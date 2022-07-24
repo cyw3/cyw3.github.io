@@ -18,4 +18,7 @@ hexo s
 # theme setting
 npm install -S hexo-theme-icarus hexo-renderer-inferno
 hexo config theme icarus
+
+# deploy git
+hexo g -d
 ```
