@@ -258,6 +258,7 @@ widgets:
                 icon: fas fa-rss
                 url: /
     # Table of contents widget configurations
+    # 文章目录挂件
     -
         # Where should the widget be placed, left sidebar or right sidebar
         position: left
