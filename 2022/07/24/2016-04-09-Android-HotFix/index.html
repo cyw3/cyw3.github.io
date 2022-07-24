@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>Android热修复方案 - Hexo</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="Hexo"><meta name="msapplication-TileImage" content="/img/favicon.svg"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Hexo"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="前言当一个App发布之后，突然发现了一个严重bug需要进行紧急修复，这时候公司各方就会忙得焦头烂额：重新打包App、测试、向各个应用市场和渠道换包、提示用户升级、用户下载、覆盖安装。有时候仅仅是为了修改了一行代码，也要付出巨大的成本进行换包和重新发布。 这时候就提出一个问题：有没有办法以补丁的方式动态修复紧急Bug，不再需要重新发布App，不再需要用户重新下载，覆盖安装？ 虽然Android系统并"><meta property="og:type" content="blog"><meta property="og:title" content="Android热修复方案"><meta property="og:url" content="http://example.com/2022/07/24/2016-04-09-Android-HotFix/"><meta property="og:site_name" content="Hexo"><meta property="og:description" content="前言当一个App发布之后，突然发现了一个严重bug需要进行紧急修复，这时候公司各方就会忙得焦头烂额：重新打包App、测试、向各个应用市场和渠道换包、提示用户升级、用户下载、覆盖安装。有时候仅仅是为了修改了一行代码，也要付出巨大的成本进行换包和重新发布。 这时候就提出一个问题：有没有办法以补丁的方式动态修复紧急Bug，不再需要重新发布App，不再需要用户重新下载，覆盖安装？ 虽然Android系统并"><meta property="og:locale" content="en_US"><meta property="og:image" content="http://example.com/img/1.png"><meta property="og:image" content="http://example.com/img/2.png"><meta property="og:image" content="http://example.com/img/3.png"><meta property="og:image" content="http://example.com/img/4.png"><meta property="og:image" content="http://example.com/img/5.png"><meta property="og:image" content="http://example.com/img/6.png"><meta property="og:image" content="http://example.com/img/7.png"><meta property="og:image" content="http://example.com/img/8.png"><meta property="article:published_time" content="2022-07-24T05:34:43.614Z"><meta property="article:modified_time" content="2022-07-24T05:34:43.614Z"><meta property="article:author" content="YalesonChan"><meta property="twitter:card" content="summary"><meta property="twitter:image:src" content="http://example.com/img/1.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://example.com/2022/07/24/2016-04-09-Android-HotFix/"},"headline":"Android热修复方案","image":["http://example.com/img/1.png","http://example.com/img/2.png","http://example.com/img/3.png","http://example.com/img/4.png","http://example.com/img/5.png","http://example.com/img/6.png","http://example.com/img/7.png","http://example.com/img/8.png"],"datePublished":"2022-07-24T05:34:43.614Z","dateModified":"2022-07-24T05:34:43.614Z","author":{"@type":"Person","name":"YalesonChan"},"publisher":{"@type":"Organization","name":"Hexo","logo":{"@type":"ImageObject","url":"http://example.com/img/logo.svg"}},"description":"前言当一个App发布之后，突然发现了一个严重bug需要进行紧急修复，这时候公司各方就会忙得焦头烂额：重新打包App、测试、向各个应用市场和渠道换包、提示用户升级、用户下载、覆盖安装。有时候仅仅是为了修改了一行代码，也要付出巨大的成本进行换包和重新发布。 这时候就提出一个问题：有没有办法以补丁的方式动态修复紧急Bug，不再需要重新发布App，不再需要用户重新下载，覆盖安装？ 虽然Android系统并"}</script><link rel="canonical" href="http://example.com/2022/07/24/2016-04-09-Android-HotFix/"><link rel="icon" href="/img/favicon.svg"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/css/justifiedGallery.min.css"><!--!--><!--!--><style>.pace{-webkit-pointer-events:none;pointer-events:none;-webkit-user-select:none;-moz-user-select:none;user-select:none}.pace-inactive{display:none}.pace .pace-progress{background:#3273dc;position:fixed;z-index:2000;top:0;right:100%;width:100%;height:2px}</style><script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js"></script><!--!--><!--!--><!-- hexo injector head_end start --><script>
+  (function () {
+      function switchTab() {
+          if (!location.hash) {
+            return;
+          }
+          Array
+              .from(document.querySelectorAll('.tab-content'))
+              .forEach($tab => {
+                  $tab.classList.add('is-hidden');
+              });
+          Array
+              .from(document.querySelectorAll('.tabs li'))
+              .forEach($tab => {
+                  $tab.classList.remove('is-active');
+              });
+          const $activeTab = document.querySelector(location.hash);
+          if ($activeTab) {
+              $activeTab.classList.remove('is-hidden');
+          }
+          const $tabMenu = document.querySelector(`a[href="${location.hash}"]`);
+          if ($tabMenu) {
+              $tabMenu.parentElement.classList.add('is-active');
+          }
+      }
+      switchTab();
+      window.addEventListener('hashchange', switchTab, false);
+  })();
+  </script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.2.0"></head><body class="is-2-column"><nav class="navbar navbar-main"><div class="container navbar-container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/logo.svg" alt="Hexo" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a><a class="navbar-item" href="/about">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a><a class="navbar-item search" title="Search" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-8-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2022-07-24T05:34:43.614Z" title="7/24/2022, 1:34:43 PM">2022-07-24</time></span><span class="level-item">Updated&nbsp;<time dateTime="2022-07-24T05:34:43.614Z" title="7/24/2022, 1:34:43 PM">2022-07-24</time></span><span class="level-item"> YalesonChan </span><span class="level-item">40 minutes read (About 6058 words)</span></div></div><h1 class="title is-3 is-size-4-mobile">Android热修复方案</h1><div class="content"><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>当一个App发布之后，突然发现了一个严重bug需要进行紧急修复，这时候公司各方就会忙得焦头烂额：重新打包App、测试、向各个应用市场和渠道换包、提示用户升级、用户下载、覆盖安装。有时候仅仅是为了修改了一行代码，也要付出巨大的成本进行换包和重新发布。</p>
+<p>这时候就提出一个问题：有没有办法以补丁的方式动态修复紧急Bug，不再需要重新发布App，不再需要用户重新下载，覆盖安装？</p>
+<p>虽然Android系统并没有提供这个技术，但是很幸运的告诉大家，答案是：可以，热补丁动态修复技术可以解决以上这些问题。</p>
+<p>对于热修复方案，当前市场有四种解决方案，分别是 Xposed、AndFix、ClassLoader、Proxy&#x2F;Delegate。前两个是阿里开源的框架，第三个是QQ空间团队想出的对策。在我看来，前两个方案的思路是极其相似的，都是想要通过指针替换掉出Bug的方法、类，不同的是Xposed将需要替换的方法连接到hookedMethodCallback，以他来实现替换后方法的调配，而AndFix就比较简洁粗暴了，直接就是获取需要替换的方法指针，将指针指向修改之后的新的java代码；相比之下，ClassLoader方案便较为巧妙的多了，他巧妙利用了BaseDexClassLoader的机制，类似于dex分包技术。Proxy&#x2F;Delegate的方案则是使用ProxyApplication动态加载主程序dex。</p>
+<h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><ol>
+<li>Xposed</li>
+<li>AndFix</li>
+<li>ClassLoader</li>
+<li>基于Proxy&#x2F;Delegate</li>
+<li>四种方案的比较</li>
+<li>基于以上四种方案的开源框架以及比较</li>
+</ol>
+<h2 id="一、Xposed"><a href="#一、Xposed" class="headerlink" title="一、Xposed"></a>一、Xposed</h2><p>大体上的原理是：</p>
+<p>1、首先，我们来理解一个概念——Zygote进程。</p>
+<p>在Android系统中，每一个应用程序都是由Zygote进程进行孵化出来的。Zygote进程是由init进程创建而成。Zygote在启动时候，创建了一个Davlik虚拟机实例，每当Zygote进程创建孵化出一个应用程序进程时，都会将这个Daclik虚拟机实例进行拷贝一份，拷贝到新创建的应用程序进程之中，从而使得每一个应用程序进程都有一个独立的Dalvik虚拟机实例。</p>
+<p>这样看来，Zygote进程就犹如一个盛产的孕妇，每生产一个孩子，也就是应用程序进程，都会给孩子先打疫苗（拷贝一份Davlik虚拟机实例到应用程序之中），让孩子们能够正常的健康成长。</p>
+<p>Zygote进程在启动的过程中，除了会创建一个Dalvik虚拟机实例之外，还会将Java运行时库加载到进程中来，以及注册一些Android核心类的JNI方法来前面创建的Dalvik虚拟机实例中去。注意，一个应用程序进程被Zygote进程孵化出来的时候，不仅会获得Zygote进程中的Dalvik虚拟机实例拷贝，还会与Zygote一起共享Java运行时库。这也就是可以将XposedBridge这个jar包（Xposed的关键jar包）加载到每一个Android应用程序中的原因。XposedBridge有一个私有的Native方法hookMethodNative，这个方法也在app_process中使用。这个函数提供一个方法对象利用Java的Reflection机制来对内置方法覆写。</p>
+<p>2、接着，我们再来看看Xposed的关键思想Hook。</p>
+<p>Hook的中文翻译是，挂钩、钓钩，比较形象。那么它要用来钓哪一条鱼的呢？根据不同的鱼，我们以便准备不同的鱼饵。</p>
+<p>所以，在Android系统启动时候Zygote进程加载的XposedBridge jar包，就有了用武之地。在XposedBridge之中有一个私有的方法——hookMethodNative，它将一个方法作为输入参数并且改变Dalvik虚拟机中对于该方法的定义。它将该方法的类型改变为native并且将这个方法的实现链接到它的本地的通用类的方法。</p>
+<p>在hookMethodNative的实现中，会调用XposedBridge中的handleHookedMethod这个方法来传递参数。而这个方法，我们可以称之为鱼竿。它将一个方法对象，也就是我们需要替换的方法或者类，作为输入参数，当然，你可以使用java的反射几只来获取这个方法，不过，这个方法对象，这个输入参数就是我们说的“鱼饵”了，根据鱼饵，我们使用鱼竿，便可以钓起我们想要钓起的大鱼。而大鱼便是所要hook的方法对象Method的指针。得到所需要替换的Method指针之后，因为我们的目的是要替换有bug的方法。所以，我们将得到的指针链接到hookedMethodCallback上面去，并设置该Method指向替换成为的方法，以便hookedMethodCallback可以获取真正期望执行的java方法。</p>
+<p>现在所有被hook的方法，都指向了hookedMethodCallback的c方法中，然后在此方法中实现调用替换成为的java方法。</p>
+<p>handleHookedMethod这个方法类似于一个统一调度的Dispatch任务分派例程，其对应的底层的C++函数是xposedCallHandler。而handleHookedMethod实现里面会根据一个全局结构hookedMethodCallbacks来选择相应的hook函数，并调用他们的before, after函数。</p>
+<p>那么，hook的具体过程是：</p>
+<p>1、首先通过DexClassloader（这个会在ClassLoader部分具体说明）来加载所要hook的方法，分析类后，进c++层，拿到要hook的Method类，然后在handleHookedMethod中，通过dvmslotTomethod方法获取所要替换的Method*指针。</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Method* method = dvmSlotToMethod(declaredClass, slot);</span><br></pre></td></tr></table></figure>
+
+<p>declaredClass就是所hook方法所在的类，对应的object。slot是Method类中，描述此java对象在vm中的索引；那么通过这个方法，我们就获取了c层的Method指针</p>
+<p>2、将该方法标记为一个native方法</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable constant_">SET_METHOD_FLAG</span>(method, <span class="variable constant_">ACC_NATIVE</span>);</span><br></pre></td></tr></table></figure>
+
+<p>3、重定向该方法到hookedMethodCallback，这样当被hook的java方法执行时，就会调到c层的hookedMethodCallback方法。通过meth-&gt;nativeFunc重定向MethodCallBridge到hookedMethodCallback这个方法上，控制这个c++指针是无视java的private的。</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">method-&gt;nativeFunc = &amp;hookedMethodCallback;</span><br></pre></td></tr></table></figure>
+
+<p>另外，在method结构体中有</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">method-&gt;insns = (const u2*) hookInfo;</span><br></pre></td></tr></table></figure>
+
+<p>用insns指向替换成为的方法，以便hookedMethodCallback可以获取真正期望执行的java方法。<br>现在所有被hook的方法，都指向了hookedMethodCallbackc方法中，然后在此方法中实现调用替换成为的java方法。</p>
+<p>3、优点</p>
+<p>1）无需重启就可以达到修复bug的目的</p>
+<p>2）多个模块可同时进行安装</p>
+<p>3）无需修改任何的APK</p>
+<p>4、缺点</p>
+<p>1）需要Android 的root权限</p>
+<p>2）Dexposed不支持Art模式（5.0+），且写补丁有点困难，需要反射写混淆后的代码，粒度太细，要替换的方法多的话，工作量会比较大。
+ </p>
+<h2 id="二、AndFix"><a href="#二、AndFix" class="headerlink" title="二、AndFix"></a>二、AndFix</h2><p>1、AndFix的原理就是方法的替换，把有bug的方法替换成补丁文件中的方法。 </p>
+<p><img src="/img/1.png" alt="1.png"></p>
+<p>注：在Native层使用指针替换的方式替换bug方法，以达到修复bug的目的。</p>
+<p>使用AndFix修复热修复的整体流程：</p>
+<p><img src="/img/2.png" alt="2.png"></p>
+<p>AndFix，我觉得是阿里开源的自动化程度比较高的热修复框架了。因为你发现，框架、工具已经可以做到帮你查找修改前修改后类的不同，并能够将之打包成为对应的补丁。开发人员所要负责的不过是对于Bug的修改而已。</p>
+<p><img src="/img/3.png" alt="3.png"></p>
+<p>修复补丁的具体过程是：</p>
+<p>1）我们及时修复好bug之后，我们可以apkpatch工具将两个apk做一次对比，然后找出不同的部分。可以看到生成的apatch了文件。若果这个时候，我们把后缀改成zip再解压开，里面有一个dex文件。反编译之后查看一下源码，里面就是被修复的代码所在的类文件,这些更改过的类都加上了一个_CF的后缀，并且变动的方法都被加上了一个叫@MethodReplace的annotation，通过clazz和method指定了需要替换的方法。</p>
+<p>2）客户端得到补丁文件后就会根据annotation来寻找需要替换的方法。从AndFixManager.fix方法开始，客户端找到对应的需要替换的方法，然后在fix方法的具体实现中调用fixClass方法进行方法替换过程。</p>
+<p>3）由JNI层完成方法的替换。fixClass方法遍历补丁class里的方法，在jni层对所需要替换的方法进行一一替换。关键代码如下：</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">private void replaceMethod(ClassLoader classLoader, String clz, String meth, Method method) &#123;</span><br><span class="line">  try &#123;</span><br><span class="line">    String key = clz + <span class="string">&quot;@&quot;</span> + classLoader.toString();</span><br><span class="line">    Class&lt;<span class="string">?&gt;</span> clazz = mFixedClass.get(key);</span><br><span class="line">    <span class="keyword">if</span> (clazz == null) &#123;<span class="regexp">//</span> <span class="keyword">class</span> <span class="keyword">not</span> load</span><br><span class="line">      /<span class="regexp">/ 要被替换的class</span></span><br><span class="line"><span class="regexp">      Class&lt;?&gt; clzz = classLoader.loadClass(clz);</span></span><br><span class="line"><span class="regexp">      /</span><span class="regexp">/ 这里也很黑科技，通过C层，改写accessFlags，把需要替换的类的所有方法（Field）改成了public，具体可以看Method结构体</span></span><br><span class="line"><span class="regexp">      clazz = AndFix.initTargetClass(clzz);</span></span><br><span class="line"><span class="regexp">    &#125;</span></span><br><span class="line"><span class="regexp">    if (clazz != null) &#123;/</span><span class="regexp">/ initialize class OK</span></span><br><span class="line"><span class="regexp">      mFixedClass.put(key, clazz);</span></span><br><span class="line"><span class="regexp">      /</span><span class="regexp">/ 需要被替换的函数</span></span><br><span class="line"><span class="regexp">      Method src = clazz.getDeclaredMethod(meth, method.getParameterTypes());</span></span><br><span class="line"><span class="regexp">      /</span><span class="regexp">/ 这里是调用了jni，art和dalvik分别执行不同的替换逻辑，在cpp进行实现</span></span><br><span class="line"><span class="regexp">      AndFix.addReplaceMethod(src, method);</span></span><br><span class="line"><span class="regexp">    &#125;</span></span><br><span class="line"><span class="regexp">  &#125; catch (Exception e) &#123;</span></span><br><span class="line"><span class="regexp">    Log.e(TAG, &quot;replaceMethod&quot;, e);</span></span><br><span class="line"><span class="regexp">  &#125;</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>2、优点</p>
+<p>1）可以多次打补丁。如果本地保存了多个补丁，那么AndFix会按照补丁生成的时间顺序加载补丁。具体是根据.apatch文件中的PATCH.MF的字段Created-Time。</p>
+<p>2）安全性</p>
+<p>readme提示开发者需要验证下载过来的apatch文件的签名是否就是在使用apkpatch工具时使用的签名，如果不验证那么任何人都可以制作自己的apatch文件来对你的APP进行修改。<br>但是我看到AndFix已经做了验证，如果补丁文件的证书和当前apk的证书不是同一个的话，就不能加载补丁。<br>官网还有一条，提示需要验证optimize file的指纹，应该是为了防止有人替换掉本地保存的补丁文件，所以要验证MD5码，然而SecurityChecker类里面也已经做了这个工作。。但是这个MD5码是保存在sharedpreference里面，如果手机已经root那么还是可以被访问的。</p>
+<p>3）不需要重启APP即可应用补丁。</p>
+<p>3、缺点</p>
+<p>1）不支持YunOS<br>2）无法添加新类和新的字段<br>3）需要使用加固前的apk制作补丁，但是补丁文件很容易被反编译，也就是修改过的类源码容易泄露<br>4）使用加固平台可能会使热补丁功能失效<br>5）无法添加类和字段</p>
+<h2 id="三、ClassLoader"><a href="#三、ClassLoader" class="headerlink" title="三、ClassLoader"></a>三、ClassLoader</h2><p>其实我更希望将之称之为MutilDex方案，因为他是基于谷歌的MutilDex项目思想而来，dex拆分是其核心。</p>
+<p>1、ClassLoader的原理</p>
+<p>首先，在说到这个方案的原理的时候，我们需要先了解一下Android的ClassLoader体系</p>
+<p><img src="/img/4.png" alt="4.png"></p>
+<p>由上图可以看出，在叶子节点上，我们能使用到的是DexClassLoader和PathClassLoader，这也是Android中加载类一般使用到的。</p>
+<p>首先看下这两个类的区别：</p>
+<p>对于PathClassLoader，从文档上的注释来看：</p>
+<blockquote>
+<p>Provides a simple {@link ClassLoader} implementation that operates on a list of files and directories in the local file system, but does not attempt to load classes from the network. Android uses this class for its system class loader and for its application class loader(s).</p>
+</blockquote>
+<p>Android是使用这个类作为其系统类和应用类的加载器,只能去加载已经安装到Android系统中的apk文件。</p>
+<p>对于DexClassLoader，依然看下注释：</p>
+<blockquote>
+<p>A class loader that loads classes from {@code .jar} and {@code .apk} files containing a {@code classes.dex} entry. This can be used to execute code not installed as part of an application.</p>
+</blockquote>
+<p>可以用来从.jar和.apk类型的文件内部加载classes、dex文件。可以用来执行非安装的程序代码。Android应用就是用它来加载;</p>
+<p>那这两个ClassLoader有与我们的热修复有什么联系？</p>
+<p>好吧，我们先来看看代码吧：</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">/<span class="regexp">/BaseDexClassLoader:  </span></span><br><span class="line"><span class="regexp">@Override  </span></span><br><span class="line"><span class="regexp">protected Class&lt; ?&gt; findClass(String name) throws ClassNotFoundException &#123;  </span></span><br><span class="line"><span class="regexp">    List&lt;Throwable&gt; suppressedExceptions = new ArrayList&lt;Throwable&gt;(); </span></span><br><span class="line"><span class="regexp">    Class c = pathList.findClass(name, suppressedExceptions);  </span></span><br><span class="line"><span class="regexp">    if (c == null) &#123;  </span></span><br><span class="line"><span class="regexp">        ClassNotFoundException cnfe = new ClassNotFoundException(&quot;Didn&#x27;t find class \&quot;&quot; + name + &quot;\&quot; on path: &quot; + pathList);  </span></span><br><span class="line"><span class="regexp">        for (Throwable t : suppressedExceptions) &#123;  </span></span><br><span class="line"><span class="regexp">            cnfe.addSuppressed(t);  </span></span><br><span class="line"><span class="regexp">       &#125;  </span></span><br><span class="line"><span class="regexp">    throw cnfe;  </span></span><br><span class="line"><span class="regexp">    &#125;  </span></span><br><span class="line"><span class="regexp">    return c;  </span></span><br><span class="line"><span class="regexp">&#125; </span></span><br><span class="line"><span class="regexp"></span></span><br></pre></td></tr></table></figure>
+
+<p>由上述函数可知，当我们需要加载一个class时，实际是从pathList中去需要的，查阅源码，发现pathList是DexPathList类的一个实例。好，接着去分析DexPathList类中的findClass函数。</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"> public Class findClass(String name, List&lt;Throwable&gt; suppressed) &#123;      </span><br><span class="line"> 	<span class="keyword">for</span> (Element element : dexElements) &#123;  </span><br><span class="line">       DexFile dex = element.dexFile;  </span><br><span class="line">        <span class="keyword">if</span> (dex != null) &#123;  </span><br><span class="line">            Class clazz = dex.loadClassBinaryName(name, definingContext, suppressed);  </span><br><span class="line">            <span class="keyword">if</span> (clazz != null) &#123;  </span><br><span class="line">                <span class="keyword">return</span> clazz;  </span><br><span class="line">            &#125;  </span><br><span class="line">        &#125;  </span><br><span class="line">   &#125;  </span><br><span class="line">    <span class="keyword">if</span> (dexElementsSuppressedExceptions != null) &#123;  </span><br><span class="line">        suppressed.addAll(Arrays.asList(dexElementsSuppressedExceptions));  </span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="keyword">return</span> null;  </span><br><span class="line">&#125;  </span><br></pre></td></tr></table></figure>
+
+<p>那么我们开始有点头绪了。我们在使用类的时候，会让PathClassLoader或者DexClassLoader对该类进行类加载。而加载的过程就是，遍历一个装在dex文件（每个dex文件实际上是一个DexFile对象）的数组（Element数组，Element是一个内部类），然后依次去加载所需要的class文件，直到找到为止。</p>
+<p>BaseDexClassLoader中有个pathList对象，pathList中包含一个DexFile的集合dexElements，而对于类加载，就是遍历这个集合，通过DexFile去寻找。一个ClassLoader可以包含多个dex文件，每个dex文件是一个Element，多个dex文件排列成一个有序的数组dexElements，当找类的时候，会按顺序遍历dex文件，然后从当前遍历的dex文件中找类，如果找类则返回，如果找不到从下一个dex文件继续查找。</p>
+<p>而这里面就正好让我们有机可乘。对，也就是理论上，如果在不同的dex中有相同的类存在，那么会优先选择排在前面的dex文件的类，如下图：</p>
+<p><img src="/img/5.png" alt="5.png"></p>
+<p>在此基础上，我们觉得可以用来作为热补丁的方案。把有问题的类打包到一个dex（patch.dex）中去，然后把这个dex插入到Elements的最前面，这样，在类加载的过程中便会优先加载补丁包中dex的类，如下图：</p>
+<p><img src="/img/6.png" alt="6.png"></p>
+<p>嗯，原理大致就是这样。</p>
+<p>但是，在实现过程中，我们还会遇到一个CLASS_ISPREVERIFIED问题。</p>
+<p>什么是CLASS_ISPREVERIFIED问题？</p>
+<p>首先我们来看看一下代码：</p>
+<p><img src="/img/7.png" alt="7.png"></p>
+<p>这段代码是dex转化成odex(dexopt)的代码中的一段，我们知道当一个apk在安装的时候，apk中的classes.dex会被虚拟机(dexopt)优化成odex文件，然后才会拿去执行。</p>
+<p>虚拟机在启动的时候，会有许多的启动参数，其中一项就是verify选项，当verify选项被打开的时候，上面doVerify变量为true，那么就会执行dvmVerifyClass进行类的校验，如果dvmVerifyClass校验类成功，那么这个类会被打上CLASS_ISPREVERIFIED的标志。这样看来，打上CLASS_ISPREVERIFIED其实是Android的一种性能优化方式。</p>
+<p>那么具体的校验过程是什么样子的呢？<br>此代码在DexVerify.cpp中，如下：</p>
+<p><img src="/img/8.png" alt="8.png"></p>
+<p>概括一下就是如果以上方法中直接引用到的类（第一层级关系，不会进行递归搜索）和clazz都在同一个dex中的话，那么这个类就会被打上CLASS_ISPREVERIFIED。</p>
+<p>而被打上CLASS_ISPREVERIFIED之后，在ClassLoader加载与需要修改类相关的相关类时候，却发现他们两个却不是来自于同一个dex的，这个时候就会抛出异常了。</p>
+<p>所以我们接下要做的就是阻止相关类被打上CLASS_ISPREVERIFIED标记。</p>
+<p>一般采用的方案是往所有类的构造函数里面插入了一段代码，代码如下：</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (ClassVerifier.<span class="variable constant_">PREVENT_VERIFY</span>) &#123;</span><br><span class="line">	System.out.println(AntilazyLoad.<span class="keyword">class</span>);<span class="regexp">//</span>需要修改的类</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这样，需要与修改的类以及其相关类，在进行校验的时候，因为修改后的类所在的dex与原来的dex不同，也就是与相关类的dex不同，这样，他们就不会被打上CLASS_ISPREVERIFIED了。</p>
+<p>为了实现以上操作，QQ空间采用了javassist动态代码注入。用javassist将这个类在编译打包的过程中插入到目标类中。</p>
+<p>大致的流程是：在dx工具执行之前，将LoadBugClass.class文件呢，进行修改，再其构造中添加System.out.println(dodola.hackdex.AntilazyLoad.class)，然后继续打包的流程。注意：AntilazyLoad.class这个类是独立在hack.dex中。</p>
+<p>总结下，其实我们需要做的就是两件事：</p>
+<p>1、动态改变BaseDexClassLoader对象间接引用的dexElements；</p>
+<p>2、在app打包的时候，阻止相关类去打上CLASS_ISPREVERIFIED标志。所有与该类相关的类都需要进行动态注入，可进行修改，也是需要进行fix的对象。</p>
+<h2 id="四、基于Proxy-x2F-Delegate"><a href="#四、基于Proxy-x2F-Delegate" class="headerlink" title="四、基于Proxy&#x2F;Delegate"></a>四、基于Proxy&#x2F;Delegate</h2><p>当项目有加壳子,插件化或热修复等需求的时候,可以使用Proxy&#x2F;Delegate Application框架的方式。</p>
+<p>在正常的模式中,一个程序一般只有一个Application入口,而Proxy&#x2F;Delegate模式中需要有两个Application,原程序的Application改为Delegate Application,再新加一个Proxy Application,由Proxy Application 提供一系列的个性化定制,再将所有的context和context相关的引用全部转化为Delegate Application的实例,让外界包括Delegate Application自身都以为该App的Application入口就是Delegate Application.</p>
+<p>采用的是Proxy&#x2F;Delegate Application框架。</p>
+<p>主要实现的流程:</p>
+<p>1、替换主程序dex文件为代理启动程序的dex文件</p>
+<p>2、代理启动程序启动后,动态加载主程序dex</p>
+<p>3、ProxyApplication替换消除本身Context引用为MyApplication</p>
+<p>4、启动主程序的Application.</p>
+<p>经过上述的步骤处理,由于程序启动dex只是一个代理,而主程序的dex是动态加载的,所以就可以达到不升级主程序不更改版本号只升级dex文件来修复线上紧急bug的目的.</p>
+<h2 id="五、四种方案的比较"><a href="#五、四种方案的比较" class="headerlink" title="五、四种方案的比较"></a>五、四种方案的比较</h2><ol>
+<li>Xposed方法生成补丁难度较大，需要反射写混淆后的代码，粒度太细，如果替换方法很多的话，工作量巨大。</li>
+<li>AndFix支持2.3 - 6.0系统，但JNI不像JAVA那样标准，所以偶尔会有未知的机型异常。从实现来说，类似Xposed，通过JNI来替代方法，更加简洁的完成补丁修复，应用PATCH不需要重启。但由于实现上直接跳过了类初始化，设置为初始化完毕，所以静态函数、静态成员、构造函数都会出现问题，复杂的类Class.forName很可能直接崩溃。</li>
+<li>ClassLoader方案支持2.3 - 6.0系统，对启动速度会有略微影响，而且只能下次启动生效。</li>
+<li>Proxy&#x2F;Delegate方案，对于dex的要求比较高，如果DEx文件较为庞大，启动速度会变慢。</li>
+</ol>
+<p>相比而言，ClassLoader方案较为可靠，但是如果Dex文件较为庞大，启动速度会变慢；而AndFix则适用于应用不重启即可修复，且方法够简单；Xposed方案较为复杂，暂不考虑。</p>
+<h2 id="六、基于以上四种方案的开源框架以及比较"><a href="#六、基于以上四种方案的开源框架以及比较" class="headerlink" title="六、基于以上四种方案的开源框架以及比较"></a>六、基于以上四种方案的开源框架以及比较</h2><p>1、Dexpost：</p>
+<p>1）原理：在底层虚拟机运行时hoop方法； </p>
+<p>2）缺点：适配方面存在一些问题，目前不支持android6.0，5,1；art运行时； </p>
+<p>3）优点：无需重启就可以达到修复bug的目的；</p>
+<p>2、AndFix：</p>
+<p>1）原理：在Native层使用指针替换的方法替换bug方法，达到修复bug的目的；</p>
+<p>2）缺点：</p>
+<p>底层替换，稳定性方面可能需要实际检测； </p>
+<p>不支持YunOS；</p>
+<p>无法添加新类和新的字段；</p>
+<p>需要使用加固前的apk制作补丁，但是补丁文件很容易被反编译，也就是修改过的类源码容易泄露；</p>
+<p>使用加固平台可能会使热补丁功能失效；</p>
+<p>无法添加类和字段；</p>
+<p>3）优点：无需中期就可以达到修复bug的目的；</p>
+<p>3、HotFix：</p>
+<p>1）原理：通过替换类加载器中bugclass，达到修复bug的目的；</p>
+<p>2）缺点：需要重新启动才可以修复bug； </p>
+<p>3）优点：java运行层修复，稳定性较好；</p>
+<p>4、Nuwa：</p>
+<p>1）原理：通过替换类加载器中bugclass，达到修复bug的目的； </p>
+<p>2）缺点：需要重新启动才可以修复bug； </p>
+<p>3）优点：java运行层修复，稳定性较好；自动化热修复</p>
+<p>5、DroidFix：</p>
+<p>1）原理：通过替换类加载器中bugclass，达到修复bug的目的；</p>
+<p>2）缺点：需要重新启动才可以修复bug； </p>
+<p>3）优点：java运行层修复，稳定性较好；</p>
+<p>6、dynamic-load-apk</p>
+<p>1）缺点：不支持Service和BroadcastReceiver；迁移成本高，需要修改插件，插件app需要继承自proxyActivity</p>
+<p>2）优点: 插件无需安装host即可吊起；支持R访问插件资源；插件支持Activity和FragmentActivity；基本无反射调用；插件安装后任可独立运行</p>
+<p>7、Droid Plugin</p>
+<p>1）缺点：无法使用自定义资源的通知；法注册一些特殊Intent Filter的组件（四大组件）；对Native支持不好</p>
+<p>2）优点：插件无需任何修改，可独立安装运行，也可以做插件运行；四大组件无需在Host程序注册；超强隔离性，不同插件运行在不同的进程中；资源完全隔离；实现进程管理，插件的空进程会被及时回收，占用内存低；插件的静态广播会被当作动态处理，如果插件没有运行，静态广播永远不会触发；API侵入性低</p>
+<p>8、DynamicAPK</p>
+<p>1）优点：<br>迁移成本低（无需做任何activity&#x2F;fragment&#x2F;resource的proxy实现）不使用代理来管理插件的activity&#x2F;fragment的生命周期。修改后aapt会处理插件种的资源，R.java中的资源引用和普通Android工程没有区别，开发者可以保持原有的开发规范；</p>
+<p>更加有利于并发开发；</p>
+<p>提升编译速度；</p>
+<p>提升启动速度。</p>
+<p>2）缺点：</p>
+<p>dex解压、dexopt、加载耗时较长，使用按需加载启动时间过长</p>
+</div><div class="article-licensing box"><div class="licensing-title"><p>Android热修复方案</p><p><a href="http://example.com/2022/07/24/2016-04-09-Android-HotFix/">http://example.com/2022/07/24/2016-04-09-Android-HotFix/</a></p></div><div class="licensing-meta level is-mobile"><div class="level-left"><div class="level-item is-narrow"><div><h6>Author</h6><p>YalesonChan</p></div></div><div class="level-item is-narrow"><div><h6>Posted on</h6><p>2022-07-24</p></div></div><div class="level-item is-narrow"><div><h6>Updated on</h6><p>2022-07-24</p></div></div><div class="level-item is-narrow"><div><h6>Licensed under</h6><p><a class="icons" rel="noopener" target="_blank" title="Creative Commons" href="https://creativecommons.org/"><i class="icon fab fa-creative-commons"></i></a><a class="icons" rel="noopener" target="_blank" title="Attribution" href="https://creativecommons.org/licenses/by/4.0/"><i class="icon fab fa-creative-commons-by"></i></a><a class="icons" rel="noopener" target="_blank" title="Noncommercial" href="https://creativecommons.org/licenses/by-nc/4.0/"><i class="icon fab fa-creative-commons-nc"></i></a></p></div></div></div></div></div><div class="notification is-danger">You need to set <code>install_url</code> to use ShareThis. Please set it in <code>_config.yml</code>.</div></article></div><div class="card"><div class="card-content"><h3 class="menu-label has-text-centered">Like this article? Support the author with</h3><div class="buttons is-centered"><a class="button donate" href="/" target="_blank" rel="noopener" data-type="afdian"><span class="icon is-small"><i class="fas fa-charging-station"></i></span><span>Afdian.net</span></a><a class="button donate" data-type="alipay"><span class="icon is-small"><i class="fab fa-alipay"></i></span><span>Alipay</span><span class="qrcode"><img src="/" alt="Alipay"></span></a><a class="button donate" href="/" target="_blank" rel="noopener" data-type="buymeacoffee"><span class="icon is-small"><i class="fas fa-coffee"></i></span><span>Buy me a coffee</span></a><a class="button donate" href="/" target="_blank" rel="noopener" data-type="patreon"><span class="icon is-small"><i class="fab fa-patreon"></i></span><span>Patreon</span></a><div class="notification is-danger">You forgot to set the <code>business</code> or <code>currency_code</code> for Paypal. Please set it in <code>_config.yml</code>.</div><a class="button donate" data-type="wechat"><span class="icon is-small"><i class="fab fa-weixin"></i></span><span>Wechat</span><span class="qrcode"><img src="/" alt="Wechat"></span></a></div></div></div><nav class="post-navigation mt-4 level is-mobile"><div class="level-start"><a class="article-nav-prev level level-item link-muted" href="/2022/07/24/2016-04-04-Android-Service/"><i class="level-item fas fa-chevron-left"></i><span class="level-item">Service on Android</span></a></div><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2022/07/24/2016-05-08-Tencent-Offer/"><span class="level-item">不只是三面</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><div class="card"><div class="card-content"><h3 class="title is-5">Comments</h3><div class="notification is-danger">You forgot to set the <code>shortname</code> for Disqus. Please set it in <code>_config.yml</code>.</div></div></div></div><div class="column column-left is-4-tablet is-4-desktop is-4-widescreen  order-1"><div class="card widget" data-type="profile"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="avatar" src="/img/avatar.png" alt="Your name"></figure><p class="title is-size-4 is-block" style="line-height:inherit;">Your name</p><p class="is-size-6 is-block">Your title</p><p class="is-size-6 is-flex justify-content-center"><i class="fas fa-map-marker-alt mr-1"></i><span>Your location</span></p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">Posts</p><a href="/archives"><p class="title">29</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">Categories</p><a href="/categories"><p class="title">0</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">Tags</p><a href="/tags"><p class="title">0</p></a></div></div></nav><div class="level"><a class="level-item button is-primary is-rounded" href="https://github.com/ppoffice" target="_blank" rel="noopener">Follow</a></div><div class="level is-mobile is-multiline"><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Github" href="https://github.com/ppoffice"><i class="fab fa-github"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Facebook" href="https://facebook.com"><i class="fab fa-facebook"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Twitter" href="https://twitter.com"><i class="fab fa-twitter"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Dribbble" href="https://dribbble.com"><i class="fab fa-dribbble"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="RSS" href="/"><i class="fas fa-rss"></i></a></div></div></div><!--!--><div class="card widget" data-type="links"><div class="card-content"><div class="menu"><h3 class="menu-label">Links</h3><ul class="menu-list"><li><a class="level is-mobile" href="https://hexo.io" target="_blank" rel="noopener"><span class="level-left"><span class="level-item">Hexo</span></span><span class="level-right"><span class="level-item tag">hexo.io</span></span></a></li><li><a class="level is-mobile" href="https://bulma.io" target="_blank" rel="noopener"><span class="level-left"><span class="level-item">Bulma</span></span><span class="level-right"><span class="level-item tag">bulma.io</span></span></a></li></ul></div></div></div><!--!--><div class="card widget" data-type="recent-posts"><div class="card-content"><h3 class="menu-label">Recents</h3><article class="media"><div class="media-content"><p class="date"><time dateTime="2022-07-24T05:34:45.046Z">2022-07-24</time></p><p class="title"><a href="/2022/07/24/2016-01-20-OpenCV-with-CodeBlocks/">OpenCV with CodeBlocks</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2022-07-24T05:34:43.614Z">2022-07-24</time></p><p class="title"><a href="/2022/07/24/2016-01-19-Rescue-Simulation-League-Team-Description-S.O.S-(Iran)/">RoboCup Rescue 2015 – Rescue Simulation League Team Description S.O.S (Iran)</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2022-07-24T05:34:43.614Z">2022-07-24</time></p><p class="title"><a href="/2022/07/24/2016-01-22-Gaussian-Blur/">Gaussian Blur</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2022-07-24T05:34:43.614Z">2022-07-24</time></p><p class="title"><a href="/2022/07/24/2016-04-04-Android-Activity/">Activity on Android</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2022-07-24T05:34:43.614Z">2022-07-24</time></p><p class="title"><a href="/2022/07/24/2016-04-04-Android-Service/">Service on Android</a></p></div></article></div></div><div class="card widget" data-type="archives"><div class="card-content"><div class="menu"><h3 class="menu-label">Archives</h3><ul class="menu-list"><li><a class="level is-mobile" href="/archives/2022/07/"><span class="level-start"><span class="level-item">July 2022</span></span><span class="level-end"><span class="level-item tag">29</span></span></a></li></ul></div></div></div><!--!--><div class="card widget" data-type="subscribe-email"><div class="card-content"><div class="menu"><h3 class="menu-label">Subscribe for updates</h3><form action="https://feedburner.google.com/fb/a/mailverify" method="post" target="popupwindow" onsubmit="window.open(&#039;https://feedburner.google.com/fb/a/mailverify?uri=&#039;,&#039;popupwindow&#039;,&#039;scrollbars=yes,width=550,height=520&#039;);return true"><input type="hidden" value="" name="uri"><input type="hidden" name="loc" value="en_US"><div class="field has-addons"><div class="control has-icons-left is-expanded"><input class="input" name="email" type="email" placeholder="Email"><span class="icon is-small is-left"><i class="fas fa-envelope"></i></span></div><div class="control"><input class="button" type="submit" value="Subscribe"></div></div></form></div></div></div><div class="card widget"><div class="card-content"><div class="notification is-danger">You need to set <code>client_id</code> and <code>slot_id</code> to show this AD unit. Please set it in <code>_config.yml</code>.</div></div></div><div class="card widget" data-type="subscribe-email"><div class="card-content"><div class="menu"><h3 class="menu-label">follow.it</h3><form action="" method="post" target="_blank"><div class="field has-addons"><div class="control has-icons-left is-expanded"><input class="input" name="email" type="email" placeholder="Email"><span class="icon is-small is-left"><i class="fas fa-envelope"></i></span></div><div class="control"><input class="button" type="submit" value="Subscribe"></div></div></form></div></div></div></div><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/logo.svg" alt="Hexo" height="28"></a><p class="is-size-7"><span>&copy; 2022 YalesonChan</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/"><i class="fab fa-creative-commons-by"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("en");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script src="/js/column.js"></script><script src="/js/animation.js"></script><a id="back-to-top" title="Back to top" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js" defer></script><script>window.addEventListener("load", () => {
+      window.cookieconsent.initialise({
+        type: "info",
+        theme: "edgeless",
+        static: false,
+        position: "bottom-left",
+        content: {
+          message: "This website uses cookies to improve your experience.",
+          dismiss: "Got it!",
+          allow: "Allow cookies",
+          deny: "Decline",
+          link: "Learn more",
+          policy: "Cookie Policy",
+          href: "https://www.cookiesandyou.com/",
+        },
+        palette: {
+          popup: {
+            background: "#edeff5",
+            text: "#838391"
+          },
+          button: {
+            background: "#4b81e8"
+          },
+        },
+      });
+    });</script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="Type something..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"Type something...","untitled":"(Untitled)","posts":"Posts","pages":"Pages","categories":"Categories","tags":"Tags"});
+        });</script></body></html>

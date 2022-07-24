@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>OpenCV with CodeBlocks - Hexo</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="Hexo"><meta name="msapplication-TileImage" content="/img/favicon.svg"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Hexo"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="前言近年，机器学习当火。而OpenCV便是机器学习在图像识别领域的热门框架。恰好近来闲来无事，便开始捣鼓一番OpenCV。 目录 OpenCV介绍 minGW版OpenCV配置方式 CodeBlocks IDE示例代码实现  1.OpenCV介绍OpenCV的全称是：Open Source Computer Vision Library。OpenCV是一个基于BSD许可（开源）发行的跨平台计算机视"><meta property="og:type" content="blog"><meta property="og:title" content="OpenCV with CodeBlocks"><meta property="og:url" content="http://example.com/2022/07/24/2016-01-20-OpenCV-with-CodeBlocks/"><meta property="og:site_name" content="Hexo"><meta property="og:description" content="前言近年，机器学习当火。而OpenCV便是机器学习在图像识别领域的热门框架。恰好近来闲来无事，便开始捣鼓一番OpenCV。 目录 OpenCV介绍 minGW版OpenCV配置方式 CodeBlocks IDE示例代码实现  1.OpenCV介绍OpenCV的全称是：Open Source Computer Vision Library。OpenCV是一个基于BSD许可（开源）发行的跨平台计算机视"><meta property="og:locale" content="en_US"><meta property="og:image" content="http://example.com/img/MinGW0.png"><meta property="og:image" content="http://example.com/img/MinGW1.png"><meta property="og:image" content="http://example.com/img/cmake.jpg"><meta property="og:image" content="http://example.com/img/cmake1.jpg"><meta property="og:image" content="http://example.com/img/cmake2.jpg"><meta property="og:image" content="http://example.com/img/cmake3.jpg"><meta property="og:image" content="http://example.com/img/cmake4.jpg"><meta property="og:image" content="http://example.com/img/cmake5.jpg"><meta property="og:image" content="http://example.com/img/codeblocks0.jpg"><meta property="og:image" content="http://example.com/img/codeblocks1.png"><meta property="og:image" content="http://example.com/img/codeblocks2.png"><meta property="og:image" content="http://example.com/img/codeblocks3.png"><meta property="article:published_time" content="2022-07-24T05:34:45.046Z"><meta property="article:modified_time" content="2022-07-24T05:34:45.046Z"><meta property="article:author" content="YalesonChan"><meta property="twitter:card" content="summary"><meta property="twitter:image:src" content="http://example.com/img/MinGW0.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://example.com/2022/07/24/2016-01-20-OpenCV-with-CodeBlocks/"},"headline":"OpenCV with CodeBlocks","image":["http://example.com/img/MinGW0.png","http://example.com/img/MinGW1.png","http://example.com/img/cmake.jpg","http://example.com/img/cmake1.jpg","http://example.com/img/cmake2.jpg","http://example.com/img/cmake3.jpg","http://example.com/img/cmake4.jpg","http://example.com/img/cmake5.jpg","http://example.com/img/codeblocks0.jpg","http://example.com/img/codeblocks1.png","http://example.com/img/codeblocks2.png","http://example.com/img/codeblocks3.png"],"datePublished":"2022-07-24T05:34:45.046Z","dateModified":"2022-07-24T05:34:45.046Z","author":{"@type":"Person","name":"YalesonChan"},"publisher":{"@type":"Organization","name":"Hexo","logo":{"@type":"ImageObject","url":"http://example.com/img/logo.svg"}},"description":"前言近年，机器学习当火。而OpenCV便是机器学习在图像识别领域的热门框架。恰好近来闲来无事，便开始捣鼓一番OpenCV。 目录 OpenCV介绍 minGW版OpenCV配置方式 CodeBlocks IDE示例代码实现  1.OpenCV介绍OpenCV的全称是：Open Source Computer Vision Library。OpenCV是一个基于BSD许可（开源）发行的跨平台计算机视"}</script><link rel="canonical" href="http://example.com/2022/07/24/2016-01-20-OpenCV-with-CodeBlocks/"><link rel="icon" href="/img/favicon.svg"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/css/justifiedGallery.min.css"><!--!--><!--!--><style>.pace{-webkit-pointer-events:none;pointer-events:none;-webkit-user-select:none;-moz-user-select:none;user-select:none}.pace-inactive{display:none}.pace .pace-progress{background:#3273dc;position:fixed;z-index:2000;top:0;right:100%;width:100%;height:2px}</style><script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js"></script><!--!--><!--!--><!-- hexo injector head_end start --><script>
+  (function () {
+      function switchTab() {
+          if (!location.hash) {
+            return;
+          }
+          Array
+              .from(document.querySelectorAll('.tab-content'))
+              .forEach($tab => {
+                  $tab.classList.add('is-hidden');
+              });
+          Array
+              .from(document.querySelectorAll('.tabs li'))
+              .forEach($tab => {
+                  $tab.classList.remove('is-active');
+              });
+          const $activeTab = document.querySelector(location.hash);
+          if ($activeTab) {
+              $activeTab.classList.remove('is-hidden');
+          }
+          const $tabMenu = document.querySelector(`a[href="${location.hash}"]`);
+          if ($tabMenu) {
+              $tabMenu.parentElement.classList.add('is-active');
+          }
+      }
+      switchTab();
+      window.addEventListener('hashchange', switchTab, false);
+  })();
+  </script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.2.0"></head><body class="is-2-column"><nav class="navbar navbar-main"><div class="container navbar-container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/logo.svg" alt="Hexo" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a><a class="navbar-item" href="/about">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a><a class="navbar-item search" title="Search" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-8-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2022-07-24T05:34:45.046Z" title="7/24/2022, 1:34:45 PM">2022-07-24</time></span><span class="level-item">Updated&nbsp;<time dateTime="2022-07-24T05:34:45.046Z" title="7/24/2022, 1:34:45 PM">2022-07-24</time></span><span class="level-item"> YalesonChan </span><span class="level-item">11 minutes read (About 1689 words)</span></div></div><h1 class="title is-3 is-size-4-mobile">OpenCV with CodeBlocks</h1><div class="content"><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>近年，机器学习当火。而OpenCV便是机器学习在图像识别领域的热门框架。恰好近来闲来无事，便开始捣鼓一番OpenCV。</p>
+<h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><ol>
+<li>OpenCV介绍</li>
+<li>minGW版OpenCV配置方式</li>
+<li>CodeBlocks IDE示例代码实现</li>
+</ol>
+<h2 id="1-OpenCV介绍"><a href="#1-OpenCV介绍" class="headerlink" title="1.OpenCV介绍"></a>1.OpenCV介绍</h2><p>OpenCV的全称是：Open Source Computer Vision Library。OpenCV是一个基于BSD许可（开源）发行的跨平台计算机视觉库，可以运行在Linux、Windows和Mac OS操作系统上。它轻量级而且高效——由一系列 C 函数和少量 C++ 类构成，同时提供了Python、Ruby、MATLAB等语言的接口，实现了图像处理和计算机视觉方面的很多通用算法。</p>
+<p>为什么有OpenCV？</p>
+<p>计算机视觉市场巨大而且持续增长，且这方面没有标准API，如今的计算机视觉软件大概有以下三种：</p>
+<ol>
+<li>研究代码（慢，不稳定，独立并与其他库不兼容）</li>
+<li>耗费很高的商业化工具（比如Halcon, MATLAB+Simulink）</li>
+<li>依赖硬件的一些特别的解决方案（比如视频监控，制造控制系统，医疗设备）这是如今的现状。而标准的API将简化计算机视觉程序和解决方案的开发。OpenCV致力于成为这样的标准API。</li>
+</ol>
+<p>OpenCV致力于真实世界的实时应用，通过优化的C代码的编写对其<br>执行速度带来了可观的提升，并且可以通过购买Intel的IPP高性能多媒体函数库(Integrated Performance Primitives)得到更快的处理速度。</p>
+<p>主要应用方向有：人机互动，人脸识别，运动跟踪，图像分割等等。</p>
+<h2 id="2-minGW版OpenCV配置方式"><a href="#2-minGW版OpenCV配置方式" class="headerlink" title="2.minGW版OpenCV配置方式"></a>2.minGW版OpenCV配置方式</h2><p>首先，我们来看看需要准备的什么吧。</p>
+<p>Win7系统</p>
+<p><a target="_blank" rel="noopener" href="http://sourceforge.net/projects/mingw/files/Installer/">mingw-get-setup.exe</a></p>
+<p><a target="_blank" rel="noopener" href="http://opencv.org/downloads.html">opencv-2.4.9.exe</a></p>
+<p><a target="_blank" rel="noopener" href="http://www.cmake.org/download/">cmake-3.2.0-rc1-win32-x86.exe</a></p>
+<p>然后，双击opencv-2.4.9.exe，这是opencv的一个自解压程序，指定好安装目录，他将自动把.exe里的文件解压到指定目录。现在，咱们来看看OpenCV的目录结构吧。</p>
+<blockquote>
+<p>opencv</p>
+<blockquote>
+<p>build、sources</p>
+</blockquote>
+</blockquote>
+<blockquote>
+<p>build</p>
+<blockquote>
+<p>doc、include、java、python、x64、x86、LICENSE、OpenCVConfig.cmake、OpenCVConfig-version.cmake</p>
+</blockquote>
+</blockquote>
+<p>可知，在opencv目录下有两个文件夹，分别为build、以及source。其中source是OpenCV的源码。而build是各个语言版本编译过后的库文件，包含c、c++、java、python等语言。x86文件夹和x86文件夹分别对应的是32-bit、64-bit系统下的库。在x64、x86中，有如下目录结构：</p>
+<blockquote>
+<p>vc10、vc11、vc12</p>
+</blockquote>
+<p>分别对应的是Virtual Studio2010、2011、2012编译后的库。因为不同的编译器(即便相同的编译器，但不同版本，编译后的文件也是不同的)。同编译器编译出来的OpenCV，只能在相应的编译环境下运行。在早前的如OpenCV 2.3.1中还有vc9（对应vs2008）和mingw版本，而在2.4版本之后便只有vc系列了。</p>
+<p>而现在，因为我们使用的编译器是MinGW，而该版本的OpenCV没有对应的编译后文件，所以，我们不得不来自己对源码进行编译。</p>
+<p>那么，接下来，我们便开始编译工作了。</p>
+<p>1)安装MinGW。</p>
+<p>很简单。直接双击，指定安装目录，确认安装即可。</p>
+<p>2)出现以下界面，至少点击以下两图所示的条目，并安装。</p>
+<p><img src="/img/MinGW0.png" alt="MinGW0"></p>
+<p><img src="/img/MinGW1.png" alt="MinGW1"></p>
+<p>3)安装cmake</p>
+<p>4)运行cmake，在where is the source code中填入OpenCV源代码文件的路径，比如：“…&#x2F;opencv_2410&#x2F;sources”；在where to build the binaries中填入编译文件需要存放的路径，比如：“…&#x2F;MinGW&#x2F;Debug”(存放路径文件自己定义新建一个即可)。(三点表示省略)</p>
+<p><img src="/img/cmake.jpg" alt="cmake"></p>
+<p>5)点击“Configure”;在Specify the generator for this project中选择MinGW Makefiles(选择刚刚安装的MinGW或者本机已有的)，选中Specify native compilers，点击“Next”。</p>
+<p><img src="/img/cmake1.jpg" alt="cmake1"></p>
+<p>6)选择编译器路径，这里Compilers: C 选择目录为“…&#x2F;MinGW&#x2F;bin&#x2F;gcc.exe”; C++ 选择目录为 “…&#x2F;MinGw&#x2F;bin&#x2F;g++.exe”，点击“Finish”</p>
+<p><img src="/img/cmake2.jpg" alt="cmake2"></p>
+<p>7)然后再次点“Configure”</p>
+<p><img src="/img/cmake3.jpg" alt="cmake3"></p>
+<p>8)等走完进度条，选择需要的Generate选项，此处可以不操作直接点“Generate”，走完进度条便生成了“MinGW Makefiles”</p>
+<p><img src="/img/cmake4.jpg" alt="cmake4"></p>
+<p>9)之后用mingw对其进行编译，cmd打开命令提示符窗口，进到刚才的保存目录，这里是“…&#x2F;opencv2.4.10&#x2F;MinGW&#x2F;Debug”，输入“mingw32-make”，回车；等待运行完毕后，输入 mingw32-make install,回车；（此过程大约需1-2个小时）</p>
+<p>10)运行完毕后便生成了mingw版的OpenCV库，进入“…&#x2F;opencv2.4.10&#x2F;MinGW&#x2F;Debug&#x2F;install”文件夹，便可以看到所需的头文件和库文件</p>
+<p><img src="/img/cmake5.jpg" alt="cmake5"></p>
+<h2 id="3-CodeBlocks-IDE示例代码实现"><a href="#3-CodeBlocks-IDE示例代码实现" class="headerlink" title="3.CodeBlocks IDE示例代码实现"></a>3.CodeBlocks IDE示例代码实现</h2><p>我所选用的IDE是</p>
+<p><a target="_blank" rel="noopener" href="http://www.codeblocks.org/">codeblocks-13.12mingw-setup.exe</a></p>
+<p>codeblocks默认使用的编译器是MinGW。</p>
+<p>1)双击安装codeblocks</p>
+<p>2)启动codeblocks，新建一个“Console application”项目，任意取一个名字。</p>
+<p>3)测试代码如下</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#include &quot;cv.h&quot;  </span></span><br><span class="line"><span class="comment">#include &quot;highgui.h&quot;  </span></span><br><span class="line">int main()  </span><br><span class="line">&#123;  </span><br><span class="line">    IplImage* img = cvLoadImage(<span class="string">&quot;test.jpg&quot;</span>);  </span><br><span class="line">    cvNamedWindow( <span class="string">&quot;test&quot;</span>, <span class="number">0</span> );  </span><br><span class="line">    cvShowImage(<span class="string">&quot;test&quot;</span>, img);  </span><br><span class="line">    cvWaitKey(<span class="number">0</span>);  </span><br><span class="line">    cvReleaseImage( &amp;img );  </span><br><span class="line">    cvDestroyWindow( <span class="string">&quot;test&quot;</span> );  </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;  </span><br><span class="line">&#125;  </span><br></pre></td></tr></table></figure>
+
+<p>4)设置opencv相关头文件以及库文件路径</p>
+<p>这一步是关键。因为还是有点麻烦的。</p>
+<p>(1)右击项目名称，选build options：</p>
+<p><img src="/img/codeblocks0.jpg" alt="codeblocks0"></p>
+<p>(2)弹出窗口，首先添加头文件路径，依次点击：Search directories-&gt;Complier-&gt;Add，选择头文件所在目录</p>
+<p><img src="/img/codeblocks1.png" alt="codeblocks1"></p>
+<p>(3)选择库文件路径，依次点击Linker-&gt;Add，选择vc10下的lib库路径</p>
+<p><img src="/img/codeblocks2.png" alt="codeblocks2"></p>
+<p>(4)最后点击 Linker settings，添加相应库文件，这里如果不知道自己会用到那些库文件的话，可以将vc10&#x2F;lib下的所有库文件全部添加进去</p>
+<p><img src="/img/codeblocks3.png" alt="codeblocks3"></p>
+<p>5)动态库调用设置</p>
+<p>两种方法任选其一即可：</p>
+<p>1.可以设置系统变量，将“…\opencv\build\x86\vc10\bin;”添加到系统变量中</p>
+<p>2.将…\opencv\build\x86\vc10\bin下的所有dll文件复制到codeblocks对应工程下的bin\Debug文件夹下即可（如果会分辨opencv库文件的话，也可以只将用到的动态库复制即可）。</p>
+</div><div class="article-licensing box"><div class="licensing-title"><p>OpenCV with CodeBlocks</p><p><a href="http://example.com/2022/07/24/2016-01-20-OpenCV-with-CodeBlocks/">http://example.com/2022/07/24/2016-01-20-OpenCV-with-CodeBlocks/</a></p></div><div class="licensing-meta level is-mobile"><div class="level-left"><div class="level-item is-narrow"><div><h6>Author</h6><p>YalesonChan</p></div></div><div class="level-item is-narrow"><div><h6>Posted on</h6><p>2022-07-24</p></div></div><div class="level-item is-narrow"><div><h6>Updated on</h6><p>2022-07-24</p></div></div><div class="level-item is-narrow"><div><h6>Licensed under</h6><p><a class="icons" rel="noopener" target="_blank" title="Creative Commons" href="https://creativecommons.org/"><i class="icon fab fa-creative-commons"></i></a><a class="icons" rel="noopener" target="_blank" title="Attribution" href="https://creativecommons.org/licenses/by/4.0/"><i class="icon fab fa-creative-commons-by"></i></a><a class="icons" rel="noopener" target="_blank" title="Noncommercial" href="https://creativecommons.org/licenses/by-nc/4.0/"><i class="icon fab fa-creative-commons-nc"></i></a></p></div></div></div></div></div><div class="notification is-danger">You need to set <code>install_url</code> to use ShareThis. Please set it in <code>_config.yml</code>.</div></article></div><div class="card"><div class="card-content"><h3 class="menu-label has-text-centered">Like this article? Support the author with</h3><div class="buttons is-centered"><a class="button donate" href="/" target="_blank" rel="noopener" data-type="afdian"><span class="icon is-small"><i class="fas fa-charging-station"></i></span><span>Afdian.net</span></a><a class="button donate" data-type="alipay"><span class="icon is-small"><i class="fab fa-alipay"></i></span><span>Alipay</span><span class="qrcode"><img src="/" alt="Alipay"></span></a><a class="button donate" href="/" target="_blank" rel="noopener" data-type="buymeacoffee"><span class="icon is-small"><i class="fas fa-coffee"></i></span><span>Buy me a coffee</span></a><a class="button donate" href="/" target="_blank" rel="noopener" data-type="patreon"><span class="icon is-small"><i class="fab fa-patreon"></i></span><span>Patreon</span></a><div class="notification is-danger">You forgot to set the <code>business</code> or <code>currency_code</code> for Paypal. Please set it in <code>_config.yml</code>.</div><a class="button donate" data-type="wechat"><span class="icon is-small"><i class="fab fa-weixin"></i></span><span>Wechat</span><span class="qrcode"><img src="/" alt="Wechat"></span></a></div></div></div><nav class="post-navigation mt-4 level is-mobile"><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2022/07/24/2016-01-19-Rescue-Simulation-League-Team-Description-S.O.S-(Iran)/"><span class="level-item">RoboCup Rescue 2015 – Rescue Simulation League Team Description S.O.S (Iran)</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><div class="card"><div class="card-content"><h3 class="title is-5">Comments</h3><div class="notification is-danger">You forgot to set the <code>shortname</code> for Disqus. Please set it in <code>_config.yml</code>.</div></div></div></div><div class="column column-left is-4-tablet is-4-desktop is-4-widescreen  order-1"><div class="card widget" data-type="profile"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="avatar" src="/img/avatar.png" alt="Your name"></figure><p class="title is-size-4 is-block" style="line-height:inherit;">Your name</p><p class="is-size-6 is-block">Your title</p><p class="is-size-6 is-flex justify-content-center"><i class="fas fa-map-marker-alt mr-1"></i><span>Your location</span></p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">Posts</p><a href="/archives"><p class="title">29</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">Categories</p><a href="/categories"><p class="title">0</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">Tags</p><a href="/tags"><p class="title">0</p></a></div></div></nav><div class="level"><a class="level-item button is-primary is-rounded" href="https://github.com/ppoffice" target="_blank" rel="noopener">Follow</a></div><div class="level is-mobile is-multiline"><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Github" href="https://github.com/ppoffice"><i class="fab fa-github"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Facebook" href="https://facebook.com"><i class="fab fa-facebook"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Twitter" href="https://twitter.com"><i class="fab fa-twitter"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Dribbble" href="https://dribbble.com"><i class="fab fa-dribbble"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="RSS" href="/"><i class="fas fa-rss"></i></a></div></div></div><!--!--><div class="card widget" data-type="links"><div class="card-content"><div class="menu"><h3 class="menu-label">Links</h3><ul class="menu-list"><li><a class="level is-mobile" href="https://hexo.io" target="_blank" rel="noopener"><span class="level-left"><span class="level-item">Hexo</span></span><span class="level-right"><span class="level-item tag">hexo.io</span></span></a></li><li><a class="level is-mobile" href="https://bulma.io" target="_blank" rel="noopener"><span class="level-left"><span class="level-item">Bulma</span></span><span class="level-right"><span class="level-item tag">bulma.io</span></span></a></li></ul></div></div></div><!--!--><div class="card widget" data-type="recent-posts"><div class="card-content"><h3 class="menu-label">Recents</h3><article class="media"><div class="media-content"><p class="date"><time dateTime="2022-07-24T05:34:45.046Z">2022-07-24</time></p><p class="title"><a href="/2022/07/24/2016-01-20-OpenCV-with-CodeBlocks/">OpenCV with CodeBlocks</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2022-07-24T05:34:43.614Z">2022-07-24</time></p><p class="title"><a href="/2022/07/24/2016-01-19-Rescue-Simulation-League-Team-Description-S.O.S-(Iran)/">RoboCup Rescue 2015 – Rescue Simulation League Team Description S.O.S (Iran)</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2022-07-24T05:34:43.614Z">2022-07-24</time></p><p class="title"><a href="/2022/07/24/2016-01-22-Gaussian-Blur/">Gaussian Blur</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2022-07-24T05:34:43.614Z">2022-07-24</time></p><p class="title"><a href="/2022/07/24/2016-04-04-Android-Activity/">Activity on Android</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2022-07-24T05:34:43.614Z">2022-07-24</time></p><p class="title"><a href="/2022/07/24/2016-04-04-Android-Service/">Service on Android</a></p></div></article></div></div><div class="card widget" data-type="archives"><div class="card-content"><div class="menu"><h3 class="menu-label">Archives</h3><ul class="menu-list"><li><a class="level is-mobile" href="/archives/2022/07/"><span class="level-start"><span class="level-item">July 2022</span></span><span class="level-end"><span class="level-item tag">29</span></span></a></li></ul></div></div></div><!--!--><div class="card widget" data-type="subscribe-email"><div class="card-content"><div class="menu"><h3 class="menu-label">Subscribe for updates</h3><form action="https://feedburner.google.com/fb/a/mailverify" method="post" target="popupwindow" onsubmit="window.open(&#039;https://feedburner.google.com/fb/a/mailverify?uri=&#039;,&#039;popupwindow&#039;,&#039;scrollbars=yes,width=550,height=520&#039;);return true"><input type="hidden" value="" name="uri"><input type="hidden" name="loc" value="en_US"><div class="field has-addons"><div class="control has-icons-left is-expanded"><input class="input" name="email" type="email" placeholder="Email"><span class="icon is-small is-left"><i class="fas fa-envelope"></i></span></div><div class="control"><input class="button" type="submit" value="Subscribe"></div></div></form></div></div></div><div class="card widget"><div class="card-content"><div class="notification is-danger">You need to set <code>client_id</code> and <code>slot_id</code> to show this AD unit. Please set it in <code>_config.yml</code>.</div></div></div><div class="card widget" data-type="subscribe-email"><div class="card-content"><div class="menu"><h3 class="menu-label">follow.it</h3><form action="" method="post" target="_blank"><div class="field has-addons"><div class="control has-icons-left is-expanded"><input class="input" name="email" type="email" placeholder="Email"><span class="icon is-small is-left"><i class="fas fa-envelope"></i></span></div><div class="control"><input class="button" type="submit" value="Subscribe"></div></div></form></div></div></div></div><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/logo.svg" alt="Hexo" height="28"></a><p class="is-size-7"><span>&copy; 2022 YalesonChan</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/"><i class="fab fa-creative-commons-by"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("en");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script src="/js/column.js"></script><script src="/js/animation.js"></script><a id="back-to-top" title="Back to top" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js" defer></script><script>window.addEventListener("load", () => {
+      window.cookieconsent.initialise({
+        type: "info",
+        theme: "edgeless",
+        static: false,
+        position: "bottom-left",
+        content: {
+          message: "This website uses cookies to improve your experience.",
+          dismiss: "Got it!",
+          allow: "Allow cookies",
+          deny: "Decline",
+          link: "Learn more",
+          policy: "Cookie Policy",
+          href: "https://www.cookiesandyou.com/",
+        },
+        palette: {
+          popup: {
+            background: "#edeff5",
+            text: "#838391"
+          },
+          button: {
+            background: "#4b81e8"
+          },
+        },
+      });
+    });</script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="Type something..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"Type something...","untitled":"(Untitled)","posts":"Posts","pages":"Pages","categories":"Categories","tags":"Tags"});
+        });</script></body></html>

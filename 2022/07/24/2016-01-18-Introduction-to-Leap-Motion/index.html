@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>Introduction to Leap Motion - Hexo</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="Hexo"><meta name="msapplication-TileImage" content="/img/favicon.svg"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Hexo"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="前言最近是要完成一个关于Leap Motion的项目，所以就顺便到官网翻译了下文章。一下首先是翻译的可以直接上手的Setting up a project，以及Hello World。 目录1.Setting up a project 2.Hello World 1.Setting up a projectLeap Motion java SDK 使用的封装了Leap Motion API 类定义"><meta property="og:type" content="blog"><meta property="og:title" content="Introduction to Leap Motion"><meta property="og:url" content="http://example.com/2022/07/24/2016-01-18-Introduction-to-Leap-Motion/"><meta property="og:site_name" content="Hexo"><meta property="og:description" content="前言最近是要完成一个关于Leap Motion的项目，所以就顺便到官网翻译了下文章。一下首先是翻译的可以直接上手的Setting up a project，以及Hello World。 目录1.Setting up a project 2.Hello World 1.Setting up a projectLeap Motion java SDK 使用的封装了Leap Motion API 类定义"><meta property="og:locale" content="en_US"><meta property="og:image" content="https://developer-china-cdn.leapmotion.com/documentation/images/Setup_Eclipse_Jar_Properties.png"><meta property="og:image" content="https://developer-china-cdn.leapmotion.com/documentation/images/Setup_IntelliJ_Properties.png"><meta property="og:image" content="https://developer-china-cdn.leapmotion.com/documentation/images/Setup_Netbeans_Properties.png"><meta property="og:image" content="https://developer-china-cdn.leapmotion.com/documentation/images/Leap_View.jpg"><meta property="article:published_time" content="2022-07-24T05:27:05.706Z"><meta property="article:modified_time" content="2022-07-24T05:26:23.443Z"><meta property="article:author" content="YalesonChan"><meta property="twitter:card" content="summary"><meta property="twitter:image:src" content="https://developer-china-cdn.leapmotion.com/documentation/images/Setup_Eclipse_Jar_Properties.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://example.com/2022/07/24/2016-01-18-Introduction-to-Leap-Motion/"},"headline":"Introduction to Leap Motion","image":["https://developer-china-cdn.leapmotion.com/documentation/images/Setup_Eclipse_Jar_Properties.png","https://developer-china-cdn.leapmotion.com/documentation/images/Setup_IntelliJ_Properties.png","https://developer-china-cdn.leapmotion.com/documentation/images/Setup_Netbeans_Properties.png","https://developer-china-cdn.leapmotion.com/documentation/images/Leap_View.jpg"],"datePublished":"2022-07-24T05:27:05.706Z","dateModified":"2022-07-24T05:26:23.443Z","author":{"@type":"Person","name":"YalesonChan"},"publisher":{"@type":"Organization","name":"Hexo","logo":{"@type":"ImageObject","url":"http://example.com/img/logo.svg"}},"description":"前言最近是要完成一个关于Leap Motion的项目，所以就顺便到官网翻译了下文章。一下首先是翻译的可以直接上手的Setting up a project，以及Hello World。 目录1.Setting up a project 2.Hello World 1.Setting up a projectLeap Motion java SDK 使用的封装了Leap Motion API 类定义"}</script><link rel="canonical" href="http://example.com/2022/07/24/2016-01-18-Introduction-to-Leap-Motion/"><link rel="icon" href="/img/favicon.svg"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/css/justifiedGallery.min.css"><!--!--><!--!--><style>.pace{-webkit-pointer-events:none;pointer-events:none;-webkit-user-select:none;-moz-user-select:none;user-select:none}.pace-inactive{display:none}.pace .pace-progress{background:#3273dc;position:fixed;z-index:2000;top:0;right:100%;width:100%;height:2px}</style><script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js"></script><!--!--><!--!--><!-- hexo injector head_end start --><script>
+  (function () {
+      function switchTab() {
+          if (!location.hash) {
+            return;
+          }
+          Array
+              .from(document.querySelectorAll('.tab-content'))
+              .forEach($tab => {
+                  $tab.classList.add('is-hidden');
+              });
+          Array
+              .from(document.querySelectorAll('.tabs li'))
+              .forEach($tab => {
+                  $tab.classList.remove('is-active');
+              });
+          const $activeTab = document.querySelector(location.hash);
+          if ($activeTab) {
+              $activeTab.classList.remove('is-hidden');
+          }
+          const $tabMenu = document.querySelector(`a[href="${location.hash}"]`);
+          if ($tabMenu) {
+              $tabMenu.parentElement.classList.add('is-active');
+          }
+      }
+      switchTab();
+      window.addEventListener('hashchange', switchTab, false);
+  })();
+  </script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.2.0"></head><body class="is-2-column"><nav class="navbar navbar-main"><div class="container navbar-container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/logo.svg" alt="Hexo" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a><a class="navbar-item" href="/about">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a><a class="navbar-item search" title="Search" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-8-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2022-07-24T05:27:05.706Z" title="7/24/2022, 1:27:05 PM">2022-07-24</time></span><span class="level-item">Updated&nbsp;<time dateTime="2022-07-24T05:26:23.443Z" title="7/24/2022, 1:26:23 PM">2022-07-24</time></span><span class="level-item"> YalesonChan </span><span class="level-item">32 minutes read (About 4850 words)</span></div></div><h1 class="title is-3 is-size-4-mobile">Introduction to Leap Motion</h1><div class="content"><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近是要完成一个关于Leap Motion的项目，所以就顺便到<a target="_blank" rel="noopener" href="https://developer.leapmotion.com/documentation/">官网</a>翻译了下文章。一下首先是翻译的可以直接上手的<a target="_blank" rel="noopener" href="https://developer.leapmotion.com/documentation/java/devguide/Project_Setup.html">Setting up a project</a>，以及<a target="_blank" rel="noopener" href="https://developer.leapmotion.com/documentation/java/devguide/Sample_Tutorial.html#id24">Hello World</a>。</p>
+<h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><p>1.Setting up a project</p>
+<p>2.Hello World</p>
+<h2 id="1-Setting-up-a-project"><a href="#1-Setting-up-a-project" class="headerlink" title="1.Setting up a project"></a>1.Setting up a project</h2><p>Leap Motion java SDK 使用的封装了Leap Motion API 类定义的标准jar包，以及一系列的原生库(native libraries)，让你可以开发Leap的java程序，与Leap Motion进行数据交换。通常，创建一个java项目包含以下步骤：添加LeapJava.jar文件到你的项目的classpath文件中，设置JVM库路径参数以至于你的JVM能够找得到Leap Motion的原生库。</p>
+<h3 id="Leap-Motion-Java-libraries"><a href="#Leap-Motion-Java-libraries" class="headerlink" title="Leap Motion Java libraries"></a>Leap Motion Java libraries</h3><p>Leap Motion的jar包是跨平台的，但是他的原生库必须要与系统平台以及用于执行程序的JVM的体系结构进行匹配。</p>
+<p>为了能偶在Java程序中使用到Leap Motion的SDk，你需要添加LeapJava.jar文件到classpath文件中，然后设置java库的路径到Leap Motion原生库的位置。</p>
+<p>需要使用到Leap Motion Java SDK的以下Java和原生库。</p>
+<ul>
+<li>32-bit Windows:<ul>
+<li>LeapSDK&#x2F;lib&#x2F;LeapJava.jar–Leap Motion Java API的类定义。</li>
+<li>LeapSDk&#x2F;lib&#x2F;x86&#x2F;LeapJava.dll–在Windows系统下的32-bit Leap Motion Java库。</li>
+<li>LeapSDK&#x2F;lib&#x2F;x86&#x2F;Leap.dll–在Windows系统下的32-bit Leap Motion库。</li>
+</ul>
+</li>
+<li>64-bit Windows:<ul>
+<li>LeapSDK&#x2F;lib&#x2F;LeapJava.jar–Leap Motion Java API的类定义。</li>
+<li>LeapSDK&#x2F;lib&#x2F;x64&#x2F;LeapJava.dll–在Windows系统下的64-bit Leap Motion Java库。</li>
+<li>LeapSDK&#x2F;lib&#x2F;x64&#x2F;Leap.dll–在Windows系统下的64-bit Leap Motion库。</li>
+</ul>
+</li>
+<li>32- or 64-bit Mac OS:<ul>
+<li>LeapSDK&#x2F;lib&#x2F;LeapJava.jar–Leap Motion Java API的类定义。</li>
+<li>LeapSDK&#x2F;lib&#x2F;libLeapJava.sylib–Mac系统下的Leap Motion Java库。</li>
+<li>LeapSDK&#x2F;lib&#x2F;libLeap.sylib–Mac系统下的Leap Motion库。</li>
+</ul>
+</li>
+</ul>
+<h3 id="Compile-from-the-command-line"><a href="#Compile-from-the-command-line" class="headerlink" title="Compile from the command line"></a>Compile from the command line</h3><p>使用java编译器，javac编译，设置classpath选项以指定LeapJar文件。举个例子，要编译包含在Leap Motion SDk中的Sample.java，你可以使用一下命令行：</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">javac -classpath &lt;LeapMotion&gt;<span class="regexp">/lib/</span>LeapJava.jar Sample.java</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>(<LeapSDK>是指你安装的Leap Motion SDK所在的文件夹)</p>
+<h3 id="Run-from-the-command-line"><a href="#Run-from-the-command-line" class="headerlink" title="Run from the command line"></a>Run from the command line</h3><p>为了运行Leap驱动的程序，java在运行时需要找到Leap Motion原生本地库。LeapJava.jar必须已经设置在classpath文件里面了。你可以设置java的’java.library.path’参数以识别原生库。更关键的是，在Windows系统下，你必须制定32-bit 或者64-bit库以匹配你使用的JVM的体系架构。</p>
+<p>在MAC上，你可以使用一下命令行运行’Sample’程序：</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">java -classpath <span class="string">&quot;.:&lt;LeapSDK&gt;/lib/LeapJava.jar&quot;</span> -Sjava.library.path=&lt;LeapSDK&gt;<span class="regexp">/lib Sample</span></span><br><span class="line"><span class="regexp"></span></span><br></pre></td></tr></table></figure>
+
+
+<p>在Windows下，你可以使用以下命令行在64-bit JVm下运行Sample程序：</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">java -classpath <span class="string">&quot;.;&lt;LeapSDK&gt;/lib/LeapJava.jar&quot;</span> -Djava.library.path=&lt;LeapSDK&gt;<span class="regexp">/lib/x</span>64 Sample</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<h3 id="Eclipse"><a href="#Eclipse" class="headerlink" title="Eclipse"></a>Eclipse</h3><p>在eclipse IDE里，你要添加LeapJava.jar文件到项目工程中，作为一个外部jar包，然后设置正确的原生Leap Motion库的路径为Jar包的一个属性。</p>
+<ol>
+<li><p>在Eclipse的文件菜单上选择<em>New &gt; Java Project</em>.</p>
+</li>
+<li><p>在<em>Create Java Project</em>页面上给项目工程指定一个名称，然后如必要的话设置其他属性(Leap Motion SDK支持Java 6和7)</p>
+</li>
+<li><p>点击<em>Next</em>键，进入Java Setting页面</p>
+</li>
+<li><p>选择<em>Livbrary</em>选项</p>
+</li>
+<li><p>点击*Add External Jars…*按钮</p>
+</li>
+<li><p>导航到LeapJava.jar包</p>
+</li>
+<li><p>点击<em>Open</em>键，添加LeapJava.jar到项目工程中</p>
+</li>
+<li><p>接着，在Library列表里面点击LeapJava.jar条目前面的小三角形，出现Library的属性<br><img src="https://developer-china-cdn.leapmotion.com/documentation/images/Setup_Eclipse_Jar_Properties.png" alt="java setting page"></p>
+</li>
+<li><p>选择<em>Native Library location</em>条目</p>
+</li>
+<li><p>点击<em>Edit</em>按钮</p>
+</li>
+<li><p>导航到半酣Leap Motion原生库的文件夹</p>
+</li>
+</ol>
+<p>在Windows下，需要确保你要选择的文件夹下包含适合你的目标体系架构的正确的库。如果你的是32-bit JVM，要用SDk里面x86文件夹下的Leap Motion库。如果你的是64-bit JVM，要用SDk里面x64文件夹下的Leap Motion库。在Mac上，Leap Motion库支持任意体系架构。</p>
+<ol start="12">
+<li>点击<em>OK</em>设置路径</li>
+</ol>
+<p><em>注意：或者你也可以通过项目属性对话框添加Leap Motion库到一个已经存在的项目工程之中。</em></p>
+<h3 id="IntelliJ"><a href="#IntelliJ" class="headerlink" title="IntelliJ"></a>IntelliJ</h3><p>在IntelliJ IDE上，你要添加LeapJava.jar文件到项目工程中作为一个库，需要分别使用JVM参数设置Leap Motion原生库的路径，’java.library.path’.JVM 参数可以通过使用IntelliJ Run&#x2F;Debug组态来设置。</p>
+<p>以下步骤添加LeapJava.jar到项目工程中：</p>
+<ol>
+<li>按通常的方法创建了一个工程之后，选择<em>File &gt; Project Structure</em>菜单打开设置对话框</li>
+<li>在project Setting下点击<em>Library</em></li>
+<li>点击在库列表顶部的小’+’号按钮，打开<em>Select Library Files</em>对话框</li>
+<li>从你的Leap Motion SDK添加’LeapJava.jar’</li>
+</ol>
+<p>通过创建一个<em>Run&#x2F;Debug configuration</em>来设置到原生Leap Motion库的路径：</p>
+<ol>
+<li>选择<em>Run &gt; Edit Configurations…</em> 菜单</li>
+<li>点击在配置离别上面的小’+’号按钮</li>
+<li>选择应用，创建一个新的应用配置</li>
+<li>指定一个名称</li>
+<li>设置VM选项域来设置’-Djava.library.path’参数指向Leap Motion原生库所在的文件夹</li>
+<li>点击<em>OK</em></li>
+</ol>
+<p><img src="https://developer-china-cdn.leapmotion.com/documentation/images/Setup_IntelliJ_Properties.png" alt="IntelliJ"></p>
+<p><em>在Windows下，确保选择跟你的JVM体系匹配的文件夹。如果你的是32-bit JVM，要用SDk里面x86文件夹下的Leap Motion库。如果你的是64-bit JVM，要用SDk里面x64文件夹下的Leap Motion库。在Mac上，Leap Motion库支持任意体系架构。</em></p>
+<h3 id="NetBeans"><a href="#NetBeans" class="headerlink" title="NetBeans"></a>NetBeans</h3><p>在NetBeans IDE下，你要添加LeapJava.jar文件到项目工程中作为一个库，需要分别使用JVM参数设置Leap Motion原生库的路径，’java.library.path’.JVM 参数可以通过使用IntelliJ Run&#x2F;Debug组态来设置。</p>
+<p>以下步骤添加LeapJava.jar到项目工程中：</p>
+<ol>
+<li>按通常的方法创建了一个工程之后，选择<em>File &gt; Project Properties</em>菜单打开设置对话框</li>
+<li>点击<em>Library</em></li>
+<li>点击<em>Add Jar&#x2F;Folder</em> 按钮</li>
+<li>在你的Leap Motion SDk中找到’LeapJava.jar’</li>
+<li>点击<em>OK</em>添加jar包到你的project中</li>
+<li>接着，在你的项目属性列表中点击<em>Run</em></li>
+<li>设置VM选项域来设置’-Djava.library.path’参数指向Leap Motion原生库所在的文件夹</li>
+</ol>
+<p><img src="https://developer-china-cdn.leapmotion.com/documentation/images/Setup_Netbeans_Properties.png" alt="NetBeans"></p>
+<p><em>在Windows下，确保选择跟你的JVM体系匹配的文件夹。如果你的是32-bit JVM，要用SDk里面x86文件夹下的Leap Motion库。如果你的是64-bit JVM，要用SDk里面x64文件夹下的Leap Motion库。在Mac上，Leap Motion库支持任意体系架构。</em></p>
+<h2 id="2-Hello-World"><a href="#2-Hello-World" class="headerlink" title="2. Hello World"></a>2. Hello World</h2><p>这篇文章演示了如何连接Leap Motion控制器，还有基本的访问跟踪数据操作。在阅读完这篇文章之后以及紧随文章编写属于你自己的基本程序，你应该拥有了扎实的基础，可以开始你的应用开发之旅了。</p>
+<p>首先，是一小段的背景知识…</p>
+<h3 id="How-the-Leap-Motion-Controller-Works"><a href="#How-the-Leap-Motion-Controller-Works" class="headerlink" title="How the Leap Motion Controller Works"></a>How the Leap Motion Controller Works</h3><p>Leap Motion控制器着重的包括硬件和软件组件。</p>
+<p>Leap Motion硬件主要包括一对立体声红外摄像机和照明LED的。摄像传感器朝上(当该装置处于其标准定向的时候)。下面的这个插图从Leap Motion传感器的视角来展示了一名用户的手。</p>
+<p><img src="https://developer-china-cdn.leapmotion.com/documentation/images/Leap_View.jpg" alt="hands"></p>
+<p>Leap Motion软件接收来自传感器的数据，然后分析这个数据，尤其是手掌、手指、手臂，或者工具的数据(追踪其他类型的数据，可能会在将来添加对应的对象的，而这是当前能跟踪的实体)。软件保持着人手的内部模型，然后与传感器发送来的数据组成的模型进行比较，以决定最好的匹配样式。传感器数据将会一帧一帧的被分析，设备会传送每一帧的数据到你的Leap Motion驱动的应用里面。被你的应用接收到的’Frame’对象包含所有已知的位置，速度和跟踪实体的辨识。比如手掌，手指，还有工具。构造，比如说手势，和跨越多个帧的动作，都需要不断刷新每一帧。如果需要控制器提供的跟踪数据的概述的话，可以阅读<a target="_blank" rel="noopener" href="https://developer.leapmotion.com/documentation/java/devguide/Leap_Overview.html">API Overview</a>。</p>
+<p>Leap Motion软件可以在客户端计算机上作为一种服务(Windows)或者是一个守护线程(Mac和Linux)。原生的Leap Motion驱动的应用可以使用Leap Motion提供的动态库(作为Leap Motion SDk的一部分提供)连接到这个服务。web应用可以连接到有服务托管的WebSocket服务器上面。WebSocket提供以JSON格式信息的跟踪数据–每一帧数据每一条信息。JavaScript库，LeapJS，提供了包含这个数据的API。想要更多信息的话，可以阅读<a target="_blank" rel="noopener" href="https://developer.leapmotion.com/documentation/java/devguide/Leap_Architecture.html">System Architecture</a>。</p>
+<h3 id="Set-Up-the-Files"><a href="#Set-Up-the-Files" class="headerlink" title="Set Up the Files"></a>Set Up the Files</h3><p>这个教程也使用命令行编译器和连接器(如有必要)，为了让我们更加庄主与代码而不是环境。对于如何在主流IDE上使用Leap Motion SDK创建工程，可以先看看这篇文章<a target="_blank" rel="noopener" href="https://developer.leapmotion.com/documentation/java/devguide/Project_Setup.html">Setting up a Project</a>。</p>
+<ol>
+<li>如果你还没有准备好，那么可以从<a target="_blank" rel="noopener" href="https://developer.leapmotion.com/">Developer site</a>下载解压最新版本的Leap Motion SDk，然后安装最新的Leap Motion服务。</li>
+<li>打开一个终端或者控制台窗口，导航到SDk ‘Sample’文件夹下。</li>
+<li>‘Sample.java’包含了这篇教程的最终代码，但是出于能够更加深入理解本篇教程的目的下，你可以重命名已经存在的这个Sample文件，然后在这个文件夹下创建一个新的、空白的’Sample.java’文件。保留已经存在的Sample文件，以供参考。</li>
+<li>在你的’Sample.java’文件中，添加导入Leap Motion库的代码：</li>
+</ol>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">import com.leapmotion.leap.*;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ol start="5">
+<li>添加主题代码，定义一个java命令行程序：</li>
+</ol>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Sample</span> &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line"></span><br><span class="line">        <span class="regexp">//</span> Keep this process running <span class="keyword">until</span> Enter is pressed</span><br><span class="line">        System.out.println(<span class="string">&quot;Press Enter to quit...&quot;</span>);</span><br><span class="line">        try &#123;</span><br><span class="line">            System.<span class="keyword">in</span>.read();</span><br><span class="line">        &#125; catch (IOException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>这个代码简单的打印了一条信息，然后等键盘输入任意键后退出。</p>
+<h3 id="Get-Connected"><a href="#Get-Connected" class="headerlink" title="Get Connected"></a>Get Connected</h3><p>下一步是在程序中添加一个控制器对象<a target="_blank" rel="noopener" href="https://developer.leapmotion.com/documentation/java/api/Leap.Controller.html">Controller</a>–这个对象将会帮助我们连接到Leap Motion 服务&#x2F;守护线程。</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Sample</span> &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        Controller controller = new Controller();</span><br><span class="line"></span><br><span class="line">        <span class="regexp">//</span> Keep this process running <span class="keyword">until</span> Enter is pressed</span><br><span class="line">        System.out.println(<span class="string">&quot;Press Enter to quit...&quot;</span>);</span><br><span class="line">        try &#123;</span><br><span class="line">            System.<span class="keyword">in</span>.read();</span><br><span class="line">        &#125; catch (IOException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>当你创建一个Controller对象的时候，他会自动的链接到Leap Motion设备，一旦连接建立，你可以通过使用Controlller.frame()方法得到所要的跟踪数据。</p>
+<p>这个连接的过程是异步的，所以你不能在一行创建’Controller’，然后期待能偶在下一行语句得到数据。你必须等到连接完成之后才行。但是这需要多久呢？</p>
+<h3 id="To-Listen-or-not-to-Listen"><a href="#To-Listen-or-not-to-Listen" class="headerlink" title="To Listen or not to Listen?"></a>To Listen or not to Listen?</h3><p>你可以在Controlller对象上添加监听器对象<a target="_blank" rel="noopener" href="https://developer.leapmotion.com/documentation/java/api/Leap.Listener.html">Listener</a>，这回提供一个基于事件的响应机制以响应’Controlller’的状态变化。这是本篇教程使用的方法–但是他也不总是最好的办法。</p>
+<p><strong>监听器的问题：</strong>Listener对象使用了独立的线程来调用你实现的每一个事件的代码。所以，使用监听器机制可以展示出贯穿你的代码中的复杂性。你需要确保的是，在你的监听器子类中实现的代码能够以一种线程安全的方式访问到你的程序。比如，你可能无法访问到跟GUI控制器有关的变量，除了主线程以外。此外，还可能有与线程的创建和清理相关的额外开销。</p>
+<p>**Avoiding Listeners:**你可以禁止使用监听器对象通过简单地轮询Controller对象的帧(或其他的状况)，如果对于你的程序是必要的话。很多程序都已经有了一个事件循环，或者动画循环来驱动用户的输入和动画。如果这样的话，你可以在每一轮的循环中获得数据，这将尽可能的加快你使用数据的速度。</p>
+<p>API中监听器类定义了当Controller事件触发时会被调用的函数的签名。你可以通过创建’listener’的子类，和实现你感兴趣的事件的回调函数的方式，创建一个监听器。</p>
+<p>那么，继续我们的教程，添加’SampleListener’类到你的程序之中。为了简单，我们添加’SampleListener’类到’Sample’类一样的文件下面吧。</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">SampleListener</span> extends Listener &#123;</span><br><span class="line"></span><br><span class="line">    public void onConnect(Controller controller) &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;Connected&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void onFrame(Controller controller) &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;Frame available&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>如果你已经看过了官方给的示例代码，你可能已经注意到了，回调函数的多次出现。你可能也想着吧他们都添加到自己的文件里面，如果你希望的话，但是为了保持代码简单，我们希望只专注于0nConnect()和onFrame()方法。</p>
+<p>现在使用你刚写的类创建一个’SampleListener’对象。然后把它添加到你的控制器里。</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Sample</span> &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        <span class="regexp">//</span> Create a sample listener <span class="keyword">and</span> controller</span><br><span class="line">        SampleListener listener = new SampleListener();</span><br><span class="line">        Controller controller = new Controller();</span><br><span class="line"></span><br><span class="line">        <span class="regexp">//</span> Have the sample listener receive events from the controller</span><br><span class="line">        controller.addListener(listener);</span><br><span class="line"></span><br><span class="line">        <span class="regexp">//</span> Keep this process running <span class="keyword">until</span> Enter is pressed</span><br><span class="line">        System.out.println(<span class="string">&quot;Press Enter to quit...&quot;</span>);</span><br><span class="line">        try &#123;</span><br><span class="line">            System.<span class="keyword">in</span>.read();</span><br><span class="line">        &#125; catch (IOException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        /<span class="regexp">/ Remove the sample listener when done</span></span><br><span class="line"><span class="regexp">        controller.removeListener(listener);</span></span><br><span class="line"><span class="regexp">    &#125;</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br><span class="line"><span class="regexp"></span></span><br></pre></td></tr></table></figure>
+
+<p>现在，你恶意运行测试一下你的’Sample’程序了。可以跳到后面查看Running the Sample的内容。</p>
+<p>如果代码什么的搜没有错误的话(还有就是你的Leap Motion硬件设备已经连接到计算机)，那么你会看到这样的字符串”Connect”打印在终端窗口上，紧接着的是一系列以很快的速度输出的”Frame available”。如果报错而且你搞不懂为什么的话，你可以在我们的<a target="_blank" rel="noopener" href="https://developer.leapmotion.com/">开发者论坛</a>上向我们寻求帮助。</p>
+<p>无论你什么时候开发出错，都可以试着打开可视化诊断工具。这个程序将展示一个Leap Motion跟踪数据的可视化观察器。你可以比较你在程序中看到的和你在可视化观察器中看到的(这两者都是用的相同的API)，来查找问题。</p>
+<h3 id="On-Connect"><a href="#On-Connect" class="headerlink" title="On Connect"></a>On Connect</h3><p>当你的控制器对象成功连接到Leap Motion服务&#x2F;守护线程之后，而且你的Leap Motion硬件已经插入计算机，控制器对象将会改变它的isConnect()方法的属性为’true’，然后调用你的<a target="_blank" rel="noopener" href="https://developer.leapmotion.com/documentation/java/api/Leap.Listener.html#javaclasscom_1_1leapmotion_1_1leap_1_1_listener_1a06446e436cca86cdd72c0d88c487d52d">Listener.onConnect</a>的回调。</p>
+<p>控制器连接之后，你可以使用<a target="_blank" rel="noopener" href="https://developer.leapmotion.com/documentation/java/api/Leap.Controller.html#javaclasscom_1_1leapmotion_1_1leap_1_1_controller_1ac2ee4e779963f135abccc183ab2f35fb">Controller.enableGesture()</a>和<a target="_blank" rel="noopener" href="https://developer.leapmotion.com/documentation/java/api/Leap.Controller.html#javaclasscom_1_1leapmotion_1_1leap_1_1_controller_1a272a235782d654778a1873a28f49a794">Controller.setPolicy()</a>方法设置控制器的参数。比如：你可以通过以下’onConnect()’方法来设置滑动手势的使能化：</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">public void onConnect(Controller controller) &#123;</span><br><span class="line">    System.out.println(<span class="string">&quot;Connected&quot;</span>);</span><br><span class="line">    controller.enableGesture(Gesture.Type.<span class="variable constant_">TYPE_SWIPE</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="On-Frame"><a href="#On-Frame" class="headerlink" title="On Frame"></a>On Frame</h3><p>在Leap Motion系统中，所有跟踪数据送达都是通过<a target="_blank" rel="noopener" href="https://developer.leapmotion.com/documentation/java/api/Leap.Frame.html">Frame</a>对象来实现的。你可以从你的控制器(当他连接之后)通过调用Controller.frame()方法来获得’Frame’对象。当一个新的frame数据有效时，你的Listener子类的onFrame()回调方法将会被调用。当你不在使用监听器时，你可以比较<a target="_blank" rel="noopener" href="https://developer.leapmotion.com/documentation/java/api/Leap.Frame.html#javaclasscom_1_1leapmotion_1_1leap_1_1_frame_1a912887c5fe73e39a0463019d92107ab0">id()</a>的值和你处理的上一帧，判断是否是一个新的frame(帧)。注意，通过设置frame()函数的’history’参数，你可以获得更早之前的帧(里面至少有60以上的帧的数据被保存着)。所以，如有必要的话，你可以使轮询速率变得比Leap Motion数据帧的速率还慢，可以处理每一帧的数据。</p>
+<p>为了获得数据帧frame，要添加frame()方法到你的onframe()回调函数里面：</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">public void onFrame(Controller controller) &#123;</span><br><span class="line">    Frame frame = controller.frame();</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>然后，打印出Frame对象的一些属性：</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">public void onFrame(Controller controller) &#123;</span><br><span class="line">    Frame frame = controller.frame();</span><br><span class="line"></span><br><span class="line">    System.out.println(<span class="string">&quot;Frame id: &quot;</span> + frame.id()</span><br><span class="line">                   + <span class="string">&quot;, timestamp: &quot;</span> + frame.timestamp()</span><br><span class="line">                   + <span class="string">&quot;, hands: &quot;</span> + frame.hands().count()</span><br><span class="line">                   + <span class="string">&quot;, fingers: &quot;</span> + frame.fingers().count()</span><br><span class="line">                   + <span class="string">&quot;, tools: &quot;</span> + frame.tools().count()</span><br><span class="line">                   + <span class="string">&quot;, gestures &quot;</span> + frame.gestures().count());</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>那么，再次运行你的Sample，把一只或者两支手掌放在Leap Motion设备上面，你会在控制台窗口看到每一帧的基本属性。</p>
+<p>本次教程在这就结束了，但是你可以看看官方提供的Sample文件中的其他代码。比如说，在一个Frame里面如何获得手掌Hand，手指Finger，手臂Arm，骨头Bone 还有手势Gesture对象。</p>
+<h3 id="Running-the-Sample"><a href="#Running-the-Sample" class="headerlink" title="Running the Sample"></a>Running the Sample</h3><p>运行一个示例应用：</p>
+<ol>
+<li><p>编译示例应用：</p>
+<ul>
+<li><p>在Windows系统下，确保’Sample.java’和’LeapJava.jar’在当前文件夹下面，然后输入以下命令行在命令行提示符后面，并运行：</p>
+ <figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">javac -classpath LeapJava.jar Sample.java</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在Mac系统上，确保’Sample.java’和’LeapJava.jar’在当前文件夹下面，然后在终端里面运行以下命令行：</p>
+</li>
+</ul>
+ <figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">javac -classpath ./LeapJava.jar Sample.java</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>运行示例应用：</p>
+<ul>
+<li><p>在Windows系统下，确保’Sample.class’,’LeapJava.jar’,’LeapJava.dll’,和’Leap.dll’在同一个文件夹下。如果你是用的是32-bit版本的JVM，需要使用SDk下的lib\x86文件夹下的.dll文件。如果你是用的是64-bit版本的JVM，需要使用SDk下的lib\x64文件夹下的.dll文件.在命令行提示符后输入并运行以下命令行：</p>
+ <figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -classpath <span class="string">&quot;LeapJava.jar;.&quot;</span> Sample</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在Mac系统下，确保’Sample.class’,’LeapJava.jar’,’LeapJava.dll’,和’Leap.dll’在同一个文件夹下。在终端中运行命令行：</p>
+</li>
+</ul>
+ <figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">java -classpath <span class="string">&quot;./LeapJava.jar:.&quot;</span> Sample</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+</ol>
+<p>当应用程序初始化并连接之后到Leap之后，你会看到”Connect”信息被打印在标准输出中。你还会看到frame的信息，在每一次’onframe’事件被调用后。</p>
+</div><div class="article-licensing box"><div class="licensing-title"><p>Introduction to Leap Motion</p><p><a href="http://example.com/2022/07/24/2016-01-18-Introduction-to-Leap-Motion/">http://example.com/2022/07/24/2016-01-18-Introduction-to-Leap-Motion/</a></p></div><div class="licensing-meta level is-mobile"><div class="level-left"><div class="level-item is-narrow"><div><h6>Author</h6><p>YalesonChan</p></div></div><div class="level-item is-narrow"><div><h6>Posted on</h6><p>2022-07-24</p></div></div><div class="level-item is-narrow"><div><h6>Updated on</h6><p>2022-07-24</p></div></div><div class="level-item is-narrow"><div><h6>Licensed under</h6><p><a class="icons" rel="noopener" target="_blank" title="Creative Commons" href="https://creativecommons.org/"><i class="icon fab fa-creative-commons"></i></a><a class="icons" rel="noopener" target="_blank" title="Attribution" href="https://creativecommons.org/licenses/by/4.0/"><i class="icon fab fa-creative-commons-by"></i></a><a class="icons" rel="noopener" target="_blank" title="Noncommercial" href="https://creativecommons.org/licenses/by-nc/4.0/"><i class="icon fab fa-creative-commons-nc"></i></a></p></div></div></div></div></div><div class="notification is-danger">You need to set <code>install_url</code> to use ShareThis. Please set it in <code>_config.yml</code>.</div></article></div><div class="card"><div class="card-content"><h3 class="menu-label has-text-centered">Like this article? Support the author with</h3><div class="buttons is-centered"><a class="button donate" href="/" target="_blank" rel="noopener" data-type="afdian"><span class="icon is-small"><i class="fas fa-charging-station"></i></span><span>Afdian.net</span></a><a class="button donate" data-type="alipay"><span class="icon is-small"><i class="fab fa-alipay"></i></span><span>Alipay</span><span class="qrcode"><img src="/" alt="Alipay"></span></a><a class="button donate" href="/" target="_blank" rel="noopener" data-type="buymeacoffee"><span class="icon is-small"><i class="fas fa-coffee"></i></span><span>Buy me a coffee</span></a><a class="button donate" href="/" target="_blank" rel="noopener" data-type="patreon"><span class="icon is-small"><i class="fab fa-patreon"></i></span><span>Patreon</span></a><div class="notification is-danger">You forgot to set the <code>business</code> or <code>currency_code</code> for Paypal. Please set it in <code>_config.yml</code>.</div><a class="button donate" data-type="wechat"><span class="icon is-small"><i class="fab fa-weixin"></i></span><span>Wechat</span><span class="qrcode"><img src="/" alt="Wechat"></span></a></div></div></div><nav class="post-navigation mt-4 level is-mobile"><div class="level-start"><a class="article-nav-prev level level-item link-muted" href="/2022/07/24/2016-03-15-YalesonChan/"><i class="level-item fas fa-chevron-left"></i><span class="level-item"> </span></a></div><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2022/07/24/2016-01-17-Java-Garbage-Collection-Mechanism/"><span class="level-item">Java Garbage Collection Mechanism</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><div class="card"><div class="card-content"><h3 class="title is-5">Comments</h3><div class="notification is-danger">You forgot to set the <code>shortname</code> for Disqus. Please set it in <code>_config.yml</code>.</div></div></div></div><div class="column column-left is-4-tablet is-4-desktop is-4-widescreen  order-1"><div class="card widget" data-type="profile"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="avatar" src="/img/avatar.png" alt="Your name"></figure><p class="title is-size-4 is-block" style="line-height:inherit;">Your name</p><p class="is-size-6 is-block">Your title</p><p class="is-size-6 is-flex justify-content-center"><i class="fas fa-map-marker-alt mr-1"></i><span>Your location</span></p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">Posts</p><a href="/archives"><p class="title">29</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">Categories</p><a href="/categories"><p class="title">0</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">Tags</p><a href="/tags"><p class="title">0</p></a></div></div></nav><div class="level"><a class="level-item button is-primary is-rounded" href="https://github.com/ppoffice" target="_blank" rel="noopener">Follow</a></div><div class="level is-mobile is-multiline"><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Github" href="https://github.com/ppoffice"><i class="fab fa-github"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Facebook" href="https://facebook.com"><i class="fab fa-facebook"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Twitter" href="https://twitter.com"><i class="fab fa-twitter"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Dribbble" href="https://dribbble.com"><i class="fab fa-dribbble"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="RSS" href="/"><i class="fas fa-rss"></i></a></div></div></div><!--!--><div class="card widget" data-type="links"><div class="card-content"><div class="menu"><h3 class="menu-label">Links</h3><ul class="menu-list"><li><a class="level is-mobile" href="https://hexo.io" target="_blank" rel="noopener"><span class="level-left"><span class="level-item">Hexo</span></span><span class="level-right"><span class="level-item tag">hexo.io</span></span></a></li><li><a class="level is-mobile" href="https://bulma.io" target="_blank" rel="noopener"><span class="level-left"><span class="level-item">Bulma</span></span><span class="level-right"><span class="level-item tag">bulma.io</span></span></a></li></ul></div></div></div><!--!--><div class="card widget" data-type="recent-posts"><div class="card-content"><h3 class="menu-label">Recents</h3><article class="media"><div class="media-content"><p class="date"><time dateTime="2022-07-24T05:34:45.046Z">2022-07-24</time></p><p class="title"><a href="/2022/07/24/2016-01-20-OpenCV-with-CodeBlocks/">OpenCV with CodeBlocks</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2022-07-24T05:34:43.614Z">2022-07-24</time></p><p class="title"><a href="/2022/07/24/2016-01-19-Rescue-Simulation-League-Team-Description-S.O.S-(Iran)/">RoboCup Rescue 2015 – Rescue Simulation League Team Description S.O.S (Iran)</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2022-07-24T05:34:43.614Z">2022-07-24</time></p><p class="title"><a href="/2022/07/24/2016-01-22-Gaussian-Blur/">Gaussian Blur</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2022-07-24T05:34:43.614Z">2022-07-24</time></p><p class="title"><a href="/2022/07/24/2016-04-04-Android-Activity/">Activity on Android</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2022-07-24T05:34:43.614Z">2022-07-24</time></p><p class="title"><a href="/2022/07/24/2016-04-04-Android-Service/">Service on Android</a></p></div></article></div></div><div class="card widget" data-type="archives"><div class="card-content"><div class="menu"><h3 class="menu-label">Archives</h3><ul class="menu-list"><li><a class="level is-mobile" href="/archives/2022/07/"><span class="level-start"><span class="level-item">July 2022</span></span><span class="level-end"><span class="level-item tag">29</span></span></a></li></ul></div></div></div><!--!--><div class="card widget" data-type="subscribe-email"><div class="card-content"><div class="menu"><h3 class="menu-label">Subscribe for updates</h3><form action="https://feedburner.google.com/fb/a/mailverify" method="post" target="popupwindow" onsubmit="window.open(&#039;https://feedburner.google.com/fb/a/mailverify?uri=&#039;,&#039;popupwindow&#039;,&#039;scrollbars=yes,width=550,height=520&#039;);return true"><input type="hidden" value="" name="uri"><input type="hidden" name="loc" value="en_US"><div class="field has-addons"><div class="control has-icons-left is-expanded"><input class="input" name="email" type="email" placeholder="Email"><span class="icon is-small is-left"><i class="fas fa-envelope"></i></span></div><div class="control"><input class="button" type="submit" value="Subscribe"></div></div></form></div></div></div><div class="card widget"><div class="card-content"><div class="notification is-danger">You need to set <code>client_id</code> and <code>slot_id</code> to show this AD unit. Please set it in <code>_config.yml</code>.</div></div></div><div class="card widget" data-type="subscribe-email"><div class="card-content"><div class="menu"><h3 class="menu-label">follow.it</h3><form action="" method="post" target="_blank"><div class="field has-addons"><div class="control has-icons-left is-expanded"><input class="input" name="email" type="email" placeholder="Email"><span class="icon is-small is-left"><i class="fas fa-envelope"></i></span></div><div class="control"><input class="button" type="submit" value="Subscribe"></div></div></form></div></div></div></div><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/logo.svg" alt="Hexo" height="28"></a><p class="is-size-7"><span>&copy; 2022 YalesonChan</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/"><i class="fab fa-creative-commons-by"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("en");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script src="/js/column.js"></script><script src="/js/animation.js"></script><a id="back-to-top" title="Back to top" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js" defer></script><script>window.addEventListener("load", () => {
+      window.cookieconsent.initialise({
+        type: "info",
+        theme: "edgeless",
+        static: false,
+        position: "bottom-left",
+        content: {
+          message: "This website uses cookies to improve your experience.",
+          dismiss: "Got it!",
+          allow: "Allow cookies",
+          deny: "Decline",
+          link: "Learn more",
+          policy: "Cookie Policy",
+          href: "https://www.cookiesandyou.com/",
+        },
+        palette: {
+          popup: {
+            background: "#edeff5",
+            text: "#838391"
+          },
+          button: {
+            background: "#4b81e8"
+          },
+        },
+      });
+    });</script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="Type something..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"Type something...","untitled":"(Untitled)","posts":"Posts","pages":"Pages","categories":"Categories","tags":"Tags"});
+        });</script></body></html>

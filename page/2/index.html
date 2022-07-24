@@ -1,0 +1,1311 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>Hexo</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="Hexo"><meta name="msapplication-TileImage" content="/img/favicon.svg"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Hexo"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta property="og:type" content="blog"><meta property="og:title" content="Hexo"><meta property="og:url" content="http://example.com/"><meta property="og:site_name" content="Hexo"><meta property="og:locale" content="en_US"><meta property="og:image" content="http://example.com/img/og_image.png"><meta property="article:author" content="John Doe"><meta property="twitter:card" content="summary"><meta property="twitter:image:src" content="http://example.com/img/og_image.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://example.com"},"headline":"Hexo","image":["http://example.com/img/og_image.png"],"author":{"@type":"Person","name":"John Doe"},"publisher":{"@type":"Organization","name":"Hexo","logo":{"@type":"ImageObject","url":"http://example.com/img/logo.svg"}},"description":""}</script><link rel="icon" href="/img/favicon.svg"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/css/justifiedGallery.min.css"><!--!--><!--!--><style>.pace{-webkit-pointer-events:none;pointer-events:none;-webkit-user-select:none;-moz-user-select:none;user-select:none}.pace-inactive{display:none}.pace .pace-progress{background:#3273dc;position:fixed;z-index:2000;top:0;right:100%;width:100%;height:2px}</style><script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js"></script><!--!--><!--!--><!-- hexo injector head_end start --><script>
+  (function () {
+      function switchTab() {
+          if (!location.hash) {
+            return;
+          }
+          Array
+              .from(document.querySelectorAll('.tab-content'))
+              .forEach($tab => {
+                  $tab.classList.add('is-hidden');
+              });
+          Array
+              .from(document.querySelectorAll('.tabs li'))
+              .forEach($tab => {
+                  $tab.classList.remove('is-active');
+              });
+          const $activeTab = document.querySelector(location.hash);
+          if ($activeTab) {
+              $activeTab.classList.remove('is-hidden');
+          }
+          const $tabMenu = document.querySelector(`a[href="${location.hash}"]`);
+          if ($tabMenu) {
+              $tabMenu.parentElement.classList.add('is-active');
+          }
+      }
+      switchTab();
+      window.addEventListener('hashchange', switchTab, false);
+  })();
+  </script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.2.0"></head><body class="is-2-column"><nav class="navbar navbar-main"><div class="container navbar-container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/logo.svg" alt="Hexo" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a><a class="navbar-item" href="/about">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a><a class="navbar-item search" title="Search" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-8-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2022-07-24T05:34:43.602Z" title="7/24/2022, 1:34:43 PM">2022-07-24</time></span><span class="level-item">Updated&nbsp;<time dateTime="2022-07-24T05:34:43.602Z" title="7/24/2022, 1:34:43 PM">2022-07-24</time></span><span class="level-item"> YalesonChan </span><span class="level-item">34 minutes read (About 5096 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2022/07/24/2016-05-23-ConvexHull/">凸包算法剖析</a></h1><div class="content"><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>前天，刚考完证券，以前帮别人搞金融时候的一些问题也算有了点自己的答案。当然，今天不是说这个。<br>正好也是前几天，好基友跑来问我凸包算法，一时就楞住了，好像还真没有搞过计算机几何方面的。于是赶忙就Google了下，把凸包的几种算法都搞了个清楚。所以，今天就来讲讲凸包算法吧。</p>
+<h2 id="何为凸包"><a href="#何为凸包" class="headerlink" title="何为凸包"></a>何为凸包</h2><p>首先，我们的搞清楚，什么叫做凸包。<br>假设平面上有p0~p12共13个点，过某些点作一个最小多边形，使这个多边形能把所有点都“包”起来。当这个多边形是凸多边形的时候，我们就叫它“凸包”。如图： </p>
+<p><img src="/img/convexHull1.gif" alt="convexHull1.gif"></p>
+<p>换种说法便是：令S是平面上的一个点集，封闭S中所有顶点的最小凸多边形，称为S的凸包。</p>
+<p>然后，什么是凸包问题？ 我们把这些点放在二维坐标系里面，那么每个点都能用 (x,y) 来表示。 现给出点的数目为13，已知各个点的坐标，求构成凸包的点。</p>
+<h2 id="解一：穷举法（暴力法）"><a href="#解一：穷举法（暴力法）" class="headerlink" title="解一：穷举法（暴力法）"></a>解一：穷举法（暴力法）</h2><p>时间复杂度：O(n³）。 </p>
+<p>思路：两点确定一条直线，如果剩余的其它点都在这条直线的同一侧，则这两个点是凸包上的点，否则就不是。</p>
+<p>步骤：</p>
+<p>1、将点集里面的所有点两两配对，组成 n(n-1)&#x2F;2 条直线。</p>
+<p>2、对于每条直线，再检查剩余的 (n-2) 个点是否在直线的同一侧。</p>
+<p>如何判断一个点 p3 是在直线 p1p2 的左边还是右边呢？（坐标：p1(x1,y1)，p2(x2,y2)，p3(x3,y3)）</p>
+<p><img src="/img/convexhull2.png" alt="convexhull2.png"></p>
+<p>当上式结果为正时，p3在直线 p1p2 的左侧；当结果为负时，p3在直线 p1p2 的右边。</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">package com.cyw.algorithms;</span><br><span class="line"></span><br><span class="line">import java.util.*;</span><br><span class="line"></span><br><span class="line">public <span class="keyword">class</span> <span class="title class_">ConvexHullExhaustive</span> &#123;</span><br><span class="line">	public static <span class="keyword">class</span> <span class="title class_">Line</span> &#123;<span class="regexp">//</span>线</span><br><span class="line">		 Point p1, p2;</span><br><span class="line">		 Line(Point p1, Point p2) &#123;</span><br><span class="line">		  this.p1 = p1;</span><br><span class="line">		  this.p2 = p2;</span><br><span class="line">		 &#125;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">	public static <span class="keyword">class</span> <span class="title class_">Point</span>&#123;<span class="regexp">//</span>点</span><br><span class="line">		  int x;</span><br><span class="line">		  int y;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">	List&lt;Point&gt; pts = null;<span class="regexp">//</span>点集</span><br><span class="line">	List&lt;Line&gt; lines = new ArrayList&lt;Line&gt;();<span class="regexp">//</span>点集pts的凸包</span><br><span class="line"></span><br><span class="line">	public void setPointList(List&lt;Point&gt; pts) &#123;</span><br><span class="line">	     this.pts = pts;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	public List&lt;Line&gt; eval() &#123;</span><br><span class="line">		    lines.clear();</span><br><span class="line">		    <span class="keyword">if</span> (pts == null) &#123; <span class="keyword">return</span> lines; &#125;</span><br><span class="line">		    int n = pts.size();</span><br><span class="line">		    int a, b, c, cc, l, r;</span><br><span class="line">		    <span class="keyword">for</span> (int i = <span class="number">0</span>; i &lt; n; i++) &#123;</span><br><span class="line">		     <span class="keyword">for</span> (int j = i+<span class="number">1</span>; j &lt; n; j++) &#123;<span class="regexp">//</span>穷举点集中任意两点组成的直线ax+by=c</span><br><span class="line">		       a = pts.get(j).y - pts.get(i).y;<span class="regexp">//</span></span><br><span class="line">		       b = pts.get(i).x - pts.get(j).x;</span><br><span class="line">		       c = pts.get(i).x * pts.get(j).y -pts.get(i).y * pts.get(j).x;</span><br><span class="line">		       l = r = <span class="number">0</span>;</span><br><span class="line">		       int k;</span><br><span class="line">		       <span class="keyword">for</span> (k = <span class="number">0</span>; k &lt; n; k++) &#123;<span class="regexp">//</span>穷举点集中的每一点</span><br><span class="line">		         cc = a * pts.get(k).x + b * pts.get(k).y;</span><br><span class="line">		         <span class="keyword">if</span> (cc &gt; c) l++;</span><br><span class="line">		         <span class="keyword">else</span> <span class="keyword">if</span> (cc &lt; c) r++;</span><br><span class="line">		         <span class="keyword">if</span> (l * r != <span class="number">0</span>) <span class="keyword">break</span>;<span class="regexp">//</span>直线两侧都有点,</span><br><span class="line">		       &#125;</span><br><span class="line">		      <span class="keyword">if</span> (k == n) &#123;<span class="regexp">//</span>凸包中添加一条边</span><br><span class="line">		        lines.add(new Line(pts.get(i), pts.get(j)));</span><br><span class="line">		      &#125;</span><br><span class="line">		     &#125;</span><br><span class="line">		   &#125;</span><br><span class="line">		   <span class="keyword">return</span> lines;</span><br><span class="line">		  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="解二：分治法"><a href="#解二：分治法" class="headerlink" title="解二：分治法"></a>解二：分治法</h2><p>时间复杂度：O(n㏒n)。</p>
+<p>思路：应用分治法思想，把一个大问题分成几个结构相同的子问题，把子问题再分成几个更小的子问题。然后我们就能用递归的方法，分别求这些子问题的解。最后把每个子问题的解“组装”成原来大问题的解。 </p>
+<p>步骤：</p>
+<p>1、把所有的点都放在二维坐标系里面，在横坐标方向上按照大小排序。那么横坐标最小和最大的两个点 P1 和 Pn 一定是凸包上的点。直线 P1Pn 把点集分成了两部分，即 X 轴上面和下面两部分，分别叫做上包和下包。</p>
+<p>2、对上包，找到一个距离直线 P1Pn 最远的点，即下图中的点 Pmax 。</p>
+<p>3、作直线 P1Pmax 、PnPmax，把直线 P1Pmax 左侧的点当成是上包，把直线 PnPmax 右侧的点也当成是上包。显然直线段P1Pmax与直线段PmaxPn把点集分为三个集合。由凸包的性质可控制，P1PmaxPn三点围成的三角形中的点不可能作为凸包的顶点，所以只需考虑直线P1Pmax左边的点以及直线PmaxPn右边的点。</p>
+<p>4、重复步骤 2、3。递归求解得到凸多边形的边。</p>
+<p>5、对下包也作类似操作。</p>
+<p>6、合并这些边即得所求的凸包。</p>
+<p><img src="/img/convexhull3.png" alt="convexhull3.png"></p>
+<p>然而怎么求距离某直线最远的点呢？我们还是用到解一中的公式： </p>
+<p><img src="/img/convexhull2.png" alt="convexhull2.png"></p>
+<p>设有一个点 P3 和直线 P1P2 （坐标：p1(x1,y1)，p2(x2,y2)，p3(x3,y3)），对上式的结果取绝对值，绝对值越大，则距离直线越远。</p>
+<p>注意：在步骤一，如果横坐标最小的点不止一个，那么这几个点都是凸包上的点，此时上包和下包的划分就有点不同了，需要注意。</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">package com.cyw.algorithms;</span><br><span class="line"></span><br><span class="line">import java.util.*;   </span><br><span class="line"></span><br><span class="line">public <span class="keyword">class</span> <span class="title class_">ConvexHullDivideAndConquer</span> &#123;</span><br><span class="line"></span><br><span class="line">	<span class="regexp">/*</span></span><br><span class="line"><span class="regexp">	*	分治法求凸包</span></span><br><span class="line"><span class="regexp">	*/</span></span><br><span class="line">/<span class="regexp">/	public class QuickTuBao &#123;</span></span><br><span class="line"><span class="regexp">	  private List&lt;Point&gt; pts = null;/</span><span class="regexp">/给出的点集S</span></span><br><span class="line"><span class="regexp">	  private List&lt;Line&gt; lines = new ArrayList&lt;Line&gt;();/</span><span class="regexp">/点集pts的凸包，多边形上的边以及边上的顶点</span></span><br><span class="line"><span class="regexp">		</span></span><br><span class="line"><span class="regexp">	  public void setPointList(List&lt;Point&gt; pts) &#123;</span></span><br><span class="line"><span class="regexp">	      this.pts = pts;</span></span><br><span class="line"><span class="regexp">	  &#125;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">	  public ConvexHullDivideAndConquer(List&lt;Point&gt; pts)&#123;</span></span><br><span class="line"><span class="regexp">	      this.pts=pts;</span></span><br><span class="line"><span class="regexp">	  &#125;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">	  public ConvexHullDivideAndConquer()&#123;</span></span><br><span class="line"><span class="regexp">	  &#125;</span></span><br><span class="line"><span class="regexp">	  </span></span><br><span class="line"><span class="regexp">	  /</span><span class="regexp">/求凸包，结果存入lines中</span></span><br><span class="line"><span class="regexp">	  public List&lt;Line&gt; eval() &#123;</span></span><br><span class="line"><span class="regexp">	      lines.clear();</span></span><br><span class="line"><span class="regexp">	      if (pts == null || pts.isEmpty()) &#123; return lines; &#125;</span></span><br><span class="line"><span class="regexp">	      </span></span><br><span class="line"><span class="regexp">	      List&lt;Point&gt; ptsLeft = new ArrayList&lt;Point&gt;();/</span><span class="regexp">/左凸包中的点</span></span><br><span class="line"><span class="regexp">	      List&lt;Point&gt; ptsRight = new ArrayList&lt;Point&gt;();/</span><span class="regexp">/右凸包中的点</span></span><br><span class="line"><span class="regexp">			</span></span><br><span class="line"><span class="regexp">	        /</span><span class="regexp">/按x坐标对pts排序，从小到大</span></span><br><span class="line"><span class="regexp">	       Collections.sort(pts, new Comparator&lt;Point&gt;() &#123;</span></span><br><span class="line"><span class="regexp">	             public int compare(Point p1, Point p2) &#123;</span></span><br><span class="line"><span class="regexp">	              if(p1.x-p2.x&gt;0) return 1;</span></span><br><span class="line"><span class="regexp">	              if(p1.x-p2.x&lt;0) return -1;</span></span><br><span class="line"><span class="regexp">	              return 0;</span></span><br><span class="line"><span class="regexp">	             &#125; </span></span><br><span class="line"><span class="regexp">				</span></span><br><span class="line"><span class="regexp">			&#125;);  </span></span><br><span class="line"><span class="regexp">	         </span></span><br><span class="line"><span class="regexp">	            Point p1 = pts.get(0);/</span><span class="regexp">/最左边的点</span></span><br><span class="line"><span class="regexp">	          /</span><span class="regexp">/最右边的点,用直线p1p2将原凸包分成两个小凸包</span></span><br><span class="line"><span class="regexp">	            Point p2 = pts.get(pts.size()-1);</span></span><br><span class="line"><span class="regexp">	            Point p3 = null;</span></span><br><span class="line"><span class="regexp">	            double area = 0;</span></span><br><span class="line"><span class="regexp">	            for (int i = 1; i &lt; pts.size()-1; i++) &#123;/</span><span class="regexp">/穷举所有的点,</span></span><br><span class="line"><span class="regexp">		              p3 = pts.get(i);</span></span><br><span class="line"><span class="regexp">		            /</span><span class="regexp">/求此三点所成三角形的有向面积。对点进行分类，是这两点直线的左边还是右边</span></span><br><span class="line"><span class="regexp">		              area = getArea(p1, p2, p3);</span></span><br><span class="line"><span class="regexp">		              if (area &gt; 0) &#123;</span></span><br><span class="line"><span class="regexp">		                 ptsLeft.add(p3);/</span><span class="regexp">/p3属于左</span></span><br><span class="line"><span class="regexp">		                &#125; else if (area &lt; 0) &#123;</span></span><br><span class="line"><span class="regexp">		                  ptsRight.add(p3);/</span><span class="regexp">/p3属于右</span></span><br><span class="line"><span class="regexp">		                &#125;</span></span><br><span class="line"><span class="regexp">	              &#125;</span></span><br><span class="line"><span class="regexp">	            </span></span><br><span class="line"><span class="regexp">	              d(p1, p2, ptsLeft);/</span><span class="regexp">/分别求解</span></span><br><span class="line"><span class="regexp">	              d(p2, p1, ptsRight);</span></span><br><span class="line"><span class="regexp">	              return lines;</span></span><br><span class="line"><span class="regexp">	   &#125;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">	  /</span><span class="regexp">/递归</span></span><br><span class="line"><span class="regexp">	   private void d(Point p1, Point p2, List&lt;Point&gt; s) &#123;</span></span><br><span class="line"><span class="regexp">	     /</span><span class="regexp">/s集合为空</span></span><br><span class="line"><span class="regexp">	     if (s.isEmpty()) &#123;</span></span><br><span class="line"><span class="regexp">	       lines.add(new Line(p1, p2));</span></span><br><span class="line"><span class="regexp">	       return;</span></span><br><span class="line"><span class="regexp">	     &#125;</span></span><br><span class="line"><span class="regexp">	     /</span><span class="regexp">/s集合不为空，寻找Pmax</span></span><br><span class="line"><span class="regexp">	     double area = 0;</span></span><br><span class="line"><span class="regexp">	     double maxArea = 0;</span></span><br><span class="line"><span class="regexp">	     Point pMax = null;</span></span><br><span class="line"><span class="regexp">	     for (int i = 0; i &lt; s.size(); i++) &#123;</span></span><br><span class="line"><span class="regexp">		      area = getArea(p1, p2, s.get(i));/</span><span class="regexp">/最大面积对应的点就是Pmax</span></span><br><span class="line"><span class="regexp">		      if (area &gt; maxArea) &#123;</span></span><br><span class="line"><span class="regexp">		        pMax = s.get(i);</span></span><br><span class="line"><span class="regexp">		        maxArea = area;</span></span><br><span class="line"><span class="regexp">		       &#125;</span></span><br><span class="line"><span class="regexp">	      &#125;</span></span><br><span class="line"><span class="regexp">	      /</span><span class="regexp">/找出位于(p1, pMax)直线左边的点集s1</span></span><br><span class="line"><span class="regexp">	      /</span><span class="regexp">/找出位于(pMax, p2)直线左边的点集s2</span></span><br><span class="line"><span class="regexp">	       List&lt;Point&gt; s1 = new ArrayList&lt;Point&gt;();</span></span><br><span class="line"><span class="regexp">	       List&lt;Point&gt; s2 = new ArrayList&lt;Point&gt;();</span></span><br><span class="line"><span class="regexp">	       Point p3 = null;</span></span><br><span class="line"><span class="regexp">	       for (int i = 0; i &lt; s.size(); i++) &#123;</span></span><br><span class="line"><span class="regexp">		         p3 = s.get(i);</span></span><br><span class="line"><span class="regexp">		         if (getArea(p1, pMax, p3) &gt; 0) &#123;</span></span><br><span class="line"><span class="regexp">		            s1.add(p3);</span></span><br><span class="line"><span class="regexp">		         &#125; else if (getArea(pMax, p2, p3) &gt; 0) &#123;</span></span><br><span class="line"><span class="regexp">		            s2.add(p3);</span></span><br><span class="line"><span class="regexp">		         &#125; </span></span><br><span class="line"><span class="regexp">	        &#125;</span></span><br><span class="line"><span class="regexp">	       /</span><span class="regexp">/递归</span></span><br><span class="line"><span class="regexp">	      d(p1, pMax, s1);</span></span><br><span class="line"><span class="regexp">	      d(pMax, p2, s2);	</span></span><br><span class="line"><span class="regexp">	    &#125;</span></span><br><span class="line"><span class="regexp">	   </span></span><br><span class="line"><span class="regexp">		/</span><span class="regexp">/ 三角形的面积等于返回值绝对值的二分之一</span></span><br><span class="line"><span class="regexp">		/</span><span class="regexp">/ 当且仅当点p3位于直线(p1, p2)左侧时，表达式的符号为正</span></span><br><span class="line"><span class="regexp">		private double getArea(Point p1, Point p2, Point p3) &#123;</span></span><br><span class="line"><span class="regexp">	           return p1.x * p2.y + p3.x * p1.y + p2.x * p3.y -</span></span><br><span class="line"><span class="regexp">	             p3.x * p2.y - p2.x * p1.y - p1.x * p3.y;</span></span><br><span class="line"><span class="regexp">		&#125;</span></span><br><span class="line"><span class="regexp">/</span><span class="regexp">/	&#125;</span></span><br><span class="line"><span class="regexp">		</span></span><br><span class="line"><span class="regexp">	public static class Line &#123;/</span><span class="regexp">/线   </span></span><br><span class="line"><span class="regexp">		 Point p1, p2;   </span></span><br><span class="line"><span class="regexp">		 Line(Point p1, Point p2) &#123;   </span></span><br><span class="line"><span class="regexp">			  this.p1 = p1;   </span></span><br><span class="line"><span class="regexp">			  this.p2 = p2;   </span></span><br><span class="line"><span class="regexp">		 &#125;   </span></span><br><span class="line"><span class="regexp">		  public double getLength() &#123;</span></span><br><span class="line"><span class="regexp">			double dx = Math.abs(p1.x - p2.x);</span></span><br><span class="line"><span class="regexp">			double dy = Math.abs(p1.y - p2.y);</span></span><br><span class="line"><span class="regexp">			return Math.sqrt(dx * dx + dy * dy);</span></span><br><span class="line"><span class="regexp">		  &#125;</span></span><br><span class="line"><span class="regexp">	&#125;   </span></span><br><span class="line"><span class="regexp">		  </span></span><br><span class="line"><span class="regexp">	public static class Point&#123;/</span><span class="regexp">/点   </span></span><br><span class="line"><span class="regexp">	  double x;   </span></span><br><span class="line"><span class="regexp">	  double y;   </span></span><br><span class="line"><span class="regexp">	  public Point(double x,double y)&#123;</span></span><br><span class="line"><span class="regexp">	     this.x=x;</span></span><br><span class="line"><span class="regexp">	     this.y=y;</span></span><br><span class="line"><span class="regexp">	  &#125;</span></span><br><span class="line"><span class="regexp">	&#125;   </span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">	</span></span><br><span class="line"><span class="regexp">	public static void main(String [] args)&#123;</span></span><br><span class="line"><span class="regexp">		ConvexHullDivideAndConquer ch = new ConvexHullDivideAndConquer();</span></span><br><span class="line"><span class="regexp">		List&lt;Point&gt; pts = new ArrayList&lt;Point&gt;();</span></span><br><span class="line"><span class="regexp">		pts.add(new Point(0,1));</span></span><br><span class="line"><span class="regexp">		pts.add(new Point(0,3));</span></span><br><span class="line"><span class="regexp">		pts.add(new Point(1,2));</span></span><br><span class="line"><span class="regexp">		pts.add(new Point(2,2));</span></span><br><span class="line"><span class="regexp">		pts.add(new Point(3,1));</span></span><br><span class="line"><span class="regexp">		pts.add(new Point(3,3));</span></span><br><span class="line"><span class="regexp">		</span></span><br><span class="line"><span class="regexp">		List&lt;Line&gt; result = new ArrayList&lt;Line&gt;();</span></span><br><span class="line"><span class="regexp">		ch.setPointList(pts);</span></span><br><span class="line"><span class="regexp">		result = ch.eval();</span></span><br><span class="line"><span class="regexp">		</span></span><br><span class="line"><span class="regexp">		for(Line l : result)&#123;</span></span><br><span class="line"><span class="regexp">			System.out.println(&quot;(&quot;+l.p1.x+&quot;,&quot;+l.p1.y+&quot;)(&quot;+l.p2.x+&quot;,&quot;+l.p2.y+&quot;)&quot;);</span></span><br><span class="line"><span class="regexp">		&#125;</span></span><br><span class="line"><span class="regexp">	&#125;</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br><span class="line"><span class="regexp"></span></span><br></pre></td></tr></table></figure>
+
+<h2 id="解三：Jarvis步进法"><a href="#解三：Jarvis步进法" class="headerlink" title="解三：Jarvis步进法"></a>解三：Jarvis步进法</h2><p>时间复杂度：O(nH)。（其中 n 是点的总个数，H 是凸包上的点的个数）</p>
+<p>思路：</p>
+<p>1、纵坐标最小的那个点一定是凸包上的点，例如图上的 P0。</p>
+<p>2、从 P0 开始，按逆时针的方向，逐个找凸包上的点，每前进一步找到一个点，所以叫作步进法。</p>
+<p>3、怎么找下一个点呢？利用夹角。假设现在已经找到 {P0，P1，P2} 了，要找下一个点：剩下的点分别和 P2 组成向量，设这个向量与向量P1P2的夹角为 β 。当 β 最小时就是所要求的下一个点了，此处为 P3 。</p>
+<p><img src="/img/convexhull4.png" alt="convexhull4.png"></p>
+<p>注意：</p>
+<p>1、找第二个点 P1 时，因为已经找到的只有 P0 一个点，所以向量只能和水平线作夹角 α，当 α 最小时求得第二个点。</p>
+<p>2、共线情况：如果直线 P2P3 上还有一个点 P4，即三个点共线，此时由向量P2P3 和向量P2P4 产生的两个 β 是相同的。我们应该把 P3、P4 都当做凸包上的点，并且把距离 P2 最远的那个点（即图中的P4）作为最后搜索到的点，继续找它的下一个连接点。</p>
+<h2 id="解四：Graham扫描法"><a href="#解四：Graham扫描法" class="headerlink" title="解四：Graham扫描法"></a>解四：Graham扫描法</h2><p>时间复杂度：O(n㏒n)</p>
+<p>思路：Graham扫描的思想和Jarris步进法类似，也是先找到凸包上的一个点，然后从那个点开始按逆时针方向逐个找凸包上的点，但它不是利用夹角，而是利用了左转判定。</p>
+<p>左转判定 ，这一思想在凸包算法里十分的重要，是如何判断两个向量 p1&#x3D;(x1,y1) 和 p2&#x3D;(x2,y2) 是否左转的一个判定方法。非常简单的，只需判断 x1<em>y2-x2</em>y1 的正负值即可，为正说明 p1 到 p2 为左转。即是说，它可以用来判断一个向量到另一个向量是逆时针转还是顺时针转。</p>
+<p><img src="/img/convexhull5.png" alt="convexhull5.png"></p>
+<p>步骤：</p>
+<p>1、把所有点放在二维坐标系中，则纵坐标最小的点一定是凸包上的点，如图中的P0。</p>
+<p>2、把所有点的坐标平移一下，使 P0 作为原点，如上图。</p>
+<p>3、计算各个点相对于 P0 的幅角 α ，按从小到大的顺序对各个点排序。当 α 同时，距离 P0 比较近的排在前面。例如上图得到的结果为P1，P2，P3，P4，P5，P6，P7，P8。我们由几何知识可以知道，结果中第一个点 P1 和最后一个点 P8 一定是凸包上的点。 </p>
+<p>以上，我们已经知道了凸包上的第一个点P0和第二个点P1，我们把它们放在栈里面。现在从步骤3求得的那个结果里，把 P1 后面的那个点拿出来做当前点，即 P2 。接下来开始找第三个点：</p>
+<p>4、连接P0和栈顶的那个点，得到直线 L 。看当前点是在直线 L 的右边还是左边。如果在直线的右边就执行步骤5；如果在直线上，或者在直线的左边就执行步骤6。</p>
+<p>5、如果在右边，则栈顶的那个元素不是凸包上的点，把栈顶元素出栈。执行步骤4。</p>
+<p>6、当前点是凸包上的点，把它压入栈，执行步骤7。</p>
+<p>7、检查当前的点 P2 是不是步骤3那个结果的最后一个元素。是最后一个元素的话就结束。如果不是的话就把 P2 后面那个点做当前点，返回步骤4。</p>
+<p>最后，栈中的元素就是凸包上的点了。<br>以下为用Graham扫描法动态求解的过程： </p>
+<p><img src="/img/convexhull6.gif" alt="convexhull6.gif"></p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">import java.util.Scanner;</span><br><span class="line">public <span class="keyword">class</span> <span class="title class_">ConvexHullWithGraham</span> &#123; </span><br><span class="line">     Point[] ch; <span class="regexp">//</span>点集p的凸包</span><br><span class="line">     Point[] p ; <span class="regexp">//</span>给出的点集</span><br><span class="line">     int n;</span><br><span class="line">     int l;</span><br><span class="line">     int len=<span class="number">0</span>;</span><br><span class="line">    public ConvexHullWithGraham(Point[] p,int n,int l)&#123;</span><br><span class="line">       this.p=p;</span><br><span class="line">       this.n=n;</span><br><span class="line">       this.l=l;</span><br><span class="line">       ch= new Point[n]; </span><br><span class="line">    &#125;</span><br><span class="line">   /<span class="regexp">/小于0,说明向量p0p1的极角大于p0p2的极角  </span></span><br><span class="line"><span class="regexp">   public  double multiply(Point p1, Point p2, Point p0) &#123; </span></span><br><span class="line"><span class="regexp">       return ((p1.getX() - p0.getX()) * (p2.getY() - p0.getY()) - </span></span><br><span class="line"><span class="regexp">    		   (p2.getX()- p0.getX()) * (p1.getY()- p0.getY())); </span></span><br><span class="line"><span class="regexp">   &#125; </span></span><br><span class="line"><span class="regexp">   /</span><span class="regexp">/求距离</span></span><br><span class="line"><span class="regexp">   public  double distance(Point p1, Point p2) &#123; </span></span><br><span class="line"><span class="regexp">       return (Math.sqrt((p1.getX() - p2.getX()) * (p1.getX() - p2.getX()) + (p1.getY() - p2.getY()) </span></span><br><span class="line"><span class="regexp">               * (p1.getY() - p2.getY()))); </span></span><br><span class="line"><span class="regexp">   &#125; </span></span><br><span class="line"><span class="regexp">   public void answer()&#123;</span></span><br><span class="line"><span class="regexp">    double sum = 0; </span></span><br><span class="line"><span class="regexp">       for (int i = 0; i &lt; len - 1; i++) &#123; </span></span><br><span class="line"><span class="regexp">           sum += distance(ch[i], ch[i + 1]); </span></span><br><span class="line"><span class="regexp">       &#125; </span></span><br><span class="line"><span class="regexp">       if (len &gt; 1) &#123; </span></span><br><span class="line"><span class="regexp">           sum += distance(ch[len - 1], ch[0]); </span></span><br><span class="line"><span class="regexp">       &#125; </span></span><br><span class="line"><span class="regexp">       sum += 2 * l * Math.PI; </span></span><br><span class="line"><span class="regexp">       System.out.println(Math.round(sum)); </span></span><br><span class="line"><span class="regexp">   &#125;</span></span><br><span class="line"><span class="regexp">   public  int Graham_scan() &#123; </span></span><br><span class="line"><span class="regexp">       int k = 0, top = 2; </span></span><br><span class="line"><span class="regexp">       Point tmp; </span></span><br><span class="line"><span class="regexp">       /</span><span class="regexp">/找到最下且偏左的那个点   </span></span><br><span class="line"><span class="regexp">       for (int i = 1; i &lt; n; i++) </span></span><br><span class="line"><span class="regexp">           if ((p[i].getY() &lt; p[k].getY()) </span></span><br><span class="line"><span class="regexp">                   || ((p[i].getY() == p[k].getY()) &amp;&amp; (p[i].getX() &lt; p[k].getX()))) </span></span><br><span class="line"><span class="regexp">               k = i; </span></span><br><span class="line"><span class="regexp">       /</span><span class="regexp">/将这个点指定为pts[0],交换pts[0]与pts[k] </span></span><br><span class="line"><span class="regexp">       tmp = p[0]; </span></span><br><span class="line"><span class="regexp">       p[0] = p[k]; </span></span><br><span class="line"><span class="regexp">       p[k] = tmp; </span></span><br><span class="line"><span class="regexp">       /</span><span class="regexp">/按极角从小到大,距离偏短进行排序   </span></span><br><span class="line"><span class="regexp">       for (int i = 1; i &lt; n - 1; i++) &#123; </span></span><br><span class="line"><span class="regexp">           k = i; </span></span><br><span class="line"><span class="regexp">           for (int j = i + 1; j &lt; n; j++) </span></span><br><span class="line"><span class="regexp">               if ((multiply(p[j], p[k], p[0]) &gt; 0) </span></span><br><span class="line"><span class="regexp">                       || ((multiply(p[j], p[k], p[0]) == 0) &amp;&amp; (distance( </span></span><br><span class="line"><span class="regexp">                               p[0], p[j]) &lt; distance( </span></span><br><span class="line"><span class="regexp">                               p[0], p[k])))) </span></span><br><span class="line"><span class="regexp">                   k = j; /</span><span class="regexp">/k保存极角最小的那个点,或者相同距离原点最近  </span></span><br><span class="line"><span class="regexp">           tmp = p[i]; </span></span><br><span class="line"><span class="regexp">           p[i] = p[k]; </span></span><br><span class="line"><span class="regexp">           p[k] = tmp; </span></span><br><span class="line"><span class="regexp">       &#125; </span></span><br><span class="line"><span class="regexp">       /</span><span class="regexp">/前三个点先入栈  </span></span><br><span class="line"><span class="regexp">       ch[0] = p[0]; </span></span><br><span class="line"><span class="regexp">       ch[1] = p[1]; </span></span><br><span class="line"><span class="regexp">       ch[2] = p[2]; </span></span><br><span class="line"><span class="regexp">        /</span><span class="regexp">/判断与其余所有点的关系   </span></span><br><span class="line"><span class="regexp">       for (int i = 3; i &lt; n; i++) &#123; </span></span><br><span class="line"><span class="regexp">            /</span><span class="regexp">/不满足向左转的关系,栈顶元素出栈   </span></span><br><span class="line"><span class="regexp">           while (top &gt; 0 &amp;&amp; multiply(p[i], ch[top], ch[top - 1]) &gt;= 0) </span></span><br><span class="line"><span class="regexp">               top--; </span></span><br><span class="line"><span class="regexp">            /</span><span class="regexp">/当前点与栈内所有点满足向左关系,因此入栈. </span></span><br><span class="line"><span class="regexp">           ch[++top] = p[i]; </span></span><br><span class="line"><span class="regexp">       &#125; </span></span><br><span class="line"><span class="regexp">       len=top+1;</span></span><br><span class="line"><span class="regexp">       return len; </span></span><br><span class="line"><span class="regexp">   &#125; </span></span><br><span class="line"><span class="regexp">  </span></span><br><span class="line"><span class="regexp">   /</span>**</span><br><span class="line">样例: </span><br><span class="line">Sample Input </span><br><span class="line"><span class="number">9</span> <span class="number">100</span> </span><br><span class="line"><span class="number">200</span> <span class="number">400</span> </span><br><span class="line"><span class="number">300</span> <span class="number">400</span> </span><br><span class="line"><span class="number">300</span> <span class="number">300</span> </span><br><span class="line"><span class="number">400</span> <span class="number">300</span> </span><br><span class="line"><span class="number">400</span> <span class="number">400</span> </span><br><span class="line"><span class="number">500</span> <span class="number">400</span> </span><br><span class="line"><span class="number">500</span> <span class="number">200</span> </span><br><span class="line"><span class="number">350</span> <span class="number">200</span> </span><br><span class="line"><span class="number">200</span> <span class="number">200</span> </span><br><span class="line"></span><br><span class="line">Sample Output </span><br><span class="line"><span class="number">1628</span> </span><br><span class="line">	*<span class="regexp">/</span></span><br><span class="line"><span class="regexp">   public static void main(String[] args)  &#123; </span></span><br><span class="line"><span class="regexp">    </span></span><br><span class="line"><span class="regexp">       Scanner in=new Scanner(System.in);</span></span><br><span class="line"><span class="regexp">       int n = in.nextInt(); </span></span><br><span class="line"><span class="regexp">       int l = in.nextInt();</span></span><br><span class="line"><span class="regexp">       int x, y; </span></span><br><span class="line"><span class="regexp">       Point[] p = new Point[n]; </span></span><br><span class="line"><span class="regexp">       for (int i = 0; i &lt; n; i++) &#123; </span></span><br><span class="line"><span class="regexp">           x = in.nextInt(); </span></span><br><span class="line"><span class="regexp">           y = in.nextInt();</span></span><br><span class="line"><span class="regexp">           p[i] = new Point(x, y); </span></span><br><span class="line"><span class="regexp">       &#125; </span></span><br><span class="line"><span class="regexp">      </span></span><br><span class="line"><span class="regexp">       ConvexHullWithGraham ma=new ConvexHullWithGraham(p,n,l); </span></span><br><span class="line"><span class="regexp">       ma.Graham_scan(); </span></span><br><span class="line"><span class="regexp">       ma.answer();</span></span><br><span class="line"><span class="regexp">   &#125; </span></span><br><span class="line"><span class="regexp">&#125; </span></span><br></pre></td></tr></table></figure>
+
+<h2 id="解五：Melkman算法"><a href="#解五：Melkman算法" class="headerlink" title="解五：Melkman算法"></a>解五：Melkman算法</h2><p>Melkman凸包算法继承Graham扫描法的主要思想，并更近一步地采用双端队列，动态地在队列两头进行增删操作，维护“凸性”。</p>
+<p>基本思想是：首先跟Graham扫描法一样，纵坐标最小的点作为基点，得到其他各点对该点的夹角，存储在栈中并排序。取最初的三点组合成为一个三角形。从一个三角形开始，对接下来的从栈中取出的每一个点，判断该点是否在该三角形内部，不在则添加该点，使得三角形不断地扩大范围，多边形的边数也在变化。获得到的点，序号可以连成一个闭环。另外是否在该多边形内部的判定是使用的左转判定，即是根据从双向表的两端开始，如果该点在在两边的左边（逆时针方向），则该点在多边形的内部。</p>
+<p>具体的步骤是：</p>
+<p>1、初始化。跟Graham一样，取一点，得到角度，然后排序各点。</p>
+<p>2、接着 向双向表中依次装入P2,P0,P1,P2. 注意：这是一个收尾相连的三角形，三点不共线。</p>
+<p>3、设置 双向表的左右指针分别是bot、top。该范围内是，不断扩大范围的凸包点多边形。</p>
+<p>4、反复i++，即是按照顺序，判断Pi是否在该多边形的内部，直到不在内部，即是d[t-1]、d[t-2]、Pi(逆时针方向)不做左转，或者d[bot+1]、d[bot+2]、Pi不做左转。</p>
+<p>5、循环以下步骤直至d[t-1]、d[t-2]、Pi做左转：</p>
+<pre><code>t--;	//退栈，判断是否在新的凸包内部。防止出现凹处将Pi从右压入d
+</code></pre>
+<p>6、循环以下步骤直至d[bot+1]、d[bot+2]、Pi做左转</p>
+<pre><code>b++;	//退栈，判断是否在新的凸包内部。防止出现凹处将Pi从左压入d
+</code></pre>
+<p>注意：每次执行第5、6步时候，两端的都需要压入相同的数，使得凸包闭环。</p>
+<pre><code>这个算法可以在各点有序的前提下，每次获知一个点，就可以将先前的凸包改造成新的凸包。
+
+因此，这是一个在线算法，有着其他算法无法比拟的优势。
+</code></pre>
+<p><img src="/img/melkman.gif" alt="melkman.gif"></p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br></pre></td><td class="code"><pre><span class="line">package com.cyw.algorithms;</span><br><span class="line"></span><br><span class="line">import java.io.BufferedReader;</span><br><span class="line">import java.io.File;</span><br><span class="line">import java.io.FileNotFoundException;</span><br><span class="line">import java.io.FileReader;</span><br><span class="line">import java.io.IOException;</span><br><span class="line">import java.util.ArrayList;</span><br><span class="line">import java.util.List;</span><br><span class="line"></span><br><span class="line">public <span class="keyword">class</span> <span class="title class_">ConvexHullWithMelkman</span> &#123;</span><br><span class="line">	private Point[] pointArray;<span class="regexp">//</span>坐标数组</span><br><span class="line">	private final int N;<span class="regexp">//</span>数据个数</span><br><span class="line">	private int D[]; <span class="regexp">//</span> 数组索引，双向表</span><br><span class="line"></span><br><span class="line">	public ConvexHullWithMelkman(List&lt;Point&gt; pList) &#123;</span><br><span class="line">		this.pointArray = new Point[pList.size()];</span><br><span class="line">		N = pList.size();</span><br><span class="line">		int k = <span class="number">0</span>;</span><br><span class="line">		<span class="keyword">for</span> (Point p : pList) &#123;</span><br><span class="line">			pointArray[k++] = p;</span><br><span class="line">		&#125;</span><br><span class="line">		D = new int[<span class="number">2</span> * N];</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	/**</span><br><span class="line">	 * 求凸包点</span><br><span class="line">	 * </span><br><span class="line">	 * <span class="variable">@return</span> 所求凸包点</span><br><span class="line">	 *<span class="regexp">/</span></span><br><span class="line"><span class="regexp">	public Point[] getTubaoPoint() &#123;</span></span><br><span class="line"><span class="regexp">		/</span><span class="regexp">/ 获得最小的Y，作为P0点</span></span><br><span class="line"><span class="regexp">		float minY = pointArray[0].getY();</span></span><br><span class="line"><span class="regexp">		int j = 0;</span></span><br><span class="line"><span class="regexp">		for (int i = 1; i &lt; N; i++) &#123;</span></span><br><span class="line"><span class="regexp">			if (pointArray[i].getY() &lt; minY) &#123;</span></span><br><span class="line"><span class="regexp">				minY = pointArray[i].getY();</span></span><br><span class="line"><span class="regexp">				j = i;</span></span><br><span class="line"><span class="regexp">			&#125;</span></span><br><span class="line"><span class="regexp">		&#125;</span></span><br><span class="line"><span class="regexp">		/</span><span class="regexp">/交换内容</span></span><br><span class="line"><span class="regexp">		swap(0, j);</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">		/</span><span class="regexp">/ 计算除第一顶点外的其余顶点到第一点的线段与x轴的夹角</span></span><br><span class="line"><span class="regexp">		for (int i = 1; i &lt; N; i++) &#123;</span></span><br><span class="line"><span class="regexp">			pointArray[i].setArCos(angle(i));</span></span><br><span class="line"><span class="regexp">		&#125;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">		quickSort(1, N - 1); /</span><span class="regexp">/ 根据所得到的角度进行快速排序</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">		int bot = N - 1;</span></span><br><span class="line"><span class="regexp">		int top = N;</span></span><br><span class="line"><span class="regexp">		D[top++] = 0;</span></span><br><span class="line"><span class="regexp">		D[top++] = 1;</span></span><br><span class="line"><span class="regexp">		int i;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">		for (i = 2; i &lt; N; i++) &#123;/</span><span class="regexp">/ 寻找第三个点 要保证3个点不共线！！==0 代表共线</span></span><br><span class="line"><span class="regexp">			if (isLeft(pointArray[D[top - 2]], pointArray[D[top - 1]], pointArray[i]) != 0)</span></span><br><span class="line"><span class="regexp">				break;</span></span><br><span class="line"><span class="regexp">			D[top - 1] = i; /</span><span class="regexp">/ 共线就更换顶点</span></span><br><span class="line"><span class="regexp">		&#125;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">		D[bot--] = i;</span></span><br><span class="line"><span class="regexp">		D[top++] = i; /</span><span class="regexp">/ i是第三个点 不共线！！</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">/</span><span class="regexp">/		最初的一次</span></span><br><span class="line"><span class="regexp">		int t;</span></span><br><span class="line"><span class="regexp">		if (isLeft(pointArray[D[N]], pointArray[D[N + 1]], pointArray[D[N + 2]]) &lt; 0) &#123;</span></span><br><span class="line"><span class="regexp">			/</span><span class="regexp">/ 此时队列中有3个点，要保证3个点a,b,c是成逆时针的，不是就调换ab</span></span><br><span class="line"><span class="regexp">			t = D[N];</span></span><br><span class="line"><span class="regexp">			D[N] = D[N + 1];</span></span><br><span class="line"><span class="regexp">			D[N + 1] = t;</span></span><br><span class="line"><span class="regexp">		&#125;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">		/</span><span class="regexp">/开始</span></span><br><span class="line"><span class="regexp">		for (i++; i &lt; N; i++) &#123;</span></span><br><span class="line"><span class="regexp">			/</span><span class="regexp">/ 如果成立就是i在凸包内，跳过 /</span><span class="regexp">/top=n+3 bot=n-2</span></span><br><span class="line"><span class="regexp">/</span><span class="regexp">/			此时top、bot没有改变</span></span><br><span class="line"><span class="regexp">			if (isLeft(pointArray[D[top - 2]], pointArray[D[top - 1]],pointArray[i]) &gt; 0 &amp;&amp;</span></span><br><span class="line"><span class="regexp">					isLeft(pointArray[D[bot + 1]], pointArray[D[bot + 2]],pointArray[i]) &gt; 0) &#123;</span></span><br><span class="line"><span class="regexp">				continue;</span></span><br><span class="line"><span class="regexp">			&#125;</span></span><br><span class="line"><span class="regexp">			</span></span><br><span class="line"><span class="regexp">			/</span><span class="regexp">/非左转 则退栈</span></span><br><span class="line"><span class="regexp">			while (isLeft(pointArray[D[top - 2]], pointArray[D[top - 1]],</span></span><br><span class="line"><span class="regexp">					pointArray[i]) &lt;= 0) &#123;</span></span><br><span class="line"><span class="regexp">				top--;</span></span><br><span class="line"><span class="regexp">			&#125;</span></span><br><span class="line"><span class="regexp">			D[top++] = i;</span></span><br><span class="line"><span class="regexp">			</span></span><br><span class="line"><span class="regexp">			/</span><span class="regexp">/反向表非左转 则退栈</span></span><br><span class="line"><span class="regexp">			while (isLeft(pointArray[D[bot + 1]], pointArray[D[bot + 2]],</span></span><br><span class="line"><span class="regexp">					pointArray[i]) &lt;= 0) &#123;</span></span><br><span class="line"><span class="regexp">				bot++;</span></span><br><span class="line"><span class="regexp">			&#125;</span></span><br><span class="line"><span class="regexp">			D[bot--] = i;</span></span><br><span class="line"><span class="regexp">		&#125;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">		/</span><span class="regexp">/ 凸包构造完成，D数组里bot+1至top-1内就是凸包的序列(头尾是同一点)</span></span><br><span class="line"><span class="regexp">		Point[] resultPoints = new Point[top - bot - 1];</span></span><br><span class="line"><span class="regexp">		int index = 0;</span></span><br><span class="line"><span class="regexp">		for (i = bot + 1; i &lt; top - 1; i++) &#123;</span></span><br><span class="line"><span class="regexp">			System.out.println(pointArray[D[i]].getX() + &quot;,&quot;</span></span><br><span class="line"><span class="regexp">					+ pointArray[D[i]].getY());</span></span><br><span class="line"><span class="regexp">			resultPoints[index++] = pointArray[D[i]];</span></span><br><span class="line"><span class="regexp">		&#125;</span></span><br><span class="line"><span class="regexp">		return resultPoints;</span></span><br><span class="line"><span class="regexp">	&#125;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">	/</span>**</span><br><span class="line">	 * 判断ba相对ao是不是左转</span><br><span class="line">	 * </span><br><span class="line">	 * <span class="variable">@return</span> 大于<span class="number">0</span>则左转</span><br><span class="line">	 *<span class="regexp">/</span></span><br><span class="line"><span class="regexp">	private float isLeft(Point o, Point a, Point b) &#123;</span></span><br><span class="line"><span class="regexp">		float aoX = a.getX() - o.getX();</span></span><br><span class="line"><span class="regexp">		float aoY = a.getY() - o.getY();</span></span><br><span class="line"><span class="regexp">		float baX = b.getX() - a.getX();</span></span><br><span class="line"><span class="regexp">		float baY = b.getY() - a.getY();</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">		return aoX * baY - aoY * baX;</span></span><br><span class="line"><span class="regexp">	&#125;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">	/</span>**</span><br><span class="line">	 * 实现数组交换</span><br><span class="line">	 * </span><br><span class="line">	 * <span class="variable">@param</span> i</span><br><span class="line">	 * <span class="variable">@param</span> j</span><br><span class="line">	 *<span class="regexp">/</span></span><br><span class="line"><span class="regexp">	private void swap(int i, int j) &#123;</span></span><br><span class="line"><span class="regexp">		Point tempPoint = new Point();</span></span><br><span class="line"><span class="regexp">		tempPoint.setX(pointArray[j].getX());</span></span><br><span class="line"><span class="regexp">		tempPoint.setY(pointArray[j].getY());</span></span><br><span class="line"><span class="regexp">		tempPoint.setArCos(pointArray[j].getArCos());</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">		pointArray[j].setX(pointArray[i].getX());</span></span><br><span class="line"><span class="regexp">		pointArray[j].setY(pointArray[i].getY());</span></span><br><span class="line"><span class="regexp">		pointArray[j].setArCos(pointArray[i].getArCos());</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">		pointArray[i].setX(tempPoint.getX());</span></span><br><span class="line"><span class="regexp">		pointArray[i].setY(tempPoint.getY());</span></span><br><span class="line"><span class="regexp">		pointArray[i].setArCos(tempPoint.getArCos());</span></span><br><span class="line"><span class="regexp">	&#125;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">	/</span>**</span><br><span class="line">	 * 快速排序</span><br><span class="line">	 * </span><br><span class="line">	 * <span class="variable">@param</span> top</span><br><span class="line">	 * <span class="variable">@param</span> bot</span><br><span class="line">	 *<span class="regexp">/</span></span><br><span class="line"><span class="regexp">	private void quickSort(int top, int bot) &#123;</span></span><br><span class="line"><span class="regexp">		int pos;</span></span><br><span class="line"><span class="regexp">		if (top &lt; bot) &#123;</span></span><br><span class="line"><span class="regexp">			pos = loc(top, bot);</span></span><br><span class="line"><span class="regexp">			quickSort(top, pos - 1);</span></span><br><span class="line"><span class="regexp">			quickSort(pos + 1, bot);</span></span><br><span class="line"><span class="regexp">		&#125;</span></span><br><span class="line"><span class="regexp">	&#125;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">	/</span>**</span><br><span class="line">	 * 移动起点，左侧为小，右侧为大</span><br><span class="line">	 * <span class="variable">@param</span> top</span><br><span class="line">	 * <span class="variable">@param</span> bot</span><br><span class="line">	 * <span class="variable">@return</span> 移动后的位置</span><br><span class="line">	 *<span class="regexp">/</span></span><br><span class="line"><span class="regexp">	private int loc(int top, int bot) &#123;</span></span><br><span class="line"><span class="regexp">		double x = pointArray[top].getArCos();</span></span><br><span class="line"><span class="regexp">		int j, k;</span></span><br><span class="line"><span class="regexp">		j = top + 1;</span></span><br><span class="line"><span class="regexp">		k = bot;</span></span><br><span class="line"><span class="regexp">		while (true) &#123;</span></span><br><span class="line"><span class="regexp">/</span><span class="regexp">/			</span></span><br><span class="line"><span class="regexp">			while (j &lt; bot &amp;&amp; pointArray[j].getArCos() &lt; x)</span></span><br><span class="line"><span class="regexp">				j++;</span></span><br><span class="line"><span class="regexp">/</span><span class="regexp">/			</span></span><br><span class="line"><span class="regexp">			while (k &gt; top &amp;&amp; pointArray[k].getArCos() &gt; x)</span></span><br><span class="line"><span class="regexp">				k--;</span></span><br><span class="line"><span class="regexp">			if (j &gt;= k)</span></span><br><span class="line"><span class="regexp">				break;</span></span><br><span class="line"><span class="regexp">			swap(j, k);</span></span><br><span class="line"><span class="regexp">		&#125;</span></span><br><span class="line"><span class="regexp">		swap(top, k);</span></span><br><span class="line"><span class="regexp">		return k;</span></span><br><span class="line"><span class="regexp">	&#125;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">	/</span>**</span><br><span class="line">	 * 角度计算</span><br><span class="line">	 * </span><br><span class="line">	 * <span class="variable">@param</span> i 指针</span><br><span class="line">	 * <span class="variable">@return</span></span><br><span class="line">	 *<span class="regexp">/</span></span><br><span class="line"><span class="regexp">	private double angle(int i) &#123;</span></span><br><span class="line"><span class="regexp">		double j, k, m, h;</span></span><br><span class="line"><span class="regexp">		j = pointArray[i].getX() - pointArray[0].getX();</span></span><br><span class="line"><span class="regexp">		k = pointArray[i].getY() - pointArray[0].getY();</span></span><br><span class="line"><span class="regexp">		m = Math.sqrt(j * j + k * k); /</span><span class="regexp">/ 得到顶点i 到第一顶点的线段长度</span></span><br><span class="line"><span class="regexp">		if (k &lt; 0)</span></span><br><span class="line"><span class="regexp">			j = (-1) * Math.abs(j);</span></span><br><span class="line"><span class="regexp">		h = Math.acos(j /</span> m); <span class="regexp">//</span> 得到该线段与x轴的角度</span><br><span class="line">		<span class="keyword">return</span> h;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	/**data.<span class="symbol">txt:</span></span><br><span class="line"><span class="number">0</span>	<span class="number">1</span></span><br><span class="line"><span class="number">0</span>	<span class="number">4</span></span><br><span class="line"><span class="number">1</span>	<span class="number">3</span></span><br><span class="line"><span class="number">2</span>	<span class="number">2</span></span><br><span class="line"><span class="number">3</span>	<span class="number">1</span></span><br><span class="line"><span class="number">3</span>	<span class="number">4</span></span><br><span class="line">	 *<span class="regexp">/</span></span><br><span class="line"><span class="regexp">	public static void main(String args[]) &#123;</span></span><br><span class="line"><span class="regexp">		/</span><span class="regexp">/ File file = new File(&quot;G:/yl</span>.txt<span class="string">&quot;);</span></span><br><span class="line"><span class="string">		File file = new File(&quot;</span><span class="symbol">D:</span>/data.txt<span class="string">&quot;);</span></span><br><span class="line"><span class="string">		BufferedReader br = null;</span></span><br><span class="line"><span class="string">		try &#123;</span></span><br><span class="line"><span class="string">			br = new BufferedReader(new FileReader(file));</span></span><br><span class="line"><span class="string">		&#125; catch (FileNotFoundException e) &#123;</span></span><br><span class="line"><span class="string">			e.printStackTrace();</span></span><br><span class="line"><span class="string">		&#125;</span></span><br><span class="line"><span class="string">		List&lt;Point&gt; pointList = new ArrayList&lt;Point&gt;();</span></span><br><span class="line"><span class="string">		String str = null;</span></span><br><span class="line"><span class="string">		try &#123;</span></span><br><span class="line"><span class="string">			str = br.readLine();</span></span><br><span class="line"><span class="string">		&#125; catch (IOException e) &#123;</span></span><br><span class="line"><span class="string">			e.printStackTrace();</span></span><br><span class="line"><span class="string">		&#125;</span></span><br><span class="line"><span class="string">		while (str != null) &#123;</span></span><br><span class="line"><span class="string">			String[] s = str.split(&quot;</span>\\t<span class="string">&quot;, 2);</span></span><br><span class="line"><span class="string">			float x = Float.parseFloat(s[0].trim());</span></span><br><span class="line"><span class="string">			float y = Float.parseFloat(s[1].trim());</span></span><br><span class="line"><span class="string">			Point p = new Point();</span></span><br><span class="line"><span class="string">			p.setX(x);</span></span><br><span class="line"><span class="string">			p.setY(y);</span></span><br><span class="line"><span class="string">			// System.out.println(&quot;</span>文件数据：<span class="string">&quot; + x + &quot;</span>, <span class="string">&quot; + y);</span></span><br><span class="line"><span class="string">			pointList.add(p);</span></span><br><span class="line"><span class="string">			try &#123;</span></span><br><span class="line"><span class="string">				str = br.readLine();</span></span><br><span class="line"><span class="string">			&#125; catch (IOException e) &#123;</span></span><br><span class="line"><span class="string">				e.printStackTrace();</span></span><br><span class="line"><span class="string">			&#125;</span></span><br><span class="line"><span class="string">		&#125;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">		System.out.println(&quot;</span>数据个数：<span class="string">&quot; + pointList.size());</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">		ConvexHullWithMelkman m = new ConvexHullWithMelkman(pointList);</span></span><br><span class="line"><span class="string">		m.getTubaoPoint();</span></span><br><span class="line"><span class="string">	&#125;</span></span><br><span class="line"><span class="string">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>以上几种算法的参考代码，我已经UP到了我的GItHub上面了，分别对应的是：</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/cyw3/CywLeetCode/tree/master/LeetCode/src/com/cyw/algorithms"><img src="/img/javaConvexHull.png" alt="javaConvexHull.png"></a></p>
+<p>可以点击图片，到GitHub上面按需下载。</p>
+</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2022-07-24T05:34:43.602Z" title="7/24/2022, 1:34:43 PM">2022-07-24</time></span><span class="level-item">Updated&nbsp;<time dateTime="2022-07-24T05:34:43.602Z" title="7/24/2022, 1:34:43 PM">2022-07-24</time></span><span class="level-item"> YalesonChan </span><span class="level-item">15 minutes read (About 2309 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2022/07/24/2016-08-22-EA/">扩展属性Extended Attributes</a></h1><div class="content"><h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><ul>
+<li><p><a href="#1">1. EA的概述</a></p>
+</li>
+<li><p><a href="#2">2. EA的命名空间</a></p>
+</li>
+<li><p><a href="#3">3. EA的Shell指令</a></p>
+</li>
+<li><p><a href="#4">4. EA的限制</a></p>
+</li>
+<li><p><a href="#4.1">4.1 对User EA的限制</a></p>
+</li>
+<li><p><a href="#4.2">4.2 EA实现上的限制</a></p>
+</li>
+<li><p><a href="#5">5. EA的系统调用</a></p>
+</li>
+<li><p><a href="#5.1">5.1 创建和修改EA</a></p>
+</li>
+<li><p><a href="#5.2">5.2 获取EA值</a></p>
+</li>
+<li><p><a href="#5.3">5.3 删除EA</a></p>
+</li>
+<li><p><a href="#5.4">5.4 获取文件相关的所有EA</a></p>
+</li>
+</ul>
+<h2 id="1、EA的概述"><a href="#1、EA的概述" class="headerlink" title="1、EA的概述"></a><span id="1">1、EA的概述</span></h2><p>所谓扩展属性，Extended Attributes，以下简称EA，是区分于文件属性、文件的扩展出来的属性。</p>
+<p>EA是目前流行的POSIX系统中文件系统具有的一项特殊功能，可以给文件、文件夹添加额外的key&#x2F;value的键值对，可以以键值对地形式将任意元数据与文件i节点关联起来。键和值都是字符串并且有一定长度地限制，是完全自定义的属性。Linux自版本2.6起，开始支持EA。</p>
+<p>我们可利用EA去实现访问列表和文件能力、记录文件地版本号、与文件地MIME类型&#x2F;字符集有关的信息，或是指向图符的指针。</p>
+<p>EA需要底层文件系统来支撑，包括btrfs、ext2、ext3、ext4、JFS、Reiserfs以及XFS等文件系统都支持EA。各类文件系统对EA的支持都属可选项，受内核配置选项中的“File systems”菜单控制。Reiserfs文件系统自Linux 2.6.7开始支持EA。</p>
+<h2 id="2、EA的命名空间"><a href="#2、EA的命名空间" class="headerlink" title="2、EA的命名空间 "></a><span id="2">2、EA的命名空间 </span></h2><p>EA的命名格式是namespace.name。其中namespace是用来把EA从功能上划分为截然不同地几大类。而name是用来在指定命名空间内唯一标识某一EA。</p>
+<p>可供namespace使用的值有4个：user、trusted、system以及security。这4类EA的用途可参考如下：</p>
+<p><strong>User EA</strong>：</p>
+<ol>
+<li><p>将在文件系统检查地制约下由非特权级进程操控。要想获取User EA值，需要由文件地读权限；要想改变User EA值，则需要写权限。若无所需权限，将会导致EACCES错误。</p>
+</li>
+<li><p>在ext2、ext3、ext4或Reiserfs文件系统上，如要将User EA与一文件关联，需要在装配底层文件系统时候带选上user_xattr选项。<br>$ mount –o user_xattr device directory</p>
+</li>
+</ol>
+<p><strong>Trusted EA</strong>：</p>
+<ol>
+<li><pre><code>也可以由用户进程驱使，跟User EA类似。
+</code></pre>
+</li>
+<li><pre><code>与User EA的区别是，要操纵trusted EA，必须是特权进程。
+</code></pre>
+</li>
+</ol>
+<p><strong>System EA</strong>：供内核使用，将系统对象与一文件关联。目前仅支持访问控制列表。</p>
+<p><strong>Security EA</strong>：</p>
+<ol>
+<li><pre><code>用来存储服务于操作系统安全模块地文件安全标签；
+</code></pre>
+</li>
+<li><pre><code>将可执行文件与能力关联起来;
+</code></pre>
+</li>
+<li><pre><code>设计初衷是为了支持安全强化版地Linux（SELinux）。
+</code></pre>
+</li>
+</ol>
+<p>一个i节点可以拥有多个相关EA，其所属地命名空间可以相同，也可不同。各个命名空间里，EA是自成一体的，即是说这些命名空间是互不排斥的。另外，在user和trusted命名空间内，EA名可以是任意字符串。在system内，只有经过内核明确认可地命名才可使用，比如访问控制列表。</p>
+<h2 id="3、EA的Shell指令"><a href="#3、EA的Shell指令" class="headerlink" title="3、EA的Shell指令 "></a><span id="3">3、EA的Shell指令 </span></h2><p>在Shell中，可执行setfattr(1)和getfattr(1)命令来设置和查看文件的EA。</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">touchtfile</span><br><span class="line">setfattr -n user.x -v <span class="string">&quot;The past is not dead.&quot;</span>  tfile</span><br><span class="line"></span><br><span class="line">getfattr -n user.xtfile</span><br><span class="line">getfattr -d tfile</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>另外需要注意的是，EA值可以为空字符串，这不同于未定义的EA值。</p>
+<ol>
+<li>setfattr</li>
+</ol>
+<p><img src="/img/EA1.png" alt="EA1.png"></p>
+<ol start="2">
+<li>getfattr</li>
+</ol>
+<p><img src="/img/EA2.png" alt="EA2.png"></p>
+<p>默认情况下，getfattr只会列出User EA值。可利用-m选项指定一个正则表达式，来筛选要显示地EA名</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="variable">$ </span>getfattr -m - tfile</span><br><span class="line"><span class="comment"># file: tfile</span></span><br><span class="line">user.x</span><br><span class="line"></span><br><span class="line"><span class="variable">$ </span>getfattr -m x tfile</span><br><span class="line"><span class="comment"># file: tfile</span></span><br><span class="line">user.x</span><br><span class="line"></span><br><span class="line"><span class="variable">$ </span>getfattr -m y tfile</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>attr</li>
+</ol>
+<p><img src="/img/EA3.png" alt="EA3.png"></p>
+<p>这个shell指令涵盖了setfattr和getfattr的功能，是两者的集合。</p>
+<h2 id="4、EA的限制"><a href="#4、EA的限制" class="headerlink" title="4、EA的限制 "></a><span id="4">4、EA的限制 </span></h2><h3 id="1-对User-EA的限制"><a href="#1-对User-EA的限制" class="headerlink" title=" 1) 对User EA的限制 "></a><span id="4.1"> 1) 对User EA的限制 </span></h3><p>User EA只能施之于文件或目录，之所以将其他文件类型排除在外，原因如下：</p>
+<p>1、因为符号链接会对所有用户开启所有权限，而且这是不可更改的。然而，对于User EA，是需要考虑权限地。这是相互矛盾地。如果使用符号链接，系统会吧链接去除掉。</p>
+<p>2、对于设备文件、套接字以及FIFO而言，授予用户权限，意在对其针对底层对象所执行的i&#x2F;o操作加以控制，如欲操控这些权限，转而求取对创建user EA地控制，二者会出现权限冲突。</p>
+<p>3、若某一目录启用了粘性位（sticky位），且为其他用户所拥有，则非特权用户不能将一User EA置于该目录之上。惟其如此，才能防止任一用户将EA附于诸如&#x2F;tmp之类的目录之上，由于其可写权限对所有用户开放，导致任意用户均可操纵此目录的EA，而设置粘性位，意在防止用户删除该目录下为其他用户所拥有的文件。</p>
+<h3 id="2-EA实现上的限制"><a href="#2-EA实现上的限制" class="headerlink" title=" 2)EA实现上的限制 "></a><span id="4.2"> 2)EA实现上的限制 </span></h3><p>1、EA名称地长度不能超过255个字节</p>
+<p>2、EA值的容量为64KB</p>
+<p>此外，某些文件系统对可与文件挂钩的EA数量及其大小还有更为严格的限制。</p>
+<p>3、在ext2、ext3以及ext4文件系统上，与一文件关联地所有EA命名和EA值地总字节数不会超过单个逻辑磁盘块的大小：1024字节、2048字节或4096字节</p>
+<p>4、在JFS上，为某一文件系统所使用的所有EA名和EA值地总字节数上限为128KB</p>
+<h2 id="5、EA的系统调用"><a href="#5、EA的系统调用" class="headerlink" title=" 5、EA的系统调用 "></a><span id="5"> 5、EA的系统调用 </span></h2><h3 id="1-创建和修改EA"><a href="#1-创建和修改EA" class="headerlink" title=" 1) 创建和修改EA "></a><span id="5.1"> 1) 创建和修改EA </span></h3><p>系统可调用以下方法来设置EA值。</p>
+<p><img src="/img/EA4.png" alt="EA4.png"></p>
+<p>setxattr:通过pathname来标识文件，如果文件名是符号链接，则对其解引用；</p>
+<p>lsetxattr:通过pathname来标识文件，如果文件名是符号链接，不会对其解引用；</p>
+<p>fsetxattr:通过打开文件描述符fd来标识文件。</p>
+<p>以上3者之间的差异同样适用于本文下面介绍的其他各组系统调用。</p>
+<p>参数name是一个以空字符串结尾地字符串，定义了EA地名称。</p>
+<p>参数value是一个指向缓冲区地指针，包含了为EA定义地新值。</p>
+<p>参数size是指明缓冲区地大小。</p>
+<p>默认情况，指定名称地EA不存在，系统调用会创建一个新的EA。已经存在地话，就会进行替换。</p>
+<p>参数flags是可对这一行为进行控制，将这参数指定为0，设定为默认情况。或者可将其指定为如下常量之一：</p>
+<p><img src="/img/EA5.png" alt="EA5.png"></p>
+<h3 id="2-获取EA值"><a href="#2-获取EA值" class="headerlink" title=" 2) 获取EA值 "></a><span id="5.2"> 2) 获取EA值 </span></h3><p>可利用以下方法来获取EA值。</p>
+<p><img src="/img/EA6.png" alt="EA6.png"></p>
+<p>参数name是一个以空字符串结尾地字符串，定义了EA地名称。用来标识要取值地EA。</p>
+<p>返回的EA值保存于参数value所指向地缓冲区中，该缓冲区必须由调用者分配，其大小由size来指定。若调用成功，会返回复制到value所指向地缓冲区中地字节数</p>
+<p>若文件不含name的EA，系统调用失败，会返回错误ENODATA。</p>
+<p>若size过小，系统调用也会失败，并返回错误ERANGE。</p>
+<p>可设size为0，将会忽略value，系统调用仍会返回EA值地大小，可用来获取EA值所需value缓冲区大小。</p>
+<h3 id="3-删除EA"><a href="#3-删除EA" class="headerlink" title=" 3) 删除EA "></a><span id="5.3"> 3) 删除EA </span></h3><p>可利用以下方法删除文件的EA。</p>
+<p><img src="/img/EA7.png" alt="EA7.png"></p>
+<p>Name所含以空字符串结尾的字符串，用于标识打算删除的EA。若试图删除不存在的EA，调用将失败，并会返回错误ENODATA。</p>
+<h3 id="4-获取文件相关的所有EA"><a href="#4-获取文件相关的所有EA" class="headerlink" title=" 4) 获取文件相关的所有EA "></a><span id="5.4"> 4) 获取文件相关的所有EA </span></h3><p>以下方法返回的列表会包含与某文件关联的所有EA的名称。</p>
+<p><img src="/img/EA8.png" alt="EA8.png"></p>
+<p>将EA地名称列表以一系列以空字符结尾地字符形式置于list所指向地缓冲区中。缓冲区大小由size指定。</p>
+<p>与getxattr一样，可以将size指定为0，系统调用将忽略list，并返回后续调用实际获取EA名称列表时所需的缓冲区大小。</p>
+<p>想要获取与某文件相关的EA列表，只需对文件拥有访问权限，对文件本身则无需任何权限。</p>
+<p>处于安全堪虑，list中返回的EA名称可能不包含调用进程无权访问的属性名。比如，在非特权进程中调用listxattr()时，大多数文件系统都会忽略trusted EA。</p>
+</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2022-07-24T05:27:08.086Z" title="7/24/2022, 1:27:08 PM">2022-07-24</time></span><span class="level-item">Updated&nbsp;<time dateTime="2022-07-24T04:29:08.596Z" title="7/24/2022, 12:29:08 PM">2022-07-24</time></span><span class="level-item"> YalesonChan </span><span class="level-item">10 minutes read (About 1506 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2022/07/24/2016-08-21-disintegration/">大学者，蜕变之谓也</a></h1><div class="content"><p>总是有很多的借口给自己开脱不更<a target="_blank" rel="noopener" href="http://mp.weixin.qq.com/s?__biz=MzIxODE4MjcwNg==&mid=2650272963&idx=1&sn=823bc66622b604abd869b5743c4d702e#rd">公众号</a>，慢慢的便会错过很多。</p>
+<p>蓝杰游学已经过去了一个多周，近来才有时间总结，毕竟实习考核在即。很难得的有机会接触这么多的学弟学妹，发现现在蓝杰的人数真是暴涨，自己已然成为了其中的老字辈？！很多人都不认识了。看着这些年轻的面孔，这些手握着大学时光的大一大二生们，有点唏嘘，想起了自己当年的囧样，啥都不懂，屁颠屁颠的到处闹腾。</p>
+<p>很敬佩胡哥，又做了件了不起的事情，竟想着带着六七十号人从长沙跑来深圳，让这帮初出茅庐的小子们见识何所谓互联网公司，见识见识这腾讯，这华为，这京东和深信服。仿佛每年都在实现一个小愿望。</p>
+<p>自己还不是个人物，也不是很会讲些严肃的话题，所以分享的时候也只能给学弟学妹们打了个马虎眼，毕竟自己体会才是硬道理。不过要想说的话，我觉得，大学，就是个蜕变之地，没人知道你将会蜕变成什么样的巨龙。</p>
+<p>一直很信奉的一句话是，“挣扎跳出自己的舒适区”。私以为，人只有觉得困惑不解、窘迫不安、不知所措、无所依靠的时候，才会想到成长，变强。因为那个时候，你的所学所得已经无法适应着变化的环境，你只得不断的学习新的知识，新的领域，新的技能来化解这燃眉之急。</p>
+<p>大学就是个舒适区。中午起床，然后对着手机、看着电脑，就是撸个一天，抽空订个外卖便解决了一天的口活，偶尔老师点名了无奈就去教室里边，或是瞌睡，或是玩手机，或是想着某某院某某系某某班的妹子好好看，谈论着谁谁谁排位又上了黄金，下课了该吃什么啊附近都没什么新店了，作业是什么，大不了就是网上一抄，考试来了怎么办快快快去图书馆占个位子学一下，不行也显得自己有好好学习了，卧槽这题怎么这么难我玩会手机先压压惊，参加个什么活动啊还要睡觉呢除非有妹子，看到某某某又拿了全年第一国奖国励某某比赛金奖体育全能出国留学创业拿了好几百万的投资也不会有个什么波澜毕竟与自己远着呢。舒适的生活，没有一滴波澜，日复一日，仿佛时间就是用来挥霍的，只愿今日醉生梦死。</p>
+<p>当初我为什么不在省内而跑到这么远的长沙读书，不就是图了个新鲜，不被家人给束缚在省内，无法见识这世界的奇妙，无法品味这多样的中华美食，无法体验着多彩的生活吗！那么这样的安逸生活，是自己想要的吗？不是。记得大一的时候，协会会长说过自己不想去自己母亲的事业单位，因为在那里他已经看到了自己老年的模样。突然就有点心惊。</p>
+<p>所以我一直在变，为的只是将过去的自己给甩的远远地，为的是未来的很多很多的不一样的事物。</p>
+<p>当然，每次见到老同学，他们都说我没变。确实，有所为有所不为，情义是不能变的。</p>
+<p>可惜的是，自己挣扎跳出舒适区，到现在，还是有很多的地方没有改变，还是一样的不够果断，还是一样的不会吉他画画，还是一样的单身，还是一样的怯懦。幸运的是，我学会了编程，学会了独自生活，学会了独自旅行，学会了怎么快速与当地人聊天，学会了尝试，学会了记录，学会了挑战，还有庆幸认识了这么多的很棒的朋友。</p>
+<p>大学者，蜕变之谓也。这几年里，我见识了有人从学渣到学霸的成长，立志科研的奋斗，为了追求爱情而形象的巨变，为了寻找而各地的旅行，为了汉服崛起的努力，为了梦想毅然奔赴边疆的军旅，为了出国深造的艰苦准备，为了世界第一而不惜耗光大学四年，为了青春而创业，为了改变而主持演话剧学轮滑跳舞画画学琴唱歌登台表演与人辩论编程。每个人都有欲望，都有梦想，都有自己喜欢的爱做的事情。不知道以后还有没有机会，但现在肯定是有机会的，所以趁这个机会不如得到蜕变，做一些自己以前想过没有想过的事情。这，才是青春。</p>
+<p>未来，我还要认识更多不一样的人，见识更多好玩的事物，学习好多好多的好玩的，走遍青山绿水，跨越山河，要有诗，也要有远方。</p>
+</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2022-07-24T05:27:07.946Z" title="7/24/2022, 1:27:07 PM">2022-07-24</time></span><span class="level-item">Updated&nbsp;<time dateTime="2022-07-24T04:29:08.596Z" title="7/24/2022, 12:29:08 PM">2022-07-24</time></span><span class="level-item"> YalesonChan </span><span class="level-item">11 minutes read (About 1592 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2022/07/24/2016-07-17-bigfishbegonia/">大鱼·海棠</a></h1><div class="content"><p>2016年7月8日，期待已久的《大鱼·海棠》终于上映了。然而，这部中国唯美动画电影的本土化尝试，却引起网民的撕逼大战。有的认为这是12年等待的落空，有的认为中国动漫的崛起又要往后延了一年，在某乎上黑《大鱼·海棠》更是成为了政治正确的选择。</p>
+<p>而因为疲于工作的Yale我，今天终于抽出时间毫不犹豫掏出口袋里仅有的几个钢镚买了电影票，圆了我整整6年的期待。</p>
+<p>可以说，《大鱼·海棠》是继《宝莲灯》以来代表着中国最高实力的国产动画电影，对，我封的，也包括《大圣归来》。因为《大圣归来》更多是依赖于齐天大圣孙悟空这一国民英雄，而不是剧情等等，这是一个巨大的IP。</p>
+<p>当初没有机会给《大鱼·海棠》众筹以期给国产动漫事业做贡献，那么，今天我就为她做一期推送，表达一下我的看法吧。</p>
+<p>我是在高一的一次去网吧，看到的《大鱼·海棠》的。那时候看的是她最初版本的预告片，真是瞬间爆炸，一下子就被她唯美的画风、奇妙的想法所深深吸引。没错，就这样我成为了她的粉丝。</p>
+<p>但是那时候毕竟还是个高中生，哪有时间上网，我可是个三好学生，高中学习压力大，根本没有时间去继续跟进《大·海》的情况，甚至都没有搞清楚为啥这个电影只有一个预告片正片到底在哪的问题。只是有时候在闲暇之余会想起这个惊艳我一时的《大·海》。</p>
+<p>后来，来到了大学，学的是信息方面的专业，学会了上网，还特地去了解《大鱼·海棠》的状况，才解开了当年的困惑。虽然，时间漫长，但是我还是愿意去等待的。</p>
+<p>一直很是佩服梁旋张春的勇气与洒脱，仅仅是因为一个梦，便不惜耗费12年的光阴去实现。这可是12年啊，还是真值青春年华啊。人生有几个12年，这不是说说就能够做得到的，期间的心酸坎坷也不是常人所能度之的。这是勇士之为。</p>
+<p>也许，他们是幸运的，知道自己人来所为何事，油然而生的使命感令其不可不为，身先士卒。<br>人生难得知己。在梁旋决定要为一个梦创办彼岸天，将其制作成电影时，张春不离不弃，投入全身尽力支持他。好基友一被子啊。</p>
+<p>而这两人也没有让我失望，再加上我的偶像Eason为《大·海》献唱了《在这个世界相遇》，更是让我为制作方点赞。可以说，整部电影画面唯美，设定惊奇充满着中国风，细节处理的很到位（尤其是客家土楼、门窗纹理、人物考究）、配音流畅，在剧情方面，逻辑比较流畅，前期铺垫也做得很足，就是在湫向椿表白的时候，略显尴尬，但是毕竟是动画、人物设定也是十几岁的少年少女，情窦初开，很难说怎么处理才适合，这不难理解。我真的想不通为啥剧情会被大家所如此诟病。</p>
+<p>虽然，我很想在剧情方面展开讨论，但是秉着剧透一时爽的原则，便在此不表。<br>在画风方面，有人说很像《千与千寻》，或者是说抄袭《千与千寻》，但是我说，说像《千与千寻》，那是谬赞，毕竟能够拿来与异步世界级的作品进行对比，是《大·海》的荣幸啊，说明这中国动漫的进步，但是说是抄袭的，我就只能怀疑这个人的智商了，到底是哪里抄了。不管是剧情方面、画风方面、设定方面，真是一毛钱都扯不上啊。</p>
+<p>整个电影，处处充满着良心，考究、考究、真是十分的考究。我认为，不失为一部佳作。这部作品，我们虽不能说国漫崛起，但是可以清晰的看出来，我们在进步。这是一次很好的经验。尽管现在国产动漫圈很小，但是在这一次又一次的尝试之后，积累经验、吸引培育人才，我们定能培育出真正能够做到国漫崛起的沃土。</p>
+<p>现如今，中国动漫产业正在不断的成长，不少投资人也在把目光投向这里，加上东家腾讯、B站、A站、有妖气等等公司的大力支持，涌现出不少好的作品，比如动漫堂米二的《一人之下》、夏天岛的《狐妖小红娘》、老壁的《端脑》等等，而中国特色的动画产业商业模式也在逐渐的形成，产业链也在艰辛地构筑当中。我也算是看动漫看了十多年的人了吧，经历过《漫画世界》、《知音漫客》、《龙漫》、有妖气等等的兴落，听说更加之前的时候国漫更是一片死寂。所以，这真是一个很棒的时代。或许，现在还不如人意，但是这是一个曲折上升的过程，毕竟一口吃不出个大胖子，但是只要不放弃努力，国漫崛起不是梦。</p>
+</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2022-07-24T05:27:07.670Z" title="7/24/2022, 1:27:07 PM">2022-07-24</time></span><span class="level-item">Updated&nbsp;<time dateTime="2022-07-24T04:29:08.596Z" title="7/24/2022, 12:29:08 PM">2022-07-24</time></span><span class="level-item"> YalesonChan </span><span class="level-item">13 minutes read (About 2023 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2022/07/24/2016-05-16-GC/">GC</a></h1><div class="content"><p>今天，我们来探讨一下JVM里面的GC算法吧，这也是JAVA用户所不能避开的问题。</p>
+<p>JAVA相比之C++的一大的区别是，JAVA能够基于JVM对内存进行自动的分配与释放，而不像C++一样需要工程师手动的注意各个变量的内存分配以及释放，时时刻刻得小心是否已经造成了内存泄漏这些问题，比较麻烦。</p>
+<p>那么，到底会有哪几种GC算法呢？我们就按照一个时间层层递进的顺序来大致了解一下吧。</p>
+<h2 id="引用计数法"><a href="#引用计数法" class="headerlink" title="引用计数法"></a>引用计数法</h2><p>引用计数法是最经典最古老的一种垃圾收集方法。</p>
+<p>引用计数法的基本思路是：对于一个对象A，只要有任何一个对象引用了A，则A的引用计数器就会+1，反之，当引用失效时，引用计数器就-1.只要对象A的引用计数器的值为0，则对象A就不可能在被使用，此时可以被回收了。</p>
+<p>实现也是比较简单的，就是为每一个对象创建一个整型的计数器即可。但是，这个方法有个致命缺点，那就是它无法处理循环引用的问题。因此，JAVA的垃圾回收器中，没有采用这种算法。</p>
+<p>而所谓的循环引用是，有两个对象A和B，A对象中含有B的引用，B对象含有A的引用，此时，A和B的引用计数器的值都不是0，但是在系统中，又没有第三个对象引用了A或B，此时，A和B应该是被回收的对象，是垃圾对象，但是由于垃圾对象之间相互引用，从而是垃圾回收器无法识别，引发内存泄漏。</p>
+<h2 id="标记-清除算法-Mark-Sweep"><a href="#标记-清除算法-Mark-Sweep" class="headerlink" title="标记-清除算法(Mark-Sweep)"></a>标记-清除算法(Mark-Sweep)</h2><p>既然引用计数法有着缺陷，那么我们就换个思路，给每一个还存活的对象进行标记，而没有标记的就是垃圾对象，这样就很方便于垃圾回收器回收清除垃圾对象了。也就是说，标记-清除算法将垃圾回收分为标记、清除两个阶段。</p>
+<p>其基本思路是：在标记阶段，首先通过根节点，标记所有从根节点开始的可达对象。然后在清除阶段，清除所有未被标记的对象。</p>
+<p>但是，标记-清除算法最大的问题是内存空间碎片化的问题。回收后的内存空间是不连续的。在对象的堆空间分配过程中，尤其是大对象的内存分配，不连续的内存空间的效率要低于连续的空间。</p>
+<h2 id="复制算法"><a href="#复制算法" class="headerlink" title="复制算法"></a>复制算法</h2><p>复制算法，算是从标记-清除算法中演变而来的一种算法。</p>
+<p>首先，我们知道现在JVM中的JAVA堆大体分为三个区，分别是年轻代（YYoung Generation）、年老代（Old Generation），以及持久代（Permanent Generation）。在年轻代中又有一个Eden区，两个Survivor区(一般而言)。大部分对象在Eden区中生成。当Eden区满时，还存活的对象将被复制到Survivor区（两个中的一个）。而我们的复制算法便是使用在这两个Survivor区之间的。</p>
+<p>接着，我们假定在这个年轻代中，只有两个Survivor区，每次只使用其中的一个Survivor区。好，那么我们把这两个Survivor区命名为S1和S2。假设这次只使用S1区。</p>
+<p>在S1中使用标记-清除算法，对还存活的对象进行标记，然后将被标记的还存活的对象复制到S2中，最后清除S1中所有的对象。这样便做到了防止内存碎片化的情况发生。</p>
+<p>那么总结一下，复制算法的基本思路是：将原有的内存空间分为两块，每次只使用其中的一块，在垃圾回收的时候，将正在使用的内存中的存活对象复制到未使用的内存块之中，之后清除正在使用的内存块中的所有对象。然后交换两个内存块的角色，完成垃圾回收。</p>
+<p>优点是：</p>
+<p>1、高效。在系统中垃圾对象较多的时候，也就是真正需要垃圾回收的时候，复制算法需要复制的存活对象并不多，所以复制算法的效率很高。</p>
+<p>2、确保回收后的内存空间没有碎片。</p>
+<p>缺点是，需要将系统的内存空间折半。</p>
+<p>另外，在垃圾回收的时候，eden空间中的存活对象会被复制到未使用的survivor空间中，正在使用的survivor空间中的年轻对象也会被复制到未使用的survivor中（大对象，或者年老对象会直接进入年老代，如果未使用的survivor空间已满，则对象也会直接进入年老代）。</p>
+<h2 id="标记-压缩算法-Mark-Compact"><a href="#标记-压缩算法-Mark-Compact" class="headerlink" title="标记-压缩算法(Mark-Compact)"></a>标记-压缩算法(Mark-Compact)</h2><p>我们知道，复制算法的高效性是建立在存活对象少、垃圾对象很多的前提下。这种情况在年轻代是经常发生的，但是在年老代，更常见的是大部分对象是存活对象，如果依然使用复制算法的话，由于存活对象较多，复制成本便变得很大。</p>
+<p>而标记-压缩算法正是一种年老代的回收算法。</p>
+<p>标记-压缩算法是在标记-清除算法上进行改进过后的算法。基本思路是：首先跟标记-清除算法一样，需要从根结点开始，对所有可达的对象进行标记，之后，不是简单的清除，而是将所有的存活对象压缩到内存的一端，接着才是清除边界以外的所有的内存空间。</p>
+<p>这样，既避免了内存的碎片化，也不需要两块相同的内存空间。性价比较高。</p>
+<h2 id="增量算法"><a href="#增量算法" class="headerlink" title="增量算法"></a>增量算法</h2><p>增量算法是专门对垃圾回收时Stop the World状态的一种优化算法。</p>
+<p>对于大部分的垃圾回收算法来说，在垃圾回收的过程中，软件会处于一种Stop the World 的状态。在这个状态下，应用程序所有的线程都会挂起，暂停一切正常的工作，等待垃圾回收的完成。如果垃圾回收时间过长，应用程序会被挂起很长时间，将会严重影响用户体验和系统的稳定性。</p>
+<p>而增量算法的基本思路是：如果一次性的将所有的垃圾进行处理，需要造成系统长时间的停顿暂停，那么可以让垃圾收集线程和应用程序线程交替执行。这样，每次垃圾回收只收集一小片区域的内存空间，接着又切换到应用程序线程。以此反复，知道垃圾回收完成。这样，便可以减少系统的停顿时间。</p>
+<p>缺点是，因为线程切换和上下文转换的消耗，会使得垃圾回收的总体成本上升，造成系统吞吐量的下降。</p>
+<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>这些便是一些简单的GC算法了。如若有错，还请斧正。多谢。</p>
+</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2022-07-24T05:27:07.386Z" title="7/24/2022, 1:27:07 PM">2022-07-24</time></span><span class="level-item">Updated&nbsp;<time dateTime="2022-07-24T04:29:08.596Z" title="7/24/2022, 12:29:08 PM">2022-07-24</time></span><span class="level-item"> YalesonChan </span><span class="level-item">an hour read (About 9127 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2022/07/24/2016-04-10-Java-key/">Java 关键字总结</a></h1><div class="content"><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>| 访问控制 | private | protected | public |<br>| 类，方法和变量修饰符 | abstract | class | extends | final | implements | interface | native |<br>| | new | static | strictfp | synchronized | transient | volatile |<br>| 程序控制 | break | continue | return | do | while | if | else |<br>| | for | instanceof | switch | case | default |<br>| 错误处理 | try | catch | throw | throws | finally |<br>| 包相关 | import | package |<br>| 基本类型 | boolean | byte | char | double | float | int | long |<br>| | short | null | true | false |<br>| 变量引用 | super | this | void |<br>| 保留字 | goto | const |</p>
+<h2 id="详细解释"><a href="#详细解释" class="headerlink" title="详细解释"></a>详细解释</h2><p>1、访问控制</p>
+<ol>
+<li>private 私有的</li>
+</ol>
+<p>private 关键字是访问控制修饰符，可以应用于类、方法或字段（在类中声明的变量）。 只能在声明 private（内部）类、方法或字段的类中引用这些类、方法或字段。在类的外部或者对于子类而言，它们是不可见的。</p>
+<ol start="2">
+<li>protected 受保护的</li>
+</ol>
+<p>protected 关键字是可以应用于类、方法或字段（在类中声明的变量）的访问控制修饰符。可以在声明 protected 类、方法或字段的类、同一个包中的其他任何类以及任何子类（无论子类是在哪个包中声明的）中引用这些类、方法或字段。</p>
+<ol start="3">
+<li>public 公共的</li>
+</ol>
+<p>public 关键字是可以应用于类、方法或字段（在类中声明的变量）的访问控制修饰符。 可能只会在其他任何类或包中引用 public 类、方法或字段。</p>
+<p>那么我们总结一下，Java之中的权限访问修饰符（其实还有一种权限访问情况，就是默认情况，暂且称作default吧）：</p>
+<p>| 访问权限 | 当前类 | 包 | 子类 | 其他包 |<br>| public   | ∨ | ∨ |  ∨  |   ∨   |<br>| protect  | ∨ | ∨ |  ∨  |   ×    |<br>| default  | ∨ | ∨ |  ×   |   ×    |<br>| private  | ∨ | ×  |  ×   |   ×    |</p>
+<p>2、类、方法和变量修饰符</p>
+<ol>
+<li>abstract 声明抽象</li>
+</ol>
+<p>abstract关键字可以修改类或方法。abstract类可以扩展（增加子类），但不能直接实例化。abstract方法不在声明它的类中实现，但必须在某个子类中重写。采用 abstract方法的类本来就是抽象类，并且必须声明为abstract。</p>
+<ol start="2">
+<li>class类</li>
+</ol>
+<p>class 关键字用来声明新的 Java 类，该类是相关变量和&#x2F;或方法的集合。类是面向对象的程序设计方法的基本构造单位。类通常代表某种实际实体，如几何形状或人。类是对象的模板。每个对象都是类的一个实例。要使用类，通常使用 new 操作符将类的对象实例化，然后调用类的方法来访问类的功能。</p>
+<ol start="3">
+<li>extends 继承、扩展</li>
+</ol>
+<p>extends 关键字用在 class 或 interface 声明中，用于指示所声明的类或接口是其名称后跟有 extends 关键字的类或接口的子类。子类继承父类的所有 public 和 protected 变量和方法（但是不包括构造函数）。 子类可以重写父类的任何非 final 方法。一个类只能扩展一个其他类。</p>
+<p>extends 关键字用在 class 或 interface 声明中，用于指示所声明的类或接口是其名称后跟有 extends 关键字的类或接口的子类。</p>
+<ol start="4">
+<li>final 最终、不可改变</li>
+</ol>
+<p>在Java中，final关键字可以用来修饰类、方法和变量（包括成员变量和局部变量）。final方法在编译阶段绑定，称为静态绑定(static binding)。下面就从这四个方面来了解一下final关键字的基本用法。</p>
+<p>1、修饰类</p>
+<p>当用final修饰一个类时，表明这个类不能被继承，不能有子类。也就是说，如果一个类你永远不会让他被继承，就可以用final进行修饰。final类中的成员变量可以根据需要设为final，但是要注意final类中的所有成员方法都会被隐式地指定为final方法。</p>
+<p>2、修饰方法</p>
+<p>下面这段话摘自《Java编程思想》：</p>
+<blockquote>
+<p>使用final方法的原因有两个。第一个原因是把方法<strong>锁定</strong>，以防任何继承类修改它的含义；第二个原因是<strong>效率</strong>。在早期的Java实现版本中，会将final方法转为内嵌调用。但是如果方法过于庞大，可能看不到内嵌调用带来的任何性能提升。在最近的Java版本中，不需要使用final方法进行这些优化了。</p>
+</blockquote>
+<p>因此，如果只有在想明确禁止 该方法在子类中被覆盖的情况下才将方法设置为final的。</p>
+<p>还有就是，类的private方法会隐式地被指定为final方法。</p>
+<p>3、修饰变量</p>
+<p>修饰变量是final用得最多的地方。</p>
+<p>对于一个final变量，如果是基本数据类型的变量，则其数值一旦在初始化之后便不能更改；如果是引用类型的变量，则在对其初始化之后便不能再让其指向另一个对象。引用变量被final修饰之后，虽然不能再指向其他对象，但是它指向的对象的内容是<em>可变</em>的。</p>
+<p>4、final参数</p>
+<p>当函数参数为final类型时，你可以读取使用该参数，但是无法改变该参数的值或者引用指向。道理同final变量。</p>
+<p>概括起来就是：</p>
+<p>在A类是声明为final类型的方法，那么不能在子类里被覆盖；</p>
+<p>如果A类被声明为final类型的类，那么B类不能继承A类；</p>
+<p>如果成员变量声明为final类型，那么成员变量不能被修改；</p>
+<p>注意：</p>
+<p>1、一个类不能同时是 abstract 又是 final。abstract 意味着必须扩展类，final 意味着不能扩展类。一个方法不能同时是 abstract 又是 final。abstract 意味着必须重写方法，final 意味着不能重写方法。两者是相互矛盾的。</p>
+<p>2、当用final作用于类的成员变量时，成员变量（注意是类的成员变量，局部变量只需要保证在使用之前被初始化赋值即可）必须在定义时或者构造器中进行初始化赋值，而且final变量一旦被初始化赋值之后，就不能再被赋值了。</p>
+<p>3、final变量和普通变量的区别。当final变量是基本数据类型以及String类型时，如果在编译期间能知道它的确切值，则编译器会进行优化，会把它当做编译期常量使用。也就是说在用到该final变量的地方，相当于直接访问的这个常量，不需要在运行时确定。这种和C语言中的宏替换有点像。而普通变量在编译时，确定不了自身的值，需要在运行时才能知道。</p>
+<p>4、局部内部类和匿名内部类只能访问局部final变量。因为这里的局部变量，需要在编译阶段便需要确定下来的。也就是说，如果局部变量的值在编译期间就可以确定，则直接在匿名内部里面创建一个拷贝。如果局部变量的值无法在编译期间确定，则通过构造器传参的方式来对拷贝进行初始化赋值。</p>
+<ol start="5">
+<li>implements实现</li>
+</ol>
+<p>implements 关键字在 class 声明中使用，以指示所声明的类提供了在 implements 关键字后面的名称所指定的接口中所声明的所有方法的实现。类必须提供在接口中所声明的所有方法的实现。一个类可以实现多个接口。</p>
+<ol start="6">
+<li>interface 接口</li>
+</ol>
+<p>interface 关键字用来声明新的 Java 接口，接口是方法的集合。</p>
+<p>接口是 Java 语言的一项强大功能。任何类都可声明它实现一个或多个接口，这意味着它实现了在这些接口中所定义的所有方法。 </p>
+<p>实现了接口的任何类都必须提供在该接口中的所有方法的实现。一个类可以实现多个接口。</p>
+<ol start="7">
+<li>native 本地</li>
+</ol>
+<p>native 关键字可以应用于方法，以指示该方法是用Java以外的语言实现的，方法对应的实现不是在当前文件，而是在用其他语言（如C和C++）实现的文件中。。</p>
+<p>Java不是完美的，Java的不足除了体现在运行速度上要比传统的C++慢许多之外，Java无法直接访问到操作系统底层（如系统硬件等)，为此Java使用native方法来扩展Java程序的功能。 </p>
+<p>可以将native方法比作Java程序同Ｃ程序的接口，其实现步骤： </p>
+<p>１、在Java中声明native()方法，然后编译；</p>
+<p>２、用javah产生一个.h文件；</p>
+<p>３、写一个.cpp文件实现native导出方法，其中需要包含第二步产生的.h文件（注意其中又包含了JDK带的jni.h文件）； </p>
+<p>４、将第三步的.cpp文件编译成动态链接库文件； </p>
+<p>５、在Java中用System.loadLibrary()方法加载第四步产生的动态链接库文件，这个native()方法就可以在Java中被访问了。  </p>
+<p>JAVA本地方法适用的情况  </p>
+<p>1、为了使用底层的主机平台的某个特性，而这个特性不能通过JAVA API访问  </p>
+<p>2、为了访问一个老的系统或者使用一个已有的库，而这个系统或这个库不是用JAVA编写的  </p>
+<p>3、为了加快程序的性能，而将一段时间敏感的代码作为本地方法实现。  </p>
+<ol start="8">
+<li>new 新,创建</li>
+</ol>
+<p>new 关键字用于创建类的新实例。 </p>
+<p>new 关键字后面的参数必须是类名，并且类名的后面必须是一组构造方法参数（必须带括号）。<br>参数集合必须与类的构造方法的签名匹配。 </p>
+<p>&#x3D; 赋值号左侧的变量的类型必须与要实例化的类或接口具有赋值兼容关系。</p>
+<ol start="9">
+<li>static 静态</li>
+</ol>
+<p>static可以用于修饰属性，可以修饰代码块，也可以用于修饰方法，还可以用于修饰类。</p>
+<p>1、static修饰属性：无论一个类生成了多少个对象，所有这些对象共同使用唯一一份静态的成员变量；一个对象对该静态成员变量进行了修改，其他对象的该静态成员变量的值也会随之发生变化。如果一个成员变量是static的，那么我们可以通过‘类名.成员变量名’的方式来使用它。</p>
+<p>2、static修饰方法：static修饰的方法叫做静态方法。对于静态方法来说，可以使用‘类名.方法名’的方式来访问。静态方法只能继承，不能重写（Override），因为重写是用于表现多态的，重写只能适用于实例方法，而静态方法是可以不生成实例直接用类名来调用，这就会与重写的定义所冲突，与多态所冲突，所以静态方法不能重写，只能是隐藏。</p>
+<p>static方法与非static方法：不能在静态方法中访问非静态成员变量；可以在静态方法中访问静态的成员变量。可以在非静态方法中访问静态的成员变量：因为静态方法可以直接用类名来调用，而非静态成员变量是在创建对象实例时才为变量分配内存和初始化变量值。</p>
+<p>不能在静态方法中使用this关键字：因为静态方法可以直接用类名来调用，而this实际上是创建实例时，实例对应的一个应用，所以不能在静态方法上使用this。</p>
+<p>3、static修饰代码块：静态代码块。静态代码块的作用也是完成一些初始化工作。<strong>首先执行静态代码块，然后执行构造方法。</strong>静态代码块在类被加载的时候执行，而构造方法是在生成对象的时候执行；要想调用某个类来生成对象，首先需要将类加载到Java虚拟机上（JVM），然后由JVM加载这个类来生成对象。</p>
+<p>类的静态代码块只会执行一次，是在类被加载的时候执行的，因为每个类只会被加载一次，所以静态代码块也只会被执行一次；而构造方法则不然，每次生成一个对象的时候都会调用类的构造方法，所以new一次就会调用构造方法一次。如果继承体系中既有构造方法，又有静态代码块，那么首先执行最顶层的类的静态代码块，一直执行到最底层类的静态代码块，然后再去执行最顶层类的构造方法，一直执行到最底层类的构造方法。注意：静态代码块只会执行一次。</p>
+<p>4、static修饰类：这个有点特殊，首先，static是可以用来修饰类的，但是static是不允许用来修饰普通类，只能用来修饰内部类，被static所修饰的内部类可以用new关键字来直接创建一个实例，不需要先创建外部类实例。static内部类可以被其他类实例化和引用（即使它是顶级类）。 </p>
+<p>其实理解起来也简单。因为static主要是修饰类里面的成员，包括内部类、属性、方法这些。修饰这些变量的目的也很单纯，那就是暗示这个成员在该类之中是唯一的一份拷贝，即便是不断的实例化该类，所有的这个类的对象都会共享这些static成员。这样就好办了。因为是共享的、唯一的，所以，也就不需要在实例化这个类以后再通过这个类来调用这个成员了，显然有点麻烦，所以就简单一点，直接通过类名直接调用static成员，更加直接。然而这样设置之后，就出现了一个限制，就是，static方法之中不能访问非static属性，因为这个时候非static属性可能还没有给他分配内存，该类还没有实例化。</p>
+<p>所以，通常，static 关键字意味着应用它的实体在声明该实体的类的任何特定实例外部可用。 </p>
+<p>可以从类的外部调用 static 方法，而不用首先实例化该类。这样的引用始终包括类名作为方法调用的限定符。</p>
+<ol start="10">
+<li>strictfp 严格,精准</li>
+</ol>
+<p>strictfp的意思是FP-strict，也就是说精确浮点的意思。在Java虚拟机进行浮点运算时，如果没有指定strictfp关键字时，Java的编译器以及运行环境在对浮点运算的表达式是采取一种近似于我行我素的行为来完成这些操作，以致于得到的结果往往无法令人满意。而一旦使用了strictfp来声明一个类、接口或者方法时，那么所声明的范围内Java的编译器以及运行环境会完全依照浮点规范IEEE-754来执行。因此如果想让浮点运算更加精确，而且不会因为不同的硬件平台所执行的结果不一致的话，那就请用关键字strictfp。</p>
+<p>可以将一个类、接口以及方法声明为strictfp，但是不允许对接口中的方法以及构造函数声明strictfp关键字。</p>
+<ol start="11">
+<li>synchronized线程、同步</li>
+</ol>
+<p>synchronized 关键字可以应用于方法或语句块，并为一次只应由一个线程执行的关键代码段提供保护。 </p>
+<p>synchronized 关键字可防止代码的关键代码段一次被多个线程执行。 </p>
+<p>如果应用于静态方法，那么，当该方法一次由一个线程执行时，整个类将被锁定。 </p>
+<p>如果应用于实例方法，那么，当该方法一次由一个线程访问时，该实例将被锁定。 </p>
+<p>如果应用于对象或数组，当关联的代码块一次由一个线程执行时，对象或数组将被锁定。</p>
+<p>一般的用法有：</p>
+<p>1、synchronized 方法控制对类成员变量的访问：每个类实例对应一把锁，</p>
+<p>每个synchronized 方法都必须获得调用该方法的类实例的锁方能执行，否则所属线程阻塞，方法一旦执行，就独占该锁，直到从该方法返回时才将锁释放，此后被阻塞的线程方能获得该锁，重新进入可执行状态。这种机制确保了同一时刻对于每一个类实例，其所有声明为 synchronized 的成员函数中至多只有一个处于可执行状态（因为至多只有一个能够获得该类实例对应的锁），从而有效避免了类成员变量的访问冲突（只要所有可能访问类成员变量的方法均被声明为 synchronized）。  </p>
+<p>在Java中，不光是类实例，每一个类也对应一把锁，这样我们也可将类的静态成员函数声明为 synchronized ，以控制其对类的静态成员变量的访问。</p>
+<p>synchronized 方法的缺陷：若将一个大的方法声明为synchronized 将会大大影响效率，典型地，若将线程类的方法 run() 声明为synchronized ，由于在线程的整个生命期内它一直在运行，因此将导致它对本类任何synchronized 方法的调用都永远不会成功。当然我们可以通过将访问类成员变量的代码放到专门的方法中，将其声明为 synchronized ，并在主方法中调用来解决这一问题，但是 Java 为我们提供了更好的解决办法，那就是 synchronized块。 </p>
+<p>2、synchronized块。</p>
+<p>当两个并发线程访问同一个对象object中的这个synchronized(this)同步代码块时，一个时间内只能有一个线程得到执行。另一个线程必须等待当前线程执行完这个代码块以后才能执行该代码块。</p>
+<p>然而，当一个线程访问object的一个synchronized(this)同步代码块时，另一个线程仍然可以访问该object中的非synchronized(this)同步代码块。</p>
+<p>尤其关键的是，当一个线程访问object的一个synchronized(this)同步代码块时，其他线程对object中所有其它synchronized(this)同步代码块的访问将被阻塞。同样适用其它同步代码块。也就是说，当一个线程访问object的一个synchronized(this)同步代码块时，它就获得了这个object的对象锁。结果，其它线程对该object对象所有同步代码部分的访问都被暂时阻塞。 </p>
+<p>这里的关键之处在于，这个object的对象锁只有一把，一把锁对应一个线程。</p>
+<ol start="12">
+<li>transient 短暂</li>
+</ol>
+<p>transient 关键字可以应用于类的成员变量，以便指出该成员变量不应在包含它的类实例已序列化时被序列化。</p>
+<p>当一个对象被串行化的时候，transient型变量的值不包括在串行化的表示中，然而非transient型的变量是被包括进去的。</p>
+<p>Java的serialization提供了一种持久化对象实例的机制。当持久化对象时，可能有一个特殊的对象数据成员，我们不想用serialization机制来保存它。为了在一个特定对象的一个域上关闭serialization，可以在这个域前加上关键字transient。</p>
+<p>transient是Java语言的关键字，用来表示一个域不是该对象串行化的一部分。当一个对象被串行化的时候，transient型变量的值不包括在串行化的表示中，然而非transient型的变量是被包括进去的。</p>
+<ol start="13">
+<li>volatile 易失</li>
+</ol>
+<p>volatile 关键字用于表示可以被多个线程异步修改的成员变量。 </p>
+<p>注意：volatile 关键字在许多 Java 虚拟机中都没有实现。 volatile 的目标用途是为了确保所有线程所看到的指定变量的值都是相同的。</p>
+<p>Volatile修饰的成员变量在每次被线程访问时，都强迫从主内存中重读该成员变量的值。而且，当成员变量发生变化时，强迫线程将变化值回写到主内存。这样在任何时刻，两个不同的线程总是看到某个成员变量的同一个值。</p>
+<p>Java语言规范中指出：</p>
+<blockquote>
+<p>为了获得最佳速度，允许线程保存共享成员变量的私有拷贝，而且只当线程进入或者离开同步代码块时才与共享成员变量的原始值对比。 </p>
+</blockquote>
+<p>这样当多个线程同时与某个对象交互时，就必须要注意到要让线程及时的得到共享成员变量的变化。      </p>
+<p>而volatile关键字就是提示VM：对于这个成员变量不能保存它的私有拷贝,而应直接与共享成员变量交互。   </p>
+<p>使用建议：在两个或者更多的线程访问的成员变量上使用volatile。当要访问的变量已在synchronized代码块中，或者为常量时，不必使用。    </p>
+<p>由于使用volatile屏蔽掉了VM中必要的代码优化，所以在效率上比较低，因此一定在必要时才使用此关键字。    </p>
+<p>Java 语言中的 volatile 变量可以被看作是一种 “程度较轻的 synchronized”；与 synchronized 块相比，volatile 变量所需的编码较少，并且运行时开销也较少，但是它所能实现的功能也仅是 synchronized 的一部分。</p>
+<p>3、程序控制语句</p>
+<ol>
+<li>break 跳出，中断</li>
+</ol>
+<p>break 关键字用于提前退出 for、while 或 do 循环，或者在 switch 语句中用来结束 case 块。 </p>
+<p>break 总是退出最深层的 while、for、do 或 switch 语句。</p>
+<ol start="2">
+<li>continue 继续</li>
+</ol>
+<p>continue 关键字用来跳转到 for、while 或 do 循环的下一个迭代。 </p>
+<p>continue 总是跳到最深层 while、for 或 do 语句的下一个迭代。</p>
+<ol start="3">
+<li>return 返回</li>
+</ol>
+<p>return 关键字会导致方法返回到调用它的方法，从而传递与返回方法的返回类型匹配的值。<br>如果方法具有非 void 的返回类型，return 语句必须具有相同或兼容类型的参数。<br>返回值两侧的括号是可选的。</p>
+<ol start="4">
+<li>do 运行</li>
+</ol>
+<p>do 关键字用于指定一个在每次迭代结束时检查其条件的循环。 </p>
+<p>do 循环体至少执行一次。<br>条件表达式后面必须有分号。</p>
+<ol start="5">
+<li>while 循环</li>
+</ol>
+<p>while 关键字用于指定一个只要条件为真就会重复的循环。</p>
+<ol start="6">
+<li>if 如果</li>
+</ol>
+<p>if 关键字指示有条件地执行代码块。条件的计算结果必须是布尔值。 </p>
+<p>if 语句可以有可选的 else 子句，该子句包含条件为 false 时将执行的代码。 </p>
+<p>包含 boolean 操作数的表达式只能包含 boolean 操作数。</p>
+<ol start="7">
+<li>else 否则</li>
+</ol>
+<p>else 关键字总是在 if-else 语句中与 if 关键字结合使用。else 子句是可选的，如果 if 条件为 false，则执行该子句。</p>
+<ol start="8">
+<li>for 循环</li>
+</ol>
+<p>for 关键字用于指定一个在每次迭代结束前检查其条件的循环。 </p>
+<p>for 语句的形式为 for(initialize; condition; increment) 控件流进入 for 语句时，将执行一次 initialize 语句。<br>每次执行循环体之前将计算 condition 的结果。如果 condition 为 true，则执行循环体。 </p>
+<p>每次执行循环体之后，在计算下一个迭代的 condition 之前，将执行 increment 语句。</p>
+<ol start="9">
+<li>instanceof 实例</li>
+</ol>
+<p>instanceof 关键字用来确定对象所属的类。</p>
+<ol start="10">
+<li>switch 观察</li>
+</ol>
+<p>switch 语句用于基于某个表达式选择执行多个代码块中的某一个。 </p>
+<p>switch 条件的计算结果必须等于 byte、char、short 或 int。 </p>
+<p>case 块没有隐式结束点。break 语句通常在每个 case 块末尾使用，用于退出 switch 语句。 </p>
+<p>如果没有 break 语句，执行流将进入所有后面的 case 和&#x2F;或 default 块。</p>
+<ol start="11">
+<li>case 返回观察里的结果</li>
+</ol>
+<p>case 用来标记 switch 语句中的每个分支。 </p>
+<p>case 块没有隐式结束点。break 语句通常在每个 case 块末尾使用，用于退出 switch 语句。 </p>
+<p>如果没有 break 语句，执行流将进入所有后面的 case 和&#x2F;或 default 块。</p>
+<ol start="12">
+<li>default 默认</li>
+</ol>
+<p>default 关键字用来标记 switch 语句中的默认分支。 </p>
+<p>default 块没有隐式结束点。break 语句通常在每个 case 或 default 块的末尾使用，以便在完成块时退出 switch 语句。 </p>
+<p>如果没有 default 语句，其参数与任何 case 块都不匹配的 switch 语句将不执行任何操作。</p>
+<p>4、错误处理</p>
+<ol>
+<li>try 捕获异常</li>
+</ol>
+<p>try 关键字用于包含可能引发异常的语句块。 </p>
+<p>每个 try 块都必须至少有一个 catch 或 finally 子句。</p>
+<p>如果某个特定异常类未被任何 catch 子句处理，该异常将沿着调用栈递归地传播到下一个封闭 try 块。如果任何封闭 try 块都未捕获到异常，Java 解释器将退出，并显示错误消息和堆栈跟踪信息。</p>
+<ol start="2">
+<li>catch 处理异常</li>
+</ol>
+<p>catch 关键字用来在 try-catch 或 try-catch-finally 语句中定义异常处理块。</p>
+<p>开始和结束标记 { 和 } 是 catch 子句语法的一部分，即使该子句只包含一个语句，也不能省略这两个标记。<br>每个 try 块都必须至少有一个 catch 或 finally 子句。 </p>
+<p>如果某个特定异常类未被任何 catch 子句处理，该异常将沿着调用栈递归地传播到下一个封闭 try 块。如果任何封闭 try 块都未捕获到异常，Java 解释器将退出，并显示错误消息和堆栈跟踪信息。</p>
+<ol start="3">
+<li>throw 抛出一个异常对象</li>
+</ol>
+<p>throw 关键字用于引发异常。 </p>
+<p>throw 语句将 java.lang.Throwable 作为参数。Throwable 在调用栈中向上传播，直到被适当的 catch 块捕获。<br>引发非 RuntimeException 异常的任何方法还必须在方法声明中使用 throws 修饰符来声明它引发的异常。</p>
+<ol start="4">
+<li>throws 声明一个异常可能被抛出</li>
+</ol>
+<p>throws 关键字可以应用于方法，以便指出方法引发了特定类型的异常。 </p>
+<p>throws 关键字将逗号分隔的 java.lang.Throwables 列表作为参数。 </p>
+<p>引发非 RuntimeException 异常的任何方法还必须在方法声明中使用 throws 修饰符来声明它引发的异常。<br>要在 try-catch 块中包含带 throws 子句的方法的调用，必须提供该方法的调用者。</p>
+<ol start="5">
+<li>finally</li>
+</ol>
+<p>在异常处理机制当中，它的作用就像是人吃饭一样，必须得做的，不论有异常还是没有异常都要执行的代码就可以放到finally块当中去。finally块，必须要配合try块一起使用，不能单独使用，也不能直接和catch块一起使用。 </p>
+<p>finally 关键字用来定义始终在 try-catch-finally 语句中执行的块。 </p>
+<p>finally 块通常包含清理代码，用在部分执行 try 块后恢复正常运行。</p>
+<p>5、包相关</p>
+<ol>
+<li>import 引入</li>
+</ol>
+<p>import 关键字使一个包中的一个或所有类在当前 Java 源文件中可见。可以不使用完全限定的类名来引用导入的类。 </p>
+<p>当多个包包含同名的类时，许多 Java 程序员只使用特定的 import 语句（没有“*”）来避免不确定性。</p>
+<ol start="2">
+<li>package 包</li>
+</ol>
+<p>package 关键字指定在 Java 源文件中声明的类所驻留的 Java 包。 </p>
+<p>package 语句（如果出现）必须是 Java 源文件中的第一个非注释性文本。<br>例:java.lang.Object。<br>如果 Java 源文件不包含 package 语句，在该文件中定义的类将位于“默认包”中。请注意，不能从非默认包中的类引用默认包中的类。</p>
+<p>6、基本类型</p>
+<ol>
+<li>boolean 布尔型</li>
+</ol>
+<p>boolean 是 Java 原始类型。boolean 变量的值可以是 true 或 false。 </p>
+<p>boolean 变量只能以 true 或 false 作为值。boolean 不能与数字类型相互转换。 </p>
+<p>包含 boolean 操作数的表达式只能包含 boolean 操作数。 </p>
+<p>Boolean 类是 boolean 原始类型的包装对象类。</p>
+<ol start="2">
+<li>byte 字节型</li>
+</ol>
+<p>byte 是 Java 原始类型。byte 可存储在 [-128, 127] 范围以内的整数值。</p>
+<p>Byte 类是 byte 原始类型的包装对象类。它定义代表此类型的值的范围的 MIN_VALUE 和 MAX_VALUE 常量。<br>Java 中的所有整数值都是 32 位的 int 值，除非值后面有 l 或 L（如 235L），这表示该值应解释为 long。</p>
+<ol start="3">
+<li>char 字符型</li>
+</ol>
+<p>char 是 Java 原始类型。char 变量可以存储一个 Unicode 字符。 </p>
+<p>可以使用下列 char 常量：</p>
+<p>\b - 空格, \f - 换页, \n - 换行, \r - 回车, \t - 水平制表符, &#39; - 单引号, &quot; - 双引号, \ - 反斜杠, \xxx - 采用 xxx 编码的 Latin-1 字符。\x 和 \xx 均为合法形式，但可能引起混淆。 \uxxxx - 采用十六进制编码 xxxx 的 Unicode 字符。 </p>
+<p>Character 类包含一些可用来处理 char 变量的 static 方法，这些方法包括 isDigit()、isLetter()、isWhitespace() 和 toUpperCase()。 </p>
+<p>char 值没有符号。</p>
+<ol start="4">
+<li>double 双精度</li>
+</ol>
+<p>double 是 Java 原始类型。double 变量可以存储双精度浮点值。 </p>
+<p>由于浮点数据类型是实际数值的近似值，因此，一般不要对浮点数值进行是否相等的比较。 </p>
+<p>Java 浮点数值可代表无穷大和 NaN（非数值）。Double 包装对象类用来定义常量 MIN_VALUE、MAX_VALUE、NEGATIVE_INFINITY、POSITIVE_INFINITY 和 NaN。</p>
+<ol start="5">
+<li>float 浮点</li>
+</ol>
+<p>float 是 Java 原始类型。float 变量可以存储单精度浮点值。</p>
+<p>使用此关键字时应遵循下列规则： </p>
+<p>Java 中的浮点文字始终默认为双精度。要指定单精度文字值，应在数值后加上 f 或 F，如 0.01f。</p>
+<p>由于浮点数据类型是实际数值的近似值，因此，一般不要对浮点数值进行是否相等的比较。 </p>
+<p>Java 浮点数值可代表无穷大和 NaN（非数值）。Float 包装对象类用来定义常量 MIN_VALUE、MAX_VALUE、NEGATIVE_INFINITY、POSITIVE_INFINITY 和 NaN。</p>
+<ol start="6">
+<li>int 整型</li>
+</ol>
+<p>int 是 Java 原始类型。int 变量可以存储 32 位的整数值。 </p>
+<p>Integer 类是 int 原始类型的包装对象类。它定义代表此类型的值的范围的 MIN_VALUE 和 MAX_VALUE 常量。</p>
+<p>Java 中的所有整数值都是 32 位的 int 值，除非值后面有 l 或 L（如 235L），这表示该值应解释为 long。</p>
+<ol start="7">
+<li>long 长整型</li>
+</ol>
+<p>long 是 Java 原始类型。long 变量可以存储 64 位的带符号整数。 </p>
+<p>Long 类是 long 原始类型的包装对象类。它定义代表此类型的值的范围的 MIN_VALUE 和 MAX_VALUE 常量。</p>
+<p>Java 中的所有整数值都是 32 位的 int 值，除非值后面有 l 或 L（如 235L），这表示该值应解释为 long。</p>
+<ol start="8">
+<li>short 短整型</li>
+</ol>
+<p>short 是 Java 原始类型。short 变量可以存储 16 位带符号的整数。 </p>
+<p>Short 类是 short 原始类型的包装对象类。它定义代表此类型的值的范围的 MIN_VALUE 和 MAX_VALUE 常量。</p>
+<p>Java 中的所有整数值都是 32 位的 int 值，除非值后面有 l 或 L（如 235L），这表示该值应解释为 long。</p>
+<ol start="9">
+<li>null 空</li>
+</ol>
+<p>null 是 Java 的保留字，表示无值。 </p>
+<p>将 null 赋给非原始变量相当于释放该变量先前所引用的对象。 </p>
+<p>不能将 null 赋给原始类型（byte、short、int、long、char、float、double、boolean）变量。</p>
+<ol start="10">
+<li>true 真</li>
+</ol>
+<p>true 关键字表示 boolean 变量的两个合法值中的一个。</p>
+<ol start="11">
+<li>false 假</li>
+</ol>
+<p>false 关键字代表 boolean 变量的两个合法值之一。</p>
+<p>7、变量引用</p>
+<ol>
+<li>super 父类,超类</li>
+</ol>
+<p>super 关键字用于引用使用该关键字的类的超类。 </p>
+<p>作为独立语句出现的 super 表示调用超类的构造方法。<br>super.<methodName>() 表示调用超类的方法。只有在如下情况中才需要采用这种用法：要调用在该类中被重写的方法，以便指定应当调用在超类中的该方法。</p>
+<ol start="2">
+<li>this 本类</li>
+</ol>
+<p>this 关键字用于引用当前实例。<br>当引用可能不明确时，可以使用 this 关键字来引用当前的实例。</p>
+<ol start="3">
+<li>void 无返回值</li>
+</ol>
+<p>void 关键字表示 null 类型。<br>void 可以用作方法的返回类型，以指示该方法不返回值。</p>
+<p>8、保留字</p>
+<p>正确识别java语言的关键字（keyword）和保留字（reserved word）是十分重要的。Java的关键字对java的编译器有特殊的意义，他们用来表示一种数据类型，或者表示程序的结构等。保留字是为java预留的关键字，他们虽然现在没有作为关键字，但在以后的升级版本中有可能作为关键字。<br>识别java语言的关键字，不要和其他语言如c&#x2F;c++的关键字混淆。<br>const和goto是java的保留字。 所有的关键字都是小写 </p>
+<ol>
+<li>goto 跳转</li>
+</ol>
+<p>goto 保留关键字，但无任何作用。结构化程序设计完全不需要 goto 语句即可完成各种流程，而 goto 语句的使用往往会使程序的可读性降低，所以 Java 不允许 goto 跳转。</p>
+<ol start="2">
+<li>const 静态</li>
+</ol>
+<p>const 保留字，是一个类型修饰符，使用const声明的对象不能更新。与final某些类似。</p>
+</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2022-07-24T05:27:06.822Z" title="7/24/2022, 1:27:06 PM">2022-07-24</time></span><span class="level-item">Updated&nbsp;<time dateTime="2022-07-24T05:26:23.443Z" title="7/24/2022, 1:26:23 PM">2022-07-24</time></span><span class="level-item"> YalesonChan </span><span class="level-item">9 minutes read (About 1373 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2022/07/24/2016-04-04-Android-BroadcastReceiver/">Broadcast Receiver on Android</a></h1><div class="content"><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>Broadcast Receiver是Android组件中最基本也是最为常见用的四大组件之一。</p>
+<p>Broadcast Receiver，<a target="_blank" rel="noopener" href="http://blog.csdn.net/liuhe688/article/details/6955668">广播接收者</a>，顾名思义，是用来接收来自系统和应用中的广播。这种组件本质上是一种全局的监听器，用于监听系统全局的广播消息。</p>
+<h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><ol>
+<li>Broadcast Receiver的生命周期</li>
+<li>Broadcast的类型</li>
+<li>Broadcast Receiver的注册方式</li>
+<li>Broadcast Receiver的使用步骤</li>
+</ol>
+<h2 id="一、Broadcast-Receiver的生命周期"><a href="#一、Broadcast-Receiver的生命周期" class="headerlink" title="一、Broadcast Receiver的生命周期"></a>一、Broadcast Receiver的生命周期</h2><p>BroadcastReceiver 有一个回调方法：void onReceive(Context curContext, Intent broadcastMsg)。当一个广播消息到达接收者时，Android 调用它的 onReceive() 方法并传递给它包含消息的 Intent 对象。BroadcastReceiver 被认为仅当它执行这个方法时是活跃的。当 onReceive() 返回后，它是不活跃的。</p>
+<p>Android系统的很多消息(如系统启动,新短信,来电话等)都通过BroadcastReceiver来分发。BroadcastReceiver的生命周期是短暂的，而且是消息一到达则创建执行完毕就立刻销毁的。</p>
+<p>拥有一个活跃状态的广播接收器的进程被保护起来而不会被杀死，但仅拥有失活状态组件的进程则会在其它进程需要它所占有的内存的时候随时被杀掉。 所以，如果响应一个广播信息需要很长的一段时 间，我们一般会将其纳入一个衍生的线程中去完成，而不是在主线程内完成它，从而保证用户交互过程的流畅。</p>
+<p>这带来一个问题，当一个广播消息的响应时费时的，因此应该在独立的线程中做这些事，远离用户界面或者其它组件运行的主线程。如果 onReceive() 衍生线程然后返回，整个进程，包括新的线程，被判定为不活跃的（除非进程中的其它应用程序组件是活跃的），否则将使它处于被杀的危机。解决这个问题的方法是 onReceive() 启动一个 Service，让 Service 做这个工作，因此系统知道进程中有活跃的工作在做。</p>
+<p>通常某个应用或系统本身在某些事件（电池电量不足、来电来短信）来临时会广播一个 Intent 出去，通过注册一个 BroadcastReceiver 来监听到这些 Intent，并获取其中广播的数据。</p>
+<h2 id="二、Broadcast的类型"><a href="#二、Broadcast的类型" class="headerlink" title="二、Broadcast的类型"></a>二、Broadcast的类型</h2><p>Broadcast的类型有两种：普通广播和有序广播。</p>
+<p>Normal broadcasts（普通广播）：Normal broadcasts是完全异步的可以同一时间被所有的接收者接收到。通常每个接收者都无需等待即可以接收到广播，接收者相互之间不会有影响。消息的传递效率比较高。但缺点是接收者不能讲接收的消息的处理信息传递给下一个接收者也不能停止消息的传播。</p>
+<p>Ordered broadcasts（有序广播）：Ordered broadcasts的接收者按照一定的优先级进行消息的接收。如：A,B,C的优先级依次降低，那么消息先传递给A，在传递给B，最后传递给C。优先级别声明在中，取值为[-1000,1000]数值越大优先级别越高。优先级也可通过filter.setPriority(10)方式设置。 另外Ordered broadcasts的接收者可以通过abortBroadcast()的方式取消广播的传播，也可以通过setResultData和setResultExtras方法将处理的结果存入到Broadcast中，传递给下一个接收者。然后，下一个接收者通过getResultData()和getResultExtras(true)接收高优先级的接收者存入的数据。</p>
+<h2 id="三、Broadcast-Receiver的注册方式"><a href="#三、Broadcast-Receiver的注册方式" class="headerlink" title="三、Broadcast Receiver的注册方式"></a>三、Broadcast Receiver的注册方式</h2><p>注册有两种方式：</p>
+<p>1、静态注册：这种方法是在配置AndroidManifest.xml配置文件中的application里面定义receiver并设置要接收的action。通过这种方式注册的广播为常驻型广播，也就是说如果应用程序关闭了，有相应事件触发，程序还是会被系统自动调用运行。如：</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- 在配置文件中注册BroadcastReceiver能够匹配的Intent --&gt;</span><br><span class="line">&lt;receiver <span class="symbol">android:</span>name=<span class="string">&quot;com.example.test.MyBroadcastReceiver&quot;</span>&gt;</span><br><span class="line">    &lt;intent-filter&gt;</span><br><span class="line">        &lt;<span class="regexp">/action&gt;</span></span><br><span class="line"><span class="regexp">        &lt;category android:name=&quot;android.intent.category.DEFAULT&quot;&gt;&lt;/category</span>&gt;</span><br><span class="line">    &lt;<span class="regexp">/intent-filter&gt;</span></span><br><span class="line"><span class="regexp">&lt;/receiver</span>&gt;</span><br></pre></td></tr></table></figure>
+
+<p>2、动态注册：这种方法是通过代码在.Java文件中进行注册。通过这种方式注册的广播为非常驻型广播，即它会跟随Activity的生命周期，所以在Activity结束前我们需要调用unregisterReceiver(receiver)方法移除它，否则会报异常。</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">/<span class="regexp">/通过代码的方式动态注册MyBroadcastReceiver</span></span><br><span class="line"><span class="regexp">MyBroadcastReceiver receiver=new MyBroadcastReceiver();</span></span><br><span class="line"><span class="regexp">IntentFilter filter=new IntentFilter();</span></span><br><span class="line"><span class="regexp">filter.addAction(&quot;android.intent.action.MyBroadcastReceiver&quot;);</span></span><br><span class="line"><span class="regexp">/</span><span class="regexp">/注册receiver</span></span><br><span class="line"><span class="regexp">registerReceiver(receiver, filter);</span></span><br></pre></td></tr></table></figure>
+
+<p>要接收某些action，需要在AndroidManifest.xml里面添加相应的permission。</p>
+<h2 id="四、Broadcast-Receiver的使用步骤"><a href="#四、Broadcast-Receiver的使用步骤" class="headerlink" title="四、Broadcast Receiver的使用步骤"></a>四、Broadcast Receiver的使用步骤</h2><p>1、创建BroadcastReceiver的子类</p>
+<p>由于BroadcastReceiver本质上是一种监听器，所以创建BroadcastReceiver的方法也非常简单，只需要创建一个BroadcastReceiver的子类然后重写onReceive (Context context, Intentintent)方法即可。</p>
+<p>2、注册BroadcastReceiver</p>
+<p>一旦实现了BroadcastReceiver，接下就应该指定该BroadcastReceiver能匹配的Intent即注册BroadcastReceiver。</p>
+<p>另外，这是发送广播的代码：</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">​Intent intent = new Intent(String action);</span><br><span class="line">intent.setAction(String action);</span><br><span class="line">sendBroadcast(Intent); </span><br></pre></td></tr></table></figure></div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2022-07-24T05:27:06.550Z" title="7/24/2022, 1:27:06 PM">2022-07-24</time></span><span class="level-item">Updated&nbsp;<time dateTime="2022-07-24T04:29:08.592Z" title="7/24/2022, 12:29:08 PM">2022-07-24</time></span><span class="level-item"> YalesonChan </span><span class="level-item">11 minutes read (About 1688 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2022/07/24/2016-04-02-No-Compromise/">No Compromise</a></h1><div class="content"><p>昨天又是翘了一节课，而这次翘课又与往常稍微不一样，因为这是翘了中南的课，却到了湖大的课堂听讲。有时候觉得蛮有趣的，因为这是交了一份大学学费，上了两所大学。</p>
+<p>昨天的课叫做，这个校友有点6，官方名字是“熊晓鸽奖学金、奖教金、我最敬爱的老师”颁奖仪式。</p>
+<p>我跟几个同学早早来到了会场，坐到了前排。我是认真听完了全程，并随着掌声不自禁的喝彩，仿佛自身便是一名湖大人，能够感受到湖大的激情以及熊晓鸽熊先生的感召力之强。</p>
+<p>全程中，有几个人我是格外印象深刻。一个是那位头发花白但面容依旧俊朗的主持人老师。开始是因为他充满磁性的嗓音以及沉稳的主持风格，后来是对于他在台下认真仔细准备主持词时候的敬佩。他身着中山装，身上还有着老一辈人的沉稳执着。</p>
+<p>第二个是湖大的新任校长段校长。这个关注他的点就是，纯粹的，他能够听得到湖大学生的心声，保证不会断网断电，能够提前对来场嘉宾做好功课，以及能够抓住一切能够与学生交流的机会上台解答学生的问题。是个好校长。</p>
+<p>最后一个当然就是主角熊晓鸽了。在昨天之前我也是不了解熊晓鸽是为何人物。于是专门去收集了下他的履历。然后，就只剩下跪舔了。</p>
+<p>熊先生现任IDG（美国国际数据集团）全球常务副总裁兼亚洲区总裁，是IDG资本创始合伙人，被誉为中国引入高科技产业风险基金的第一人，曾投资过百度、腾讯、携程、当当、搜狐、哔哩哔哩等等四百多家公司，一个人掌握着10亿投资资金。然而熊先生却也是平困出身，年少是当过电工，后考上湖大，开始求学生涯，在湖大读书期间最喜欢的是晚上跑到岳麓山上思考。在新华社实习时候，梦想新华社外派战地记者。获得恩师推荐，来到波士顿大学，只用了八个月夺得新闻传播学院硕士学位。接着进入塔夫茨大学弗莱彻法律与外交学院攻读国际经济与商理博士学位。</p>
+<p>台上的熊先生，没有所谓的威严，比较亲和，比较风趣，而且比较坑队友。因为正值移动互联网岳麓峰会，于是他邀请了湖湘会的朋友过来，包括58公司董事长姚劲波、拓维信息集团总裁李宇新等等。然后，然后就是一堆段子手的主场了，期间不乏掌声雷动。熊先生真是热爱着他的母校，就那一会，湖大就又有了至少一千多万的捐款，而且把这个熊晓鸽奖学金的含金量蹭蹭的给往上提高了许多，各位大佬都给予了应允。</p>
+<p>这次课切切实实的给我证明了名校的价值所在——名校资源。这个资源不仅仅是说，你在学校课程上的教学资源，而是你整个职业生涯里面的社会资源。每一个校园都是一个圈子，维系这个圈子的是情怀、校友情怀，圈子里面的人相互关照，圈子外的人很难介入，比如耶鲁大学的骷髅会。所以，在学校里面是，有着满满的机会的。另外，名校与职工技校的区别在于，他不是技能培训机构，他培养的是思维，更是一种与世界平齐的视界，因为你面对的都是来自各个领域顶端的人物。可惜，国内高校并没有把这方面做的很好。</p>
+<p>更加可惜的是，作为学生，还处于职业生涯的规划状态，缘由怯懦，总是对这些机会视若无睹。每当遇到这样的讲座，学校都只能是强制地让几个班的同学去充当水军了，因为学生对于这些所谓的大佬成功人士，是没有概念的，认为是与自己遥不可及的，觉得自己还是个学生，还是个孩子，还不需要考虑这些事情，他们是谁管我鸟事。校园的象牙塔里面，他们是安逸的，还没有意识到没个几年就要毕业，即将要面对这些柴米油盐酱醋茶。毕业不可怕，迷茫不可怕，选择也不可怕，可怕的是，在不知不觉之间，变得别无选择，在迷迷糊糊的时候，做出了最坏的选择而不自知，最后只能将就。</p>
+<p>这几年，我也是常常做项目，也跟着别人到处跑，自己越来越清楚的感受到，技术不是生活的全部。人与计算机打交道，说到底还是简单直接的，因为计算机是不会欺骗，他对你是永远正直的。而人与人之间的门道，却是不可捉摸的，没有原理可言，没有所谓的定律可以依据。在计算机的01之间，或许程序员便是上帝，但是在这个社会框架里面，站在顶端主导世界变革的却永远不会是一个只知道01的人。所以，一直认为无形中便能够让人信服的人十分令人敬佩。</p>
+<p>看着台上刚从美国波士顿飞回来的学姐，讲着她对晓鸽学长知遇之情的感激，我开着玩笑对旁边的同学说，“过不了十年，站在上面讲的人的就是你了”。他说好。</p>
+<p>这是一篇反思文，凑合着看吧。<br>​</p>
+</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2022-07-24T05:27:06.414Z" title="7/24/2022, 1:27:06 PM">2022-07-24</time></span><span class="level-item">Updated&nbsp;<time dateTime="2022-07-24T04:29:08.592Z" title="7/24/2022, 12:29:08 PM">2022-07-24</time></span><span class="level-item"> YalesonChan </span><span class="level-item">10 minutes read (About 1425 words)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2022/07/24/2016-03-31-Ambition/">Ambition</a></h1><div class="content"><p>野心，你有想要颠覆这个星球的野心吗？</p>
+<p>有点中二，有点热血，一句话可以点燃撩在心头的蠢动。原本有点玩笑意味的话，却是一些人一生的信条。这就是我在钢总和刀哥身上看到的。</p>
+<p>前几天，有幸能够听到原WPS技术副总裁、现中科云华CEO杨钢钢总，以及原阿里金融CTO、小米金融总经理、现福米信息CEO王安全刀哥的分享，能够跟他们坐一起畅聊。这是一次难得的机会，倾听互联网业界前辈的见解，得窥行业秘辛。</p>
+<p>钢总是个酷劲十足而又不失风趣的技术达人兼霸道总裁。有句话叫做，无形装逼最为致命。用在钢总身上最为贴切，境界确实不一样。钢总技术出身，在WPS呆了十年，公司里面一有难题就会找他，实力过硬。按他的说法就是，大大小小技术领域都玩过了。后来在金山跟雷军聊创业理念后，他决定出来创业，也就有了今天的中科云华。不过我比较感兴趣的是，他在金山时跟雷军、傅盛叫板时候的不羁与洒脱。这要是我的话，可能话都说不利索。</p>
+<p>刀哥是个很沉稳的人，说话慢条斯理、逻辑清晰，不愧技术出身又成功转型为生意人。关于金融，刀哥有着自己的一套见解，认为未来的金融应该是一个标准化的市场，标准化交易。关于学习能力，刀哥认识是，一种能够在短时间内迅速掌理清新领域主要框架的能力。刀哥还给我们讲了他的年少轻狂，大学未毕业就带着基友跑到上海出来创业。当然这也不是主要的。那晚最让我记忆犹新的一句话是，刀哥拒绝雷军的挽留时讲的，“我要当的是老大，你给不了我”。</p>
+<p>我曾经想过一个问题，<strong>怎样的人会在无形中让别人信服</strong>？</p>
+<p>现在我想给出一个答案，<strong>野心</strong>。这是我从身边有所成的人身上可以看到的。追求技术巅峰的野心，想要扬名立万的野心，想要建立起一个商业帝国的野心，想要改变生活的野心，乃至于要颠覆这个星球的野心。目标驱动主义，不达目标不罢休，不到棺材不落泪，甚至是置之死地而后生。突破现有的自己，想要紧紧握住通往梦想的门票。这就是野心。而这也是很难在一个大学生身上看到的，难能可贵的。</p>
+<p>作为大学生，我很难能够从身边同学的眼中看到渴望，看到野心，更多的反而是一种萎靡，通宵打LOL的疲倦，无所事事的宅，无所适从的迷茫。时光，在他们身上变成了荒土。每一个能够进入大学的学生，都曾经是不一般的人，都怀着梦想踏进校门的。但是大学没有给到他们想要的，没有教给他们独立的能力，前瞻的眼光，明确的目标，深刻的野心，反而丢弃了用十几年义务教育才养成的学习能力。</p>
+<p>肖老师说过，做科研只能是那些懂得精神满足的人才能做成功，比如一生都在say no的佩雷尔曼。因为只有在精神满足的情况下，你才能够全神贯注的进入到科研的领域中去。而对于野心，我认为正好相反，只有那些<strong>饥渴</strong>的人才能够拥有，因为精神上的饥渴，让他们极其渴望拥有，并且无从选择的去拥有，这就是野心。而这也是常人罕见的体验，常人只会甘于满足，认为，自讨苦吃的，不值得。没有人甘于平庸，但是，以大多数人努力的程度，注定平庸。</p>
+<p>已经大三下，对于这几年的大学生涯，虽有遗憾，但却是实实在在的充实，我感谢自己的努力。但是，平常的忙里忙外，却鲜少有所成就，甚至有时候都是在瞎忙，回首也不知道自己在忙些什么。或许，说白了，自己确实是没有野心，没有极其渴望得到某样东西的欲望，随遇则安，得过且过。这不行，得治。</p>
+<p>往者不可谏，来者犹可追。过去难以改变，也不需要改变，那就去改变未来吧。我不知道自己有一天会不会有颠覆世界的野心，也不知道自己能不能够改变这个世界。我只希望在我的每一个人生阶段，都能够有一个不一般的目标，一个小野心，跳出身边的圈子，找到更大的世界。</p>
+</div></article></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2022-07-24T05:27:06.278Z" title="7/24/2022, 1:27:06 PM">2022-07-24</time></span><span class="level-item">Updated&nbsp;<time dateTime="2022-07-24T04:29:08.592Z" title="7/24/2022, 12:29:08 PM">2022-07-24</time></span><span class="level-item">4 minutes read (About 553 words)</span></div></div><div class="content"><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    		<head>
+    			<meta content="text/html; charset=UTF-8" http-equiv="content-type"/>
+    			<meta content="乔布堂 cv.qiaobutang.com" name="keywords"/>
+    			<title>数据_陈越威_中南大学_18175139250</title>
+    			<style type="text/css">
+    				div, table, td, pre, input {
+    					margin: 0;
+    					padding: 0;
+    				}
+    				pre, textarea {
+    					white-space: pre-wrap;
+    					white-space: -moz-pre-wrap;
+    					white-space: -pre-wrap;
+    					white-space: -o-pre-wrap;
+    					word-wrap: break-word;
+    				}
+    				.border_box {
+						box-sizing: border-box;
+						-ms-box-sizing: border-box;
+						-moz-box-sizing: border-box;
+						-webkit-box-sizing: border-box;
+					}
+    				.row_layout .resume {
+    					margin: 0 auto;
+    				}
+    				.row_layout .resume .photo_table {
+    					border-collapse: separate;
+    					border-spacing: 0;
+    					table-layout: fixed;
+    					width: 100%;
+    				}
+    				.row_layout .resume .photo_table td {
+    					text-align: left;
+    					vertical-align: top;
+    				}
+    				.row_layout .resume .photo_table td img {
+    					border: 0;
+    					display: block;
+    				}
+    			</style>
+    			<style type="text/css">
+			.SimSun { font-family: SimSun, 宋体, 华文宋体; }
+                    .SimHei { font-family: SimHei, 黑体, Hei, 华文细黑, 华文黑体; }
+                    .SimKai { font-family: SimKai, 楷体, 楷体_GB2312, Kai, 华文楷体; }
+                    .SimFang { font-family: SimFang, 仿宋, 仿宋_GB2312, 华文仿宋; }
+                    .Arial { font-family: Arial; }
+                    .Times { font-family: Times New Roman; }
+                    .Tahoma { font-family: Tahoma; }
+                    .Verdana { font-family: Verdana; }
+                    
+		</style>
+    			<style type="text/css">
+    		.row_layout .resume {
+				border: 1px solid #ccc;
+				
+				-webkit-box-shadow: 0 1px 10px rgba(0,0,0,0.5);
+				-moz-box-shadow: 0 1px 10px rgba(0,0,0,0.5);
+				box-shadow: 0 1px 10px rgba(0,0,0,0.5);
+			}
+
+    		.row_layout .resume .section,
+    		.row_layout .resume .row {
+    			position: relative;
+    		}
+    		.row_layout .resume .row table {
+				border-collapse: separate;
+				border-spacing: 0;
+				table-layout: fixed;
+				width: 100%;
+			}
+    		.row_layout .resume .row .cell pre {
+    			display: block;
+    			position: relative;
+    			line-height: 0;
+    			font-size: 0;
+    		}
+    		@-moz-document url-prefix() {
+				.row_layout .resume .row table {
+					table-layout: auto;
+				}
+				.row_layout .resume .row table td {
+					max-width: 0;
+				}
+			}
+    	</style>
+    		</head>
+    		<body>
+    			<div class="row_layout">
+    				<div class="resume" style="width: 210.0mm;">
+    					<div class="inner_resume" style="margin: 12.0mm 17.0mm 5.0mm 17.0mm;">
+    					
+    					<div class="row" style="padding-top:0.0mm; padding-bottom:0.0mm;">
+						<table>
+							<tr>
+								<td class="cell border_box" style="width: auto; background-color: transparent; text-align: center; vertical-align: middle; border-top: 0.75pt none #444444; border-right: 0.75pt none #444444; border-bottom: 0.75pt none #444444; border-left: 0.75pt none #444444;">
+            <input type="hidden" name="key" value="name"/>
+            <pre style="min-height: 22pt; margin: 1.0mm 1.5mm 0.0mm 1.5mm;"><span class="Tahoma" style="font-size: 22pt; color: #000000; background-color: transparent; font-weight: bold; font-style: normal; text-decoration: none; line-height: 1.15;">YalesonChan</span></pre>
+        </td>
+							</tr>
+						</table>
+					</div><div class="row" style="padding-top:0.0mm; padding-bottom:0.0mm;">
+						<table>
+							<tr>
+								<td class="cell border_box" style="width: 29.7744%; background-color: transparent; text-align: center; vertical-align: middle; border-top: 0.75pt none #444444; border-right: 0.75pt none #444444; border-bottom: 0.75pt none #444444; border-left: 0.75pt none #444444;">
+            <input type="hidden" name="key" value="phone"/>
+            <pre style="min-height: 10pt; margin: 0.75mm 0.0mm 0.75mm 1.5mm;"><span class="Tahoma" style="font-size: 10pt; color: #000000; background-color: transparent; font-weight: normal; font-style: normal; text-decoration: none; line-height: 1.15;">(+86) 181-7513-9250</span></pre>
+        </td><td class="cell border_box" style="width: 41.6541%; background-color: transparent; text-align: center; vertical-align: middle; border-top: 0.75pt none #444444; border-right: 0.75pt none #444444; border-bottom: 0.75pt none #444444; border-left: 0.75pt none #444444;">
+            <input type="hidden" name="key" value="email"/>
+            <pre style="min-height: 10pt; margin: 0.75mm 0.0mm 0.75mm 1.5mm;"><span class="Tahoma" style="font-size: 10pt; color: #000000; background-color: transparent; font-weight: normal; font-style: normal; text-decoration: none; line-height: 1.15;">yalesonchan@163.com</span></pre>
+        </td><td class="cell border_box" style="width: auto; background-color: transparent; text-align: center; vertical-align: middle; border-top: 0.75pt none #444444; border-right: 0.75pt none #444444; border-bottom: 0.75pt none #444444; border-left: 0.75pt none #444444;">
+            <input type="hidden" name="key" value="social_network_account"/>
+            <pre style="min-height: 10pt; margin: 0.75mm 0.0mm 0.75mm 1.5mm;"><span class="Tahoma" style="font-size: 10pt; color: #000000; background-color: transparent; font-weight: normal; font-style: normal; text-decoration: none; line-height: 1.15;">Wechat: cyw20130609</span></pre>
+        </td>
+							</tr>
+						</table>
+					</div><div class="row" style="padding-top:0.0mm; padding-bottom:0.0mm;">
+						<table>
+							<tr>
+								<td class="cell border_box" style="width: auto; background-color: transparent; text-align: center; vertical-align: middle; border-top: 0.75pt none #444444; border-right: 0.75pt none #444444; border-bottom: 0.75pt none #444444; border-left: 0.75pt none #444444;">
+            <input type="hidden" name="key" value="intent"/>
+            <pre style="min-height: 10pt; margin: 0.75mm 0.0mm 0.75mm 1.5mm;"><span class="Tahoma" style="font-size: 10pt; color: #000000; background-color: transparent; font-weight: bold; font-style: normal; text-decoration: none; line-height: 1.15;">Seeking for a data analysis engineer position</span></pre>
+        </td>
+							</tr>
+						</table>
+					</div><div class="row" style="padding-top:0.0mm; padding-bottom:0.0mm;">
+						<table>
+							<tr>
+								<td class="cell border_box" style="width: auto; background-color: transparent; text-align: left; vertical-align: middle; border-top: 1.5pt none #444444; border-right: 1.5pt none #444444; border-bottom: 1.5pt none #444444; border-left: 1.5pt none #444444;">
+            <input type="hidden" name="key" value=""/>
+            <pre style="min-height: 1pt; margin: 2.0mm 1.5mm 0.0mm 1.5mm;"><span class="Tahoma" style="font-size: 1pt; color: #000000; background-color: transparent; font-weight: bold; font-style: normal; text-decoration: none; line-height: 1.15;"></span></pre>
+        </td>
+							</tr>
+						</table>
+					</div><div class="row" style="padding-top:0.0mm; padding-bottom:0.0mm;">
+						<table>
+							<tr>
+								<td class="cell border_box" style="width: auto; background-color: #eeeeee; text-align: left; vertical-align: middle; border-top: 1.5pt none #000000; border-right: 1.5pt none #000000; border-bottom: 1.5pt none #000000; border-left: 1.5pt none #000000;">
+            <input type="hidden" name="key" value="title"/>
+            <pre style="min-height: 11pt; margin: 1.5mm 1.5mm 1.0mm 1.0mm;"><span class="Tahoma" style="font-size: 11pt; color: #000000; background-color: transparent; font-weight: bold; font-style: normal; text-decoration: none; line-height: 1.15;">EDUCATION</span></pre>
+        </td>
+							</tr>
+						</table>
+					</div><div class="row" style="padding-top:0.0mm; padding-bottom:0.0mm;">
+						<table>
+							<tr>
+								<td class="cell border_box" style="width: auto; background-color: transparent; text-align: left; vertical-align: middle; border-top: 1.5pt none #444444; border-right: 1.5pt none #444444; border-bottom: 1.5pt none #444444; border-left: 1.5pt none #444444;">
+            <input type="hidden" name="key" value=""/>
+            <pre style="min-height: 1pt; margin: 0.5mm 1.5mm 0.0mm 1.5mm;"><span class="Tahoma" style="font-size: 1pt; color: #000000; background-color: transparent; font-weight: bold; font-style: normal; text-decoration: none; line-height: 1.15;"></span></pre>
+        </td>
+							</tr>
+						</table>
+					</div><div class="row" style="padding-top:0.0mm; padding-bottom:0.0mm;">
+						<table>
+							<tr>
+								<td class="cell border_box" style="width: 76.391%; background-color: transparent; text-align: left; vertical-align: middle; border-top: 0.75pt none #444444; border-right: 0.75pt none #444444; border-bottom: 0.75pt none #444444; border-left: 0.75pt none #444444;">
+            <input type="hidden" name="key" value="university"/>
+            <pre style="min-height: 10pt; margin: 0.75mm 1.5mm 0.75mm 1.5mm;"><span class="Tahoma" style="font-size: 10pt; color: #000000; background-color: transparent; font-weight: bold; font-style: normal; text-decoration: none; line-height: 1.15;">Central South University</span></pre>
+        </td><td class="cell border_box" style="width: auto; background-color: transparent; text-align: right; vertical-align: middle; border-top: 0.75pt none #444444; border-right: 0.75pt none #444444; border-bottom: 0.75pt none #444444; border-left: 0.75pt none #444444;">
+            <input type="hidden" name="key" value="period"/>
+            <pre style="min-height: 10pt; margin: 0.75mm 0.5mm 0.75mm 0.5mm;"><span class="Tahoma" style="font-size: 10pt; color: #000000; background-color: transparent; font-weight: normal; font-style: normal; text-decoration: none; line-height: 1.15;">Sep.2013-Jul.2017.07</span></pre>
+        </td>
+							</tr>
+						</table>
+					</div><div class="row" style="padding-top:0.0mm; padding-bottom:0.0mm;">
+						<table>
+							<tr>
+								<td class="cell border_box" style="width: auto; background-color: transparent; text-align: left; vertical-align: middle; border-top: 0.75pt none #444444; border-right: 0.75pt none #444444; border-bottom: 0.75pt none #444444; border-left: 0.75pt none #444444;">
+            <input type="hidden" name="key" value="major"/>
+            <pre style="min-height: 10pt; margin: 0.75mm 1.5mm 0.75mm 1.5mm;"><span class="Tahoma" style="font-size: 10pt; color: #000000; background-color: transparent; font-weight: bold; font-style: normal; text-decoration: none; line-height: 1.15;">Bachelor in Automation Professional</span></pre>
+        </td>
+							</tr>
+						</table>
+					</div><div class="row" style="padding-top:0.0mm; padding-bottom:0.0mm;">
+						<table>
+							<tr>
+								<td class="cell border_box" style="width: auto; background-color: transparent; text-align: left; vertical-align: middle; border-top: 0.75pt none #444444; border-right: 0.75pt none #444444; border-bottom: 0.75pt none #444444; border-left: 0.75pt none #444444;">
+            <input type="hidden" name="key" value=""/>
+            <pre style="min-height: 1pt; margin: 3.0mm 1.5mm 0.0mm 5.0mm;"><span class="Tahoma" style="font-size: 1pt; color: #000000; background-color: transparent; font-weight: normal; font-style: normal; text-decoration: none; line-height: 1.0;"></span></pre>
+        </td>
+							</tr>
+						</table>
+					</div><div class="row" style="padding-top:0.0mm; padding-bottom:0.0mm;">
+						<table>
+							<tr>
+								<td class="cell border_box" style="width: auto; background-color: #eeeeee; text-align: left; vertical-align: middle; border-top: 1.5pt none #000000; border-right: 1.5pt none #000000; border-bottom: 1.5pt none #000000; border-left: 1.5pt none #000000;">
+            <input type="hidden" name="key" value="title"/>
+            <pre style="min-height: 11pt; margin: 1.5mm 1.5mm 1.0mm 1.0mm;"><span class="Tahoma" style="font-size: 11pt; color: #000000; background-color: transparent; font-weight: bold; font-style: normal; text-decoration: none; line-height: 1.15;">SKILLS</span></pre>
+        </td>
+							</tr>
+						</table>
+					</div><div class="row" style="padding-top:0.0mm; padding-bottom:0.0mm;">
+						<table>
+							<tr>
+								<td class="cell border_box" style="width: auto; background-color: transparent; text-align: left; vertical-align: middle; border-top: 1.5pt none #444444; border-right: 1.5pt none #444444; border-bottom: 1.5pt none #444444; border-left: 1.5pt none #444444;">
+            <input type="hidden" name="key" value=""/>
+            <pre style="min-height: 1pt; margin: 0.5mm 1.5mm 0.0mm 1.5mm;"><span class="Tahoma" style="font-size: 1pt; color: #000000; background-color: transparent; font-weight: bold; font-style: normal; text-decoration: none; line-height: 1.15;"></span></pre>
+        </td>
+							</tr>
+						</table>
+					</div><div class="row" style="padding-top:0.0mm; padding-bottom:0.0mm;">
+						<table>
+							<tr>
+								<td class="cell border_box" style="width: auto; background-color: transparent; text-align: left; vertical-align: middle; border-top: 0.75pt none #444444; border-right: 0.75pt none #444444; border-bottom: 0.75pt none #444444; border-left: 0.75pt none #444444;">
+            <input type="hidden" name="key" value="content"/>
+            <pre style="min-height: 10pt; margin: 0.75mm 1.5mm 0.75mm 1.5mm;"><span class="Tahoma" style="font-size: 10pt; color: #000000; background-color: transparent; font-weight: normal; font-style: normal; text-decoration: none; line-height: 1.15;">Computer Language: Java, R, Python</span></pre>
+        </td>
+							</tr>
+						</table>
+					</div><div class="row" style="padding-top:0.0mm; padding-bottom:0.0mm;">
+						<table>
+							<tr>
+								<td class="cell border_box" style="width: auto; background-color: transparent; text-align: left; vertical-align: middle; border-top: 0.75pt none #444444; border-right: 0.75pt none #444444; border-bottom: 0.75pt none #444444; border-left: 0.75pt none #444444;">
+            <input type="hidden" name="key" value="content"/>
+            <pre style="min-height: 10pt; margin: 0.75mm 1.5mm 0.75mm 1.5mm;"><span class="Tahoma" style="font-size: 10pt; color: #000000; background-color: transparent; font-weight: normal; font-style: normal; text-decoration: none; line-height: 1.15;">Data Analysis Software: Hadoop, Matlab, R</span></pre>
+        </td>
+							</tr>
+						</table>
+					</div><div class="row" style="padding-top:0.0mm; padding-bottom:0.0mm;">
+						<table>
+							<tr>
+								<td class="cell border_box" style="width: auto; background-color: transparent; text-align: left; vertical-align: middle; border-top: 0.75pt none #444444; border-right: 0.75pt none #444444; border-bottom: 0.75pt none #444444; border-left: 0.75pt none #444444;">
+            <input type="hidden" name="key" value="content"/>
+            <pre style="min-height: 10pt; margin: 0.75mm 1.5mm 0.75mm 1.5mm;"><span class="Tahoma" style="font-size: 10pt; color: #000000; background-color: transparent; font-weight: normal; font-style: normal; text-decoration: none; line-height: 1.15;">Version management tools: SVN, GitHub</span></pre>
+        </td>
+							</tr>
+						</table>
+					</div><div class="row" style="padding-top:0.0mm; padding-bottom:0.0mm;">
+						<table>
+							<tr>
+								<td class="cell border_box" style="width: auto; background-color: transparent; text-align: left; vertical-align: middle; border-top: 0.75pt none #444444; border-right: 0.75pt none #444444; border-bottom: 0.75pt none #444444; border-left: 0.75pt none #444444;">
+            <input type="hidden" name="key" value="content"/>
+            <pre style="min-height: 10pt; margin: 0.75mm 1.5mm 0.75mm 1.5mm;"><span class="Tahoma" style="font-size: 10pt; color: #000000; background-color: transparent; font-weight: normal; font-style: normal; text-decoration: none; line-height: 1.15;">Algorithm: Machine Learning Algorithm</span></pre>
+        </td>
+							</tr>
+						</table>
+					</div><div class="row" style="padding-top:0.0mm; padding-bottom:0.0mm;">
+						<table>
+							<tr>
+								<td class="cell border_box" style="width: auto; background-color: transparent; text-align: left; vertical-align: middle; border-top: 0.75pt none #444444; border-right: 0.75pt none #444444; border-bottom: 0.75pt none #444444; border-left: 0.75pt none #444444;">
+            <input type="hidden" name="key" value="content"/>
+            <pre style="min-height: 10pt; margin: 0.75mm 1.5mm 0.75mm 1.5mm;"><span class="Tahoma" style="font-size: 10pt; color: #000000; background-color: transparent; font-weight: normal; font-style: normal; text-decoration: none; line-height: 1.15;">Operating Systems: Linux, Windows</span></pre>
+        </td>
+							</tr>
+						</table>
+					</div><div class="row" style="padding-top:0.0mm; padding-bottom:0.0mm;">
+						<table>
+							<tr>
+								<td class="cell border_box" style="width: auto; background-color: transparent; text-align: left; vertical-align: middle; border-top: 0.75pt none #444444; border-right: 0.75pt none #444444; border-bottom: 0.75pt none #444444; border-left: 0.75pt none #444444;">
+            <input type="hidden" name="key" value=""/>
+            <pre style="min-height: 1pt; margin: 3.0mm 1.5mm 0.0mm 5.0mm;"><span class="Tahoma" style="font-size: 1pt; color: #000000; background-color: transparent; font-weight: normal; font-style: normal; text-decoration: none; line-height: 1.0;"></span></pre>
+        </td>
+							</tr>
+						</table>
+					</div><div class="row" style="padding-top:0.0mm; padding-bottom:0.0mm;">
+						<table>
+							<tr>
+								<td class="cell border_box" style="width: auto; background-color: #eeeeee; text-align: left; vertical-align: middle; border-top: 1.5pt none #000000; border-right: 1.5pt none #000000; border-bottom: 1.5pt none #000000; border-left: 1.5pt none #000000;">
+            <input type="hidden" name="key" value="title"/>
+            <pre style="min-height: 11pt; margin: 1.5mm 1.5mm 1.0mm 1.0mm;"><span class="Tahoma" style="font-size: 11pt; color: #000000; background-color: transparent; font-weight: bold; font-style: normal; text-decoration: none; line-height: 1.15;">PROJECT EXPERIENCES</span></pre>
+        </td>
+							</tr>
+						</table>
+					</div><div class="row" style="padding-top:0.0mm; padding-bottom:0.0mm;">
+						<table>
+							<tr>
+								<td class="cell border_box" style="width: auto; background-color: transparent; text-align: left; vertical-align: middle; border-top: 1.5pt none #444444; border-right: 1.5pt none #444444; border-bottom: 1.5pt none #444444; border-left: 1.5pt none #444444;">
+            <input type="hidden" name="key" value=""/>
+            <pre style="min-height: 1pt; margin: 0.5mm 1.5mm 0.0mm 1.5mm;"><span class="Tahoma" style="font-size: 1pt; color: #000000; background-color: transparent; font-weight: bold; font-style: normal; text-decoration: none; line-height: 1.15;"></span></pre>
+        </td>
+							</tr>
+						</table>
+					</div><div class="row" style="padding-top:0.0mm; padding-bottom:0.0mm;">
+						<table>
+							<tr>
+								<td class="cell border_box" style="width: 75.4887%; background-color: transparent; text-align: left; vertical-align: middle; border-top: 0.75pt none #444444; border-right: 0.75pt none #444444; border-bottom: 0.75pt none #444444; border-left: 0.75pt none #444444;">
+            <input type="hidden" name="key" value="title"/>
+            <pre style="min-height: 10pt; margin: 0.75mm 5.0mm 0.75mm 1.5mm;"><span class="Tahoma" style="font-size: 10pt; color: #000000; background-color: transparent; font-weight: bold; font-style: normal; text-decoration: none; line-height: 1.15;">OriStone Programming Language</span></pre>
+        </td><td class="cell border_box" style="width: auto; background-color: transparent; text-align: right; vertical-align: middle; border-top: 0.75pt none #444444; border-right: 0.75pt none #444444; border-bottom: 0.75pt none #444444; border-left: 0.75pt none #444444;">
+            <input type="hidden" name="key" value="period"/>
+            <pre style="min-height: 10pt; margin: 0.75mm 0.5mm 0.75mm 1.5mm;"><span class="Tahoma" style="font-size: 10pt; color: #000000; background-color: transparent; font-weight: normal; font-style: normal; text-decoration: none; line-height: 1.15;">2015-2016</span></pre>
+        </td>
+							</tr>
+						</table>
+					</div><div class="row" style="padding-top:0.0mm; padding-bottom:0.0mm;">
+						<table>
+							<tr>
+								<td class="cell border_box" style="width: auto; background-color: transparent; text-align: left; vertical-align: middle; border-top: 0.75pt none #444444; border-right: 0.75pt none #444444; border-bottom: 0.75pt none #444444; border-left: 0.75pt none #444444;">
+            <input type="hidden" name="key" value="subtitle"/>
+            <pre style="min-height: 10pt; margin: 0.75mm 0.5mm 0.75mm 1.5mm;"><span class="Tahoma" style="font-size: 10pt; color: #000000; background-color: transparent; font-weight: bold; font-style: normal; text-decoration: none; line-height: 1.15;">Principal: Originally develope.</span></pre>
+        </td>
+							</tr>
+						</table>
+					</div><div class="row" style="padding-top:0.0mm; padding-bottom:0.0mm;">
+						<table>
+							<tr>
+								<td class="cell border_box" style="width: auto; background-color: transparent; text-align: left; vertical-align: middle; border-top: 0.75pt none #444444; border-right: 0.75pt none #444444; border-bottom: 0.75pt none #444444; border-left: 0.75pt none #444444;">
+            <input type="hidden" name="key" value="content"/>
+            <pre style="min-height: 10pt; margin: 0.5mm 0.0mm 0.5mm 1.5mm;"><span class="Tahoma" style="font-size: 10pt; color: #000000; background-color: transparent; font-weight: normal; font-style: normal; text-decoration: none; line-height: 1.5;">OriStone is a scripting language based on Java, which is object-oriented, and has its own VM.</span></pre>
+        </td>
+							</tr>
+						</table>
+					</div><div class="row" style="padding-top:0.0mm; padding-bottom:0.0mm;">
+						<table>
+							<tr>
+								<td class="cell border_box" style="width: auto; background-color: transparent; text-align: left; vertical-align: middle; border-top: 0.75pt none #444444; border-right: 0.75pt none #444444; border-bottom: 0.75pt none #444444; border-left: 0.75pt none #444444;">
+            <input type="hidden" name="key" value="content"/>
+            <pre style="min-height: 10pt; margin: 0.5mm 0.0mm 0.5mm 1.5mm;"><span class="Tahoma" style="font-size: 10pt; color: #000000; background-color: transparent; font-weight: normal; font-style: normal; text-decoration: none; line-height: 1.5;">Base on BNF paradigm, and regular expression parsing.</span></pre>
+        </td>
+							</tr>
+						</table>
+					</div><div class="row" style="padding-top:0.0mm; padding-bottom:0.0mm;">
+						<table>
+							<tr>
+								<td class="cell border_box" style="width: auto; background-color: transparent; text-align: left; vertical-align: middle; border-top: 0.75pt none #444444; border-right: 0.75pt none #444444; border-bottom: 0.75pt none #444444; border-left: 0.75pt none #444444;">
+            <input type="hidden" name="key" value="content"/>
+            <pre style="min-height: 10pt; margin: 0.5mm 0.0mm 0.5mm 1.5mm;"><span class="Tahoma" style="font-size: 10pt; color: #000000; background-color: transparent; font-weight: normal; font-style: normal; text-decoration: none; line-height: 1.5;">The language compiler, interpreter, grammatical structure and VM, have already been constructed.</span></pre>
+        </td>
+							</tr>
+						</table>
+					</div><div class="row" style="padding-top:0.0mm; padding-bottom:0.0mm;">
+						<table>
+							<tr>
+								<td class="cell border_box" style="width: 78.797%; background-color: transparent; text-align: left; vertical-align: middle; border-top: 0.75pt none #444444; border-right: 0.75pt none #444444; border-bottom: 0.75pt none #444444; border-left: 0.75pt none #444444;">
+            <input type="hidden" name="key" value="title"/>
+            <pre style="min-height: 10pt; margin: 0.75mm 5.0mm 0.75mm 1.5mm;"><span class="Tahoma" style="font-size: 10pt; color: #000000; background-color: transparent; font-weight: bold; font-style: normal; text-decoration: none; line-height: 1.15;">Entrepreneurial team of FindThings App</span></pre>
+        </td><td class="cell border_box" style="width: auto; background-color: transparent; text-align: right; vertical-align: middle; border-top: 0.75pt none #444444; border-right: 0.75pt none #444444; border-bottom: 0.75pt none #444444; border-left: 0.75pt none #444444;">
+            <input type="hidden" name="key" value="period"/>
+            <pre style="min-height: 10pt; margin: 0.75mm 0.5mm 0.75mm 1.5mm;"><span class="Tahoma" style="font-size: 10pt; color: #000000; background-color: transparent; font-weight: normal; font-style: normal; text-decoration: none; line-height: 1.15;">2014-2016</span></pre>
+        </td>
+							</tr>
+						</table>
+					</div><div class="row" style="padding-top:0.0mm; padding-bottom:0.0mm;">
+						<table>
+							<tr>
+								<td class="cell border_box" style="width: auto; background-color: transparent; text-align: left; vertical-align: middle; border-top: 0.75pt none #444444; border-right: 0.75pt none #444444; border-bottom: 0.75pt none #444444; border-left: 0.75pt none #444444;">
+            <input type="hidden" name="key" value="subtitle"/>
+            <pre style="min-height: 10pt; margin: 0.75mm 0.5mm 0.75mm 1.5mm;"><span class="Tahoma" style="font-size: 10pt; color: #000000; background-color: transparent; font-weight: bold; font-style: normal; text-decoration: none; line-height: 1.15;">CTO and Android development engineer</span></pre>
+        </td>
+							</tr>
+						</table>
+					</div><div class="row" style="padding-top:0.0mm; padding-bottom:0.0mm;">
+						<table>
+							<tr>
+								<td class="cell border_box" style="width: auto; background-color: transparent; text-align: left; vertical-align: middle; border-top: 0.75pt none #444444; border-right: 0.75pt none #444444; border-bottom: 0.75pt none #444444; border-left: 0.75pt none #444444;">
+            <input type="hidden" name="key" value="content"/>
+            <pre style="min-height: 10pt; margin: 0.5mm 0.0mm 0.5mm 1.5mm;"><span class="Tahoma" style="font-size: 10pt; color: #000000; background-color: transparent; font-weight: normal; font-style: normal; text-decoration: none; line-height: 1.5;">To meet the demand for skills and matching inside the College, the team, an intermediary platforms, including Android App and website, was established. </span></pre>
+        </td>
+							</tr>
+						</table>
+					</div><div class="row" style="padding-top:0.0mm; padding-bottom:0.0mm;">
+						<table>
+							<tr>
+								<td class="cell border_box" style="width: auto; background-color: transparent; text-align: left; vertical-align: middle; border-top: 0.75pt none #444444; border-right: 0.75pt none #444444; border-bottom: 0.75pt none #444444; border-left: 0.75pt none #444444;">
+            <input type="hidden" name="key" value="content"/>
+            <pre style="min-height: 10pt; margin: 0.5mm 0.0mm 0.5mm 1.5mm;"><span class="Tahoma" style="font-size: 10pt; color: #000000; background-color: transparent; font-weight: normal; font-style: normal; text-decoration: none; line-height: 1.5;">The project won the second prize of the Innovation, Entrepreneurship and Creativity Contest.</span></pre>
+        </td>
+							</tr>
+						</table>
+					</div><div class="row" style="padding-top:0.0mm; padding-bottom:0.0mm;">
+						<table>
+							<tr>
+								<td class="cell border_box" style="width: auto; background-color: transparent; text-align: left; vertical-align: middle; border-top: 0.75pt none #444444; border-right: 0.75pt none #444444; border-bottom: 0.75pt none #444444; border-left: 0.75pt none #444444;">
+            <input type="hidden" name="key" value="content"/>
+            <pre style="min-height: 10pt; margin: 0.5mm 0.0mm 0.5mm 1.5mm;"><span class="Tahoma" style="font-size: 10pt; color: #000000; background-color: transparent; font-weight: normal; font-style: normal; text-decoration: none; line-height: 1.5;">I am responsible for the speech, looking for investment. </span></pre>
+        </td>
+							</tr>
+						</table>
+					</div><div class="row" style="padding-top:0.0mm; padding-bottom:0.0mm;">
+						<table>
+							<tr>
+								<td class="cell border_box" style="width: auto; background-color: transparent; text-align: left; vertical-align: middle; border-top: 0.75pt none #444444; border-right: 0.75pt none #444444; border-bottom: 0.75pt none #444444; border-left: 0.75pt none #444444;">
+            <input type="hidden" name="key" value="content"/>
+            <pre style="min-height: 10pt; margin: 0.5mm 0.0mm 0.5mm 1.5mm;"><span class="Tahoma" style="font-size: 10pt; color: #000000; background-color: transparent; font-weight: normal; font-style: normal; text-decoration: none; line-height: 1.5;">Use technology development frameworks Volley.</span></pre>
+        </td>
+							</tr>
+						</table>
+					</div><div class="row" style="padding-top:0.0mm; padding-bottom:0.0mm;">
+						<table>
+							<tr>
+								<td class="cell border_box" style="width: 76.8421%; background-color: transparent; text-align: left; vertical-align: middle; border-top: 0.75pt none #444444; border-right: 0.75pt none #444444; border-bottom: 0.75pt none #444444; border-left: 0.75pt none #444444;">
+            <input type="hidden" name="key" value="title"/>
+            <pre style="min-height: 10pt; margin: 0.75mm 5.0mm 0.75mm 1.5mm;"><span class="Tahoma" style="font-size: 10pt; color: #000000; background-color: transparent; font-weight: bold; font-style: normal; text-decoration: none; line-height: 1.15;">Rescue Simulation Group of RoboCup Competition </span></pre>
+        </td><td class="cell border_box" style="width: auto; background-color: transparent; text-align: right; vertical-align: middle; border-top: 0.75pt none #444444; border-right: 0.75pt none #444444; border-bottom: 0.75pt none #444444; border-left: 0.75pt none #444444;">
+            <input type="hidden" name="key" value="period"/>
+            <pre style="min-height: 10pt; margin: 0.75mm 0.5mm 0.75mm 1.5mm;"><span class="Tahoma" style="font-size: 10pt; color: #000000; background-color: transparent; font-weight: normal; font-style: normal; text-decoration: none; line-height: 1.15;">2015-2016</span></pre>
+        </td>
+							</tr>
+						</table>
+					</div><div class="row" style="padding-top:0.0mm; padding-bottom:0.0mm;">
+						<table>
+							<tr>
+								<td class="cell border_box" style="width: auto; background-color: transparent; text-align: left; vertical-align: middle; border-top: 0.75pt none #444444; border-right: 0.75pt none #444444; border-bottom: 0.75pt none #444444; border-left: 0.75pt none #444444;">
+            <input type="hidden" name="key" value="subtitle"/>
+            <pre style="min-height: 10pt; margin: 0.75mm 0.5mm 0.75mm 1.5mm;"><span class="Tahoma" style="font-size: 10pt; color: #000000; background-color: transparent; font-weight: bold; font-style: normal; text-decoration: none; line-height: 1.15;">Core member</span></pre>
+        </td>
+							</tr>
+						</table>
+					</div><div class="row" style="padding-top:0.0mm; padding-bottom:0.0mm;">
+						<table>
+							<tr>
+								<td class="cell border_box" style="width: auto; background-color: transparent; text-align: left; vertical-align: middle; border-top: 0.75pt none #444444; border-right: 0.75pt none #444444; border-bottom: 0.75pt none #444444; border-left: 0.75pt none #444444;">
+            <input type="hidden" name="key" value="content"/>
+            <pre style="min-height: 10pt; margin: 0.5mm 0.0mm 0.5mm 1.5mm;"><span class="Tahoma" style="font-size: 10pt; color: #000000; background-color: transparent; font-weight: normal; font-style: normal; text-decoration: none; line-height: 1.5;">Based on photoelectric sensor and MCU, automatically patrol movement and the intelligent car on a particular task</span></pre>
+        </td>
+							</tr>
+						</table>
+					</div><div class="row" style="padding-top:0.0mm; padding-bottom:0.0mm;">
+						<table>
+							<tr>
+								<td class="cell border_box" style="width: auto; background-color: transparent; text-align: left; vertical-align: middle; border-top: 0.75pt none #444444; border-right: 0.75pt none #444444; border-bottom: 0.75pt none #444444; border-left: 0.75pt none #444444;">
+            <input type="hidden" name="key" value="content"/>
+            <pre style="min-height: 10pt; margin: 0.5mm 0.0mm 0.5mm 1.5mm;"><span class="Tahoma" style="font-size: 10pt; color: #000000; background-color: transparent; font-weight: normal; font-style: normal; text-decoration: none; line-height: 1.5;">Write operation algorithm of agents. Use KNN algorithm for partition, A * algorithm for searching path and so on.</span></pre>
+        </td>
+							</tr>
+						</table>
+					</div><div class="row" style="padding-top:0.0mm; padding-bottom:0.0mm;">
+						<table>
+							<tr>
+								<td class="cell border_box" style="width: auto; background-color: transparent; text-align: left; vertical-align: middle; border-top: 0.75pt none #444444; border-right: 0.75pt none #444444; border-bottom: 0.75pt none #444444; border-left: 0.75pt none #444444;">
+            <input type="hidden" name="key" value="content"/>
+            <pre style="min-height: 10pt; margin: 0.5mm 0.0mm 0.5mm 1.5mm;"><span class="Tahoma" style="font-size: 10pt; color: #000000; background-color: transparent; font-weight: normal; font-style: normal; text-decoration: none; line-height: 1.5;">Won the second prize of RoboCup in the world, and won the first prize in the national competition of RoboCup.</span></pre>
+        </td>
+							</tr>
+						</table>
+					</div><div class="row" style="padding-top:0.0mm; padding-bottom:0.0mm;">
+						<table>
+							<tr>
+								<td class="cell border_box" style="width: auto; background-color: transparent; text-align: left; vertical-align: middle; border-top: 1.5pt none #444444; border-right: 1.5pt none #444444; border-bottom: 1.5pt none #444444; border-left: 1.5pt none #444444;">
+            <input type="hidden" name="key" value=""/>
+            <pre style="min-height: 1pt; margin: 0.5mm 1.5mm 0.0mm 1.5mm;"><span class="Tahoma" style="font-size: 1pt; color: #000000; background-color: transparent; font-weight: bold; font-style: normal; text-decoration: none; line-height: 1.15;"></span></pre>
+        </td>
+							</tr>
+						</table>
+					</div><div class="row" style="padding-top:0.0mm; padding-bottom:0.0mm;">
+						<table>
+							<tr>
+								<td class="cell border_box" style="width: auto; background-color: transparent; text-align: left; vertical-align: middle; border-top: 0.75pt none #444444; border-right: 0.75pt none #444444; border-bottom: 0.75pt none #444444; border-left: 0.75pt none #444444;">
+            <input type="hidden" name="key" value=""/>
+            <pre style="min-height: 1pt; margin: 3.0mm 1.5mm 0.0mm 5.0mm;"><span class="Tahoma" style="font-size: 1pt; color: #000000; background-color: transparent; font-weight: normal; font-style: normal; text-decoration: none; line-height: 1.0;"></span></pre>
+        </td>
+							</tr>
+						</table>
+					</div><div class="row" style="padding-top:0.0mm; padding-bottom:0.0mm;">
+						<table>
+							<tr>
+								<td class="cell border_box" style="width: auto; background-color: #eeeeee; text-align: left; vertical-align: middle; border-top: 1.5pt none #000000; border-right: 1.5pt none #000000; border-bottom: 1.5pt none #000000; border-left: 1.5pt none #000000;">
+            <input type="hidden" name="key" value="title"/>
+            <pre style="min-height: 11pt; margin: 1.5mm 1.5mm 1.0mm 1.0mm;"><span class="Tahoma" style="font-size: 11pt; color: #000000; background-color: transparent; font-weight: bold; font-style: normal; text-decoration: none; line-height: 1.15;">INTERN EXPERIENCE</span></pre>
+        </td>
+							</tr>
+						</table>
+					</div><div class="row" style="padding-top:0.0mm; padding-bottom:0.0mm;">
+						<table>
+							<tr>
+								<td class="cell border_box" style="width: auto; background-color: transparent; text-align: left; vertical-align: middle; border-top: 1.5pt none #444444; border-right: 1.5pt none #444444; border-bottom: 1.5pt none #444444; border-left: 1.5pt none #444444;">
+            <input type="hidden" name="key" value=""/>
+            <pre style="min-height: 1pt; margin: 0.5mm 1.5mm 0.0mm 1.5mm;"><span class="Tahoma" style="font-size: 1pt; color: #000000; background-color: transparent; font-weight: bold; font-style: normal; text-decoration: none; line-height: 1.15;"></span></pre>
+        </td>
+							</tr>
+						</table>
+					</div><div class="row" style="padding-top:0.0mm; padding-bottom:0.0mm;">
+						<table>
+							<tr>
+								<td class="cell border_box" style="width: 78.0451%; background-color: transparent; text-align: left; vertical-align: middle; border-top: 0.75pt none #444444; border-right: 0.75pt none #444444; border-bottom: 0.75pt none #444444; border-left: 0.75pt none #444444;">
+            <input type="hidden" name="key" value="title"/>
+            <pre style="min-height: 10pt; margin: 0.75mm 5.0mm 0.75mm 1.5mm;"><span class="Tahoma" style="font-size: 10pt; color: #000000; background-color: transparent; font-weight: bold; font-style: normal; text-decoration: none; line-height: 1.15;">Qutke Ltd. in Beijing</span></pre>
+        </td><td class="cell border_box" style="width: auto; background-color: transparent; text-align: right; vertical-align: middle; border-top: 0.75pt none #444444; border-right: 0.75pt none #444444; border-bottom: 0.75pt none #444444; border-left: 0.75pt none #444444;">
+            <input type="hidden" name="key" value="period"/>
+            <pre style="min-height: 10pt; margin: 0.75mm 0.5mm 0.75mm 1.5mm;"><span class="Tahoma" style="font-size: 10pt; color: #000000; background-color: transparent; font-weight: normal; font-style: normal; text-decoration: none; line-height: 1.15;">Dec.2015-Feb.2016</span></pre>
+        </td>
+							</tr>
+						</table>
+					</div><div class="row" style="padding-top:0.0mm; padding-bottom:0.0mm;">
+						<table>
+							<tr>
+								<td class="cell border_box" style="width: auto; background-color: transparent; text-align: left; vertical-align: middle; border-top: 0.75pt none #444444; border-right: 0.75pt none #444444; border-bottom: 0.75pt none #444444; border-left: 0.75pt none #444444;">
+            <input type="hidden" name="key" value="subtitle"/>
+            <pre style="min-height: 10pt; margin: 0.75mm 0.5mm 0.75mm 1.5mm;"><span class="Tahoma" style="font-size: 10pt; color: #000000; background-color: transparent; font-weight: bold; font-style: normal; text-decoration: none; line-height: 1.15;">R Programming Language intern</span></pre>
+        </td>
+							</tr>
+						</table>
+					</div><div class="row" style="padding-top:0.0mm; padding-bottom:0.0mm;">
+						<table>
+							<tr>
+								<td class="cell border_box" style="width: auto; background-color: transparent; text-align: left; vertical-align: middle; border-top: 0.75pt none #444444; border-right: 0.75pt none #444444; border-bottom: 0.75pt none #444444; border-left: 0.75pt none #444444;">
+            <input type="hidden" name="key" value="content"/>
+            <pre style="min-height: 10pt; margin: 0.5mm 0.0mm 0.5mm 1.5mm;"><span class="Tahoma" style="font-size: 10pt; color: #000000; background-color: transparent; font-weight: normal; font-style: normal; text-decoration: none; line-height: 1.5;">Optimized code about the Internet banking, and wrote the blog about how to use the API.</span></pre>
+        </td>
+							</tr>
+						</table>
+					</div><div class="row" style="padding-top:0.0mm; padding-bottom:0.0mm;">
+						<table>
+							<tr>
+								<td class="cell border_box" style="width: 79.3985%; background-color: transparent; text-align: left; vertical-align: middle; border-top: 0.75pt none #444444; border-right: 0.75pt none #444444; border-bottom: 0.75pt none #444444; border-left: 0.75pt none #444444;">
+            <input type="hidden" name="key" value="title"/>
+            <pre style="min-height: 10pt; margin: 0.75mm 0.0mm 0.75mm 1.5mm;"><span class="Tahoma" style="font-size: 10pt; color: #000000; background-color: transparent; font-weight: bold; font-style: normal; text-decoration: none; line-height: 1.15;">Pipa Planet Ltd. in Changsha</span></pre>
+        </td><td class="cell border_box" style="width: auto; background-color: transparent; text-align: right; vertical-align: middle; border-top: 0.75pt none #444444; border-right: 0.75pt none #444444; border-bottom: 0.75pt none #444444; border-left: 0.75pt none #444444;">
+            <input type="hidden" name="key" value="period"/>
+            <pre style="min-height: 10pt; margin: 0.75mm 0.0mm 0.75mm 0.0mm;"><span class="Tahoma" style="font-size: 10pt; color: #000000; background-color: transparent; font-weight: normal; font-style: normal; text-decoration: none; line-height: 1.15;">Aug.2015-Sep.2019</span></pre>
+        </td>
+							</tr>
+						</table>
+					</div><div class="row" style="padding-top:0.0mm; padding-bottom:0.0mm;">
+						<table>
+							<tr>
+								<td class="cell border_box" style="width: auto; background-color: transparent; text-align: left; vertical-align: middle; border-top: 0.75pt none #444444; border-right: 0.75pt none #444444; border-bottom: 0.75pt none #444444; border-left: 0.75pt none #444444;">
+            <input type="hidden" name="key" value="subtitle"/>
+            <pre style="min-height: 10pt; margin: 0.75mm 0.0mm 0.75mm 1.5mm;"><span class="Tahoma" style="font-size: 10pt; color: #000000; background-color: transparent; font-weight: bold; font-style: normal; text-decoration: none; line-height: 1.15;">All Stack Engineer</span></pre>
+        </td>
+							</tr>
+						</table>
+					</div><div class="row" style="padding-top:0.0mm; padding-bottom:0.0mm;">
+						<table>
+							<tr>
+								<td class="cell border_box" style="width: auto; background-color: transparent; text-align: left; vertical-align: middle; border-top: 0.75pt none #444444; border-right: 0.75pt none #444444; border-bottom: 0.75pt none #444444; border-left: 0.75pt none #444444;">
+            <input type="hidden" name="key" value="subtitle"/>
+            <pre style="min-height: 10pt; margin: 0.75mm 0.0mm 0.75mm 1.5mm;"><span class="Tahoma" style="font-size: 10pt; color: #000000; background-color: transparent; font-weight: normal; font-style: normal; text-decoration: none; line-height: 1.15;">Responsible for Web Development.Use the technical framework of bootsrap.</span></pre>
+        </td>
+							</tr>
+						</table>
+					</div><div class="row" style="padding-top:0.0mm; padding-bottom:0.0mm;">
+						<table>
+							<tr>
+								<td class="cell border_box" style="width: auto; background-color: transparent; text-align: left; vertical-align: middle; border-top: 0.75pt none #444444; border-right: 0.75pt none #444444; border-bottom: 0.75pt none #444444; border-left: 0.75pt none #444444;">
+            <input type="hidden" name="key" value=""/>
+            <pre style="min-height: 1pt; margin: 3.0mm 1.5mm 0.0mm 5.0mm;"><span class="Tahoma" style="font-size: 1pt; color: #000000; background-color: transparent; font-weight: normal; font-style: normal; text-decoration: none; line-height: 1.0;"></span></pre>
+        </td>
+							</tr>
+						</table>
+					</div><div class="row" style="padding-top:0.0mm; padding-bottom:0.0mm;">
+						<table>
+							<tr>
+								<td class="cell border_box" style="width: auto; background-color: #eeeeee; text-align: left; vertical-align: middle; border-top: 1.5pt none #000000; border-right: 1.5pt none #000000; border-bottom: 1.5pt none #000000; border-left: 1.5pt none #000000;">
+            <input type="hidden" name="key" value="title"/>
+            <pre style="min-height: 11pt; margin: 1.5mm 1.5mm 1.0mm 1.0mm;"><span class="Tahoma" style="font-size: 11pt; color: #000000; background-color: transparent; font-weight: bold; font-style: normal; text-decoration: none; line-height: 1.15;">BLOG: cyw3.github.io/YalesonChan</span></pre>
+        </td>
+							</tr>
+						</table>
+					</div><div class="row" style="padding-top:0.0mm; padding-bottom:0.0mm;">
+						<table>
+							<tr>
+								<td class="cell border_box" style="width: auto; background-color: transparent; text-align: left; vertical-align: middle; border-top: 1.5pt none #444444; border-right: 1.5pt none #444444; border-bottom: 1.5pt none #444444; border-left: 1.5pt none #444444;">
+            <input type="hidden" name="key" value=""/>
+            <pre style="min-height: 1pt; margin: 0.5mm 1.5mm 0.0mm 1.5mm;"><span class="Tahoma" style="font-size: 1pt; color: #000000; background-color: transparent; font-weight: bold; font-style: normal; text-decoration: none; line-height: 1.15;"></span></pre>
+        </td>
+							</tr>
+						</table>
+					</div><div class="row" style="padding-top:0.0mm; padding-bottom:0.0mm;">
+						<table>
+							<tr>
+								<td class="cell border_box" style="width: auto; background-color: transparent; text-align: left; vertical-align: middle; border-top: 0.75pt none #444444; border-right: 0.75pt none #444444; border-bottom: 0.75pt none #444444; border-left: 0.75pt none #444444;">
+            <input type="hidden" name="key" value=""/>
+            <pre style="min-height: 1pt; margin: 3.0mm 1.5mm 0.0mm 5.0mm;"><span class="Tahoma" style="font-size: 1pt; color: #000000; background-color: transparent; font-weight: normal; font-style: normal; text-decoration: none; line-height: 1.0;"></span></pre>
+        </td>
+							</tr>
+						</table>
+					</div><div class="row" style="padding-top:0.0mm; padding-bottom:0.0mm;">
+						<table>
+							<tr>
+								<td class="cell border_box" style="width: auto; background-color: #eeeeee; text-align: left; vertical-align: middle; border-top: 1.5pt none #000000; border-right: 1.5pt none #000000; border-bottom: 1.5pt none #000000; border-left: 1.5pt none #000000;">
+            <input type="hidden" name="key" value="title"/>
+            <pre style="min-height: 11pt; margin: 1.5mm 1.5mm 1.0mm 1.0mm;"><span class="Tahoma" style="font-size: 11pt; color: #000000; background-color: transparent; font-weight: bold; font-style: normal; text-decoration: none; line-height: 1.15;">HOBBIES</span></pre>
+        </td>
+							</tr>
+						</table>
+					</div><div class="row" style="padding-top:0.0mm; padding-bottom:0.0mm;">
+						<table>
+							<tr>
+								<td class="cell border_box" style="width: auto; background-color: transparent; text-align: left; vertical-align: middle; border-top: 1.5pt none #444444; border-right: 1.5pt none #444444; border-bottom: 1.5pt none #444444; border-left: 1.5pt none #444444;">
+            <input type="hidden" name="key" value=""/>
+            <pre style="min-height: 1pt; margin: 0.5mm 1.5mm 0.0mm 1.5mm;"><span class="Tahoma" style="font-size: 1pt; color: #000000; background-color: transparent; font-weight: bold; font-style: normal; text-decoration: none; line-height: 1.15;"></span></pre>
+        </td>
+							</tr>
+						</table>
+					</div><div class="row" style="padding-top:0.0mm; padding-bottom:0.0mm;">
+						<table>
+							<tr>
+								<td class="cell border_box" style="width: auto; background-color: transparent; text-align: left; vertical-align: middle; border-top: 0.75pt none #444444; border-right: 0.75pt none #444444; border-bottom: 0.75pt none #444444; border-left: 0.75pt none #444444;">
+            <input type="hidden" name="key" value="content"/>
+            <pre style="min-height: 10pt; margin: 0.75mm 1.5mm 0.75mm 1.5mm;"><span class="Tahoma" style="font-size: 10pt; color: #000000; background-color: transparent; font-weight: normal; font-style: normal; text-decoration: none; line-height: 1.15;">Sing songs, traveling, skating, Eason,the book of Three Body, AI.</span></pre>
+        </td>
+							</tr>
+						</table>
+					</div>
+    					</div>
+    				</div>
+    			</div>
+    		</body>
+    	</html></div></article></div><nav class="pagination" role="navigation" aria-label="pagination"><div class="pagination-previous"><a href="/">Previous</a></div><div class="pagination-next"><a href="/page/3/">Next</a></div><ul class="pagination-list is-hidden-mobile"><li><a class="pagination-link" href="/">1</a></li><li><a class="pagination-link is-current" href="/page/2/">2</a></li><li><a class="pagination-link" href="/page/3/">3</a></li></ul></nav></div><div class="column column-left is-4-tablet is-4-desktop is-4-widescreen  order-1"><div class="card widget" data-type="profile"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="avatar" src="/img/avatar.png" alt="Your name"></figure><p class="title is-size-4 is-block" style="line-height:inherit;">Your name</p><p class="is-size-6 is-block">Your title</p><p class="is-size-6 is-flex justify-content-center"><i class="fas fa-map-marker-alt mr-1"></i><span>Your location</span></p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">Posts</p><a href="/archives"><p class="title">29</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">Categories</p><a href="/categories"><p class="title">0</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">Tags</p><a href="/tags"><p class="title">0</p></a></div></div></nav><div class="level"><a class="level-item button is-primary is-rounded" href="https://github.com/ppoffice" target="_blank" rel="noopener">Follow</a></div><div class="level is-mobile is-multiline"><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Github" href="https://github.com/ppoffice"><i class="fab fa-github"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Facebook" href="https://facebook.com"><i class="fab fa-facebook"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Twitter" href="https://twitter.com"><i class="fab fa-twitter"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Dribbble" href="https://dribbble.com"><i class="fab fa-dribbble"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="RSS" href="/"><i class="fas fa-rss"></i></a></div></div></div><!--!--><div class="card widget" data-type="links"><div class="card-content"><div class="menu"><h3 class="menu-label">Links</h3><ul class="menu-list"><li><a class="level is-mobile" href="https://hexo.io" target="_blank" rel="noopener"><span class="level-left"><span class="level-item">Hexo</span></span><span class="level-right"><span class="level-item tag">hexo.io</span></span></a></li><li><a class="level is-mobile" href="https://bulma.io" target="_blank" rel="noopener"><span class="level-left"><span class="level-item">Bulma</span></span><span class="level-right"><span class="level-item tag">bulma.io</span></span></a></li></ul></div></div></div><!--!--><div class="card widget" data-type="recent-posts"><div class="card-content"><h3 class="menu-label">Recents</h3><article class="media"><div class="media-content"><p class="date"><time dateTime="2022-07-24T05:34:45.046Z">2022-07-24</time></p><p class="title"><a href="/2022/07/24/2016-01-20-OpenCV-with-CodeBlocks/">OpenCV with CodeBlocks</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2022-07-24T05:34:43.614Z">2022-07-24</time></p><p class="title"><a href="/2022/07/24/2016-01-19-Rescue-Simulation-League-Team-Description-S.O.S-(Iran)/">RoboCup Rescue 2015 – Rescue Simulation League Team Description S.O.S (Iran)</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2022-07-24T05:34:43.614Z">2022-07-24</time></p><p class="title"><a href="/2022/07/24/2016-01-22-Gaussian-Blur/">Gaussian Blur</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2022-07-24T05:34:43.614Z">2022-07-24</time></p><p class="title"><a href="/2022/07/24/2016-04-04-Android-Activity/">Activity on Android</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2022-07-24T05:34:43.614Z">2022-07-24</time></p><p class="title"><a href="/2022/07/24/2016-04-04-Android-Service/">Service on Android</a></p></div></article></div></div><div class="card widget" data-type="archives"><div class="card-content"><div class="menu"><h3 class="menu-label">Archives</h3><ul class="menu-list"><li><a class="level is-mobile" href="/archives/2022/07/"><span class="level-start"><span class="level-item">July 2022</span></span><span class="level-end"><span class="level-item tag">29</span></span></a></li></ul></div></div></div><!--!--><div class="card widget" data-type="subscribe-email"><div class="card-content"><div class="menu"><h3 class="menu-label">Subscribe for updates</h3><form action="https://feedburner.google.com/fb/a/mailverify" method="post" target="popupwindow" onsubmit="window.open(&#039;https://feedburner.google.com/fb/a/mailverify?uri=&#039;,&#039;popupwindow&#039;,&#039;scrollbars=yes,width=550,height=520&#039;);return true"><input type="hidden" value="" name="uri"><input type="hidden" name="loc" value="en_US"><div class="field has-addons"><div class="control has-icons-left is-expanded"><input class="input" name="email" type="email" placeholder="Email"><span class="icon is-small is-left"><i class="fas fa-envelope"></i></span></div><div class="control"><input class="button" type="submit" value="Subscribe"></div></div></form></div></div></div><div class="card widget"><div class="card-content"><div class="notification is-danger">You need to set <code>client_id</code> and <code>slot_id</code> to show this AD unit. Please set it in <code>_config.yml</code>.</div></div></div><div class="card widget" data-type="subscribe-email"><div class="card-content"><div class="menu"><h3 class="menu-label">follow.it</h3><form action="" method="post" target="_blank"><div class="field has-addons"><div class="control has-icons-left is-expanded"><input class="input" name="email" type="email" placeholder="Email"><span class="icon is-small is-left"><i class="fas fa-envelope"></i></span></div><div class="control"><input class="button" type="submit" value="Subscribe"></div></div></form></div></div></div></div><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/logo.svg" alt="Hexo" height="28"></a><p class="is-size-7"><span>&copy; 2022 John Doe</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/"><i class="fab fa-creative-commons-by"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("en");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script src="/js/column.js"></script><script src="/js/animation.js"></script><a id="back-to-top" title="Back to top" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js" defer></script><script>window.addEventListener("load", () => {
+      window.cookieconsent.initialise({
+        type: "info",
+        theme: "edgeless",
+        static: false,
+        position: "bottom-left",
+        content: {
+          message: "This website uses cookies to improve your experience.",
+          dismiss: "Got it!",
+          allow: "Allow cookies",
+          deny: "Decline",
+          link: "Learn more",
+          policy: "Cookie Policy",
+          href: "https://www.cookiesandyou.com/",
+        },
+        palette: {
+          popup: {
+            background: "#edeff5",
+            text: "#838391"
+          },
+          button: {
+            background: "#4b81e8"
+          },
+        },
+      });
+    });</script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="Type something..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"Type something...","untitled":"(Untitled)","posts":"Posts","pages":"Pages","categories":"Categories","tags":"Tags"});
+        });</script></body></html>

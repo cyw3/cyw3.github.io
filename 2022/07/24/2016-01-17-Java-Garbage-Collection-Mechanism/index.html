@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>Java Garbage Collection Mechanism - Hexo</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="Hexo"><meta name="msapplication-TileImage" content="/img/favicon.svg"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Hexo"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="前言所谓“java”，其实不只是一门语言，而是一种设计的美丽，更是一种关于世界观、关于架构之美的映射。 java的底层架构，一个我所未知的世界，一个我想了解的世界。所以，我开始结识到java虚拟机(JVM)，以及java之中的垃圾收集机制。 目录1.JVM 2.Java Garbage Collection Mechanism 3.Java GC 1.JVM既然我们时常说到”JVM(java虚拟机"><meta property="og:type" content="blog"><meta property="og:title" content="Java Garbage Collection Mechanism"><meta property="og:url" content="http://example.com/2022/07/24/2016-01-17-Java-Garbage-Collection-Mechanism/"><meta property="og:site_name" content="Hexo"><meta property="og:description" content="前言所谓“java”，其实不只是一门语言，而是一种设计的美丽，更是一种关于世界观、关于架构之美的映射。 java的底层架构，一个我所未知的世界，一个我想了解的世界。所以，我开始结识到java虚拟机(JVM)，以及java之中的垃圾收集机制。 目录1.JVM 2.Java Garbage Collection Mechanism 3.Java GC 1.JVM既然我们时常说到”JVM(java虚拟机"><meta property="og:locale" content="en_US"><meta property="og:image" content="http://dl2.iteye.com/upload/attachment/0107/3332/dcc4a0d7-2709-3d5e-8bfe-11f9bee29899.jpeg"><meta property="og:image" content="http://dl2.iteye.com/upload/attachment/0107/3336/1d0e5a0a-6967-3770-a6c3-80518ba5ffc9.jpeg"><meta property="article:published_time" content="2022-07-24T05:27:05.562Z"><meta property="article:modified_time" content="2022-07-24T04:29:08.592Z"><meta property="article:author" content="YalesonChan"><meta property="twitter:card" content="summary"><meta property="twitter:image:src" content="http://dl2.iteye.com/upload/attachment/0107/3332/dcc4a0d7-2709-3d5e-8bfe-11f9bee29899.jpeg"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://example.com/2022/07/24/2016-01-17-Java-Garbage-Collection-Mechanism/"},"headline":"Java Garbage Collection Mechanism","image":[],"datePublished":"2022-07-24T05:27:05.562Z","dateModified":"2022-07-24T04:29:08.592Z","author":{"@type":"Person","name":"YalesonChan"},"publisher":{"@type":"Organization","name":"Hexo","logo":{"@type":"ImageObject","url":"http://example.com/img/logo.svg"}},"description":"前言所谓“java”，其实不只是一门语言，而是一种设计的美丽，更是一种关于世界观、关于架构之美的映射。 java的底层架构，一个我所未知的世界，一个我想了解的世界。所以，我开始结识到java虚拟机(JVM)，以及java之中的垃圾收集机制。 目录1.JVM 2.Java Garbage Collection Mechanism 3.Java GC 1.JVM既然我们时常说到”JVM(java虚拟机"}</script><link rel="canonical" href="http://example.com/2022/07/24/2016-01-17-Java-Garbage-Collection-Mechanism/"><link rel="icon" href="/img/favicon.svg"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/css/justifiedGallery.min.css"><!--!--><!--!--><style>.pace{-webkit-pointer-events:none;pointer-events:none;-webkit-user-select:none;-moz-user-select:none;user-select:none}.pace-inactive{display:none}.pace .pace-progress{background:#3273dc;position:fixed;z-index:2000;top:0;right:100%;width:100%;height:2px}</style><script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js"></script><!--!--><!--!--><!-- hexo injector head_end start --><script>
+  (function () {
+      function switchTab() {
+          if (!location.hash) {
+            return;
+          }
+          Array
+              .from(document.querySelectorAll('.tab-content'))
+              .forEach($tab => {
+                  $tab.classList.add('is-hidden');
+              });
+          Array
+              .from(document.querySelectorAll('.tabs li'))
+              .forEach($tab => {
+                  $tab.classList.remove('is-active');
+              });
+          const $activeTab = document.querySelector(location.hash);
+          if ($activeTab) {
+              $activeTab.classList.remove('is-hidden');
+          }
+          const $tabMenu = document.querySelector(`a[href="${location.hash}"]`);
+          if ($tabMenu) {
+              $tabMenu.parentElement.classList.add('is-active');
+          }
+      }
+      switchTab();
+      window.addEventListener('hashchange', switchTab, false);
+  })();
+  </script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.2.0"></head><body class="is-2-column"><nav class="navbar navbar-main"><div class="container navbar-container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/logo.svg" alt="Hexo" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a><a class="navbar-item" href="/about">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a><a class="navbar-item search" title="Search" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-8-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2022-07-24T05:27:05.562Z" title="7/24/2022, 1:27:05 PM">2022-07-24</time></span><span class="level-item">Updated&nbsp;<time dateTime="2022-07-24T04:29:08.592Z" title="7/24/2022, 12:29:08 PM">2022-07-24</time></span><span class="level-item"> YalesonChan </span><span class="level-item">21 minutes read (About 3119 words)</span></div></div><h1 class="title is-3 is-size-4-mobile">Java Garbage Collection Mechanism</h1><div class="content"><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>所谓“java”，其实不只是一门语言，而是一种设计的美丽，更是一种关于世界观、关于架构之美的映射。</p>
+<p>java的底层架构，一个我所未知的世界，一个我想了解的世界。所以，我开始结识到java虚拟机(JVM)，以及java之中的垃圾收集机制。</p>
+<h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><p>1.JVM</p>
+<p>2.Java Garbage Collection Mechanism</p>
+<p>3.Java GC</p>
+<h2 id="1-JVM"><a href="#1-JVM" class="headerlink" title="1.JVM"></a>1.JVM</h2><p>既然我们时常说到”JVM(java虚拟机)”，那么所谓的java虚拟机到底是什么吗？我认为他应该是这样的：</p>
+<p>java虚拟机，Java Virtual Machine，跟我们平常使用的Virtual PC或者VMware一样，是在操作系统上面运行的，一类模仿操作系统环境，虚构出来的计算机。Java虚拟机有自己完善的硬体架构，如处理器、堆栈、寄存器等，还具有相应的指令系统。不过，VMware等是属于系统虚拟机，而JVM是属于程序虚拟机。</p>
+<p>既然我们都说java虚拟机十分重要，那么他为什么这么重要呢？</p>
+<p>我们都曾弄过java的环境配置，都知道，要从Oracle官网下载jdk进行安装，知道jdk里面含有Jre，知道我们要设置计算机的环境路径。但是，对于新手来说，可能不知道，我们做这些工作，其实都是在做一件事情——配置java的虚拟机。我们所编写的java程序，经过编译之后，会生成可以在Java虚拟机上运行的字节码文件。因为每一个可以运行java程序的计算机，都拥有java虚拟机，拥有一样的运行环境。所以，在一种平台下编译生成的字节码文件，便可以在不同的平台下运行。</p>
+<p>综上可知，JVM的优势是：屏蔽具体平台的信息，实现跨平台开发。</p>
+<p>一般的高级语言如果要在不同的平台上运行，至少需要编译成不同的目标代码。而引入Java语言虚拟机后，Java语言在不同平台上运行时不需要重新编译。Java语言使用模式Java虚拟机屏蔽了与具体平台相关的信息，使得Java语言编译程序只需生成在Java虚拟机上运行的目标代码（字节码），就可以在多种平台上不加修改地运行。Java虚拟机在执行字节码时，把字节码解释成具体平台上的机器指令执行。</p>
+<p>显然，没有JVM，java将不会有今天这般的辉煌。那么，JVM具体上是如何工作的呢？</p>
+<p>JVM的工作：</p>
+<p>1、先通过调用jdk之中的java.exe，来让操作系统装载jvm。</p>
+<p>2、配置jvm的环境：</p>
+<p>1）创建JVM装载环境和配置</p>
+<p>2）装载JVM.dll</p>
+<p>3）初始化JVM.dll并挂界到JNIENV（JNI调用接口）实例</p>
+<p>4）调用JNIENV实例装载并处理class类</p>
+<p>JVM在整个jdk中处于最底层的，负责操作系统的交互，用来屏蔽操作系统环境，提供一个完整的java运行环境。</p>
+<p>首先是将JVM装入环境，JVM提供的方式是操作系统的动态链接文件。既然是装载JVM的文件，那么操作系统会在你的path下面找到你的程序的java.exe，再从里面通过各种调用寻找jvm.dll以及jvm.cfg，将其装载到操作系统，这样就可以在java中调用JVM的函数了。这些工作做完之后就开始运行java程序了。</p>
+<p>Java程序有两种方式一种是jar包，一种是class.</p>
+<p>运行jar,Java -jar XXX.jar运行的时候</p>
+<p>1、Java.exe调用GetMainClassName函数，该函数先获得JNIEnv实例，然后调用Java类           Java.util.jar.JarFileJNIEnv中方法getManifest()并从返回的Manifest对象中取getAttributes(“Main-Class”)的值即jar包中文件：META-INF&#x2F;MANIFEST.MF指定的Main-Class的主类名作为运行的主类。</p>
+<p>2、之后main函数会调用Java.c中LoadClass方法装载该主类（使用JNIEnv实例的FindClass）。main函数直接调用Java.c中LoadClass方法装载该类。</p>
+<p>如果是执行class方法。main函数直接调用Java.c中LoadClass方法装载该类。</p>
+<h2 id="2-Java-Garbage-Collection-Mechanism"><a href="#2-Java-Garbage-Collection-Mechanism" class="headerlink" title="2.Java Garbage Collection Mechanism"></a>2.Java Garbage Collection Mechanism</h2><p>既然，我们已经了解到了何为“JVM”，那么我们也要接着了解一下，JVM是如何进行平时的内存分配的？</p>
+<p>过去的语言（如C语言）要求程序员显示的分配内存、释放内存。程序在需要时分配内存，不需要时释放内存。但是这种做法常常会引起“内存泄漏”，即是说，由于某种原因是分配的内存始终没有得到释放。如果该任务不断地重复，程序最终会耗尽内存并异常终止，至少无法正常的运行下去。相比之下，java不要求程序员显式的分配内存和释放内存，避免了很多的潜在问题。java在创建对象时自动分配内存，并当该对象的引用不存在是释放这块内存。</p>
+<p>而这也就是，java垃圾回收机制，java相对于以前的语言的优势。</p>
+<p>java的垃圾收集机制，gc（garbage collection），是指JVM用于释放哪些不在会用的对象所占用的内存。，虽说，java语言并没有要求JVM有gc，也没有规定gc要如何进行工作，但是，常用的JVM都有GC，而且，大多数gc都使用类似的算法管理内存，和执行收集操作。</p>
+<p>但是一般的，在java语言之中，判断一块内存空间是否符合垃圾回收器标准的标准只有两个：</p>
+<ul>
+<li>给对象赋予了控制null，以后再没有调试过。</li>
+<li>给对象赋予了新值，即重新分配了内存空间。</li>
+</ul>
+<p>注：一块内存空间符合了垃圾回收器的收集标准，并不意味着这块内存控件就一定会被垃圾回收器收集。</p>
+<p>虽说，java是自动进行内存的分配与释放的。但是，我们也可以使用System.gc()方法做到强制执行。但是，并不保证每次调用System.gc()方法就一定能够启动垃圾回收，他只不过会向jvm发出这样的一个申请，但是当地会不会真正执行垃圾回收，一切都是未知数。</p>
+<p>所以，我们可以在执行system.gc()前，先执行finalize()方法，对对象进行强制释放内存。虽说，在没有明确释放内存志愿的情况下，java也会隐形的调用finalize()方法,终止对象，以此来释放资源。 </p>
+<h2 id="3-Java-GC"><a href="#3-Java-GC" class="headerlink" title="3.Java GC"></a>3.Java GC</h2><h3 id="1-首先来看一下JVM内存结构，它是由堆、栈等部分组成，结构图如下所示。"><a href="#1-首先来看一下JVM内存结构，它是由堆、栈等部分组成，结构图如下所示。" class="headerlink" title="1.首先来看一下JVM内存结构，它是由堆、栈等部分组成，结构图如下所示。"></a>1.首先来看一下JVM内存结构，它是由堆、栈等部分组成，结构图如下所示。</h3><p><img src="http://dl2.iteye.com/upload/attachment/0107/3332/dcc4a0d7-2709-3d5e-8bfe-11f9bee29899.jpeg" alt="JVM内存结构"></p>
+<p>1.1 堆</p>
+<p> 所有通过new创建的对象的内存都在堆中分配。显然，如果不对堆中的这些对象内存进行分类的话，是多而杂的。在不进行对象存活时间区分的情况下，每次垃圾回收都是对整个堆空间进行回收，花费时间相对会长，同时，因为每次回收都需要遍历所有存活对象，但实际上，对于生命周期长的对象而言，这种遍历是没有效果的，因为可能进行了很多次遍历，但是他们依旧存在。因此，分代垃圾回收采用分治的思想，进行代的划分，把不同生命周期的对象放在不同代上，不同代上采用最适合它的垃圾回收方式进行回收。</p>
+<p> <img src="http://dl2.iteye.com/upload/attachment/0107/3336/1d0e5a0a-6967-3770-a6c3-80518ba5ffc9.jpeg" alt="回收方式"></p>
+<ul>
+<li>年轻代:</li>
+</ul>
+<p>所有新生成的对象首先都是放在年轻代的。年轻代的目标就是尽可能快速的收集掉那些生命周期短的对象。年轻代分三个区。一个Eden区，两个Survivor区(一般而言)。大部分对象在Eden区中生成。当Eden区满时，还存活的对象将被复制到Survivor区（两个中的一个），当这个Survivor区满时，此区的存活对象将被复制到另外一个Survivor区，当这个Survivor去也满了的时候，从第一个Survivor区复制过来的并且此时还存活的对象，将被复制“年老区(Tenured)”。需要注意，Survivor的两个区是对称的，没先后关系，所以同一个区中可能同时存在从Eden复制过来 对象，和从前一个Survivor复制过来的对象，而复制到年老区的只有从第一个Survivor去过来的对象。而且，Survivor区总有一个是空的。同时，根据程序需要，Survivor区是可以配置为多个的（多于两个），这样可以增加对象在年轻代中的存在时间，减少被放到年老代的可能。</p>
+<ul>
+<li>年老代:</li>
+</ul>
+<p>在年轻代中经历了N次垃圾回收后仍然存活的对象，就会被放到年老代中。因此，可以认为年老代中存放的都是一些生命周期较长的对象。</p>
+<ul>
+<li>持久代:</li>
+</ul>
+<p>用于存放静态文件，如今Java类、方法等。持久代对垃圾回收没有显著影响，但是有些应用可能动态生成或者调用一些class，例如Hibernate等，在这种时候需要设置一个比较大的持久代空间来存放这些运行过程中新增的类。持久代大小通过-XX:MaxPermSize&#x3D;<N>进行设置。</p>
+<p>1.2 栈</p>
+<p>每个线程执行每个方法的时候都会在栈中申请一个栈帧，每个栈帧包括局部变量区和操作数栈，用于存放此次方法调用过程中的临时变量、参数和中间结果。</p>
+<h3 id="2-VM垃圾回收机制"><a href="#2-VM垃圾回收机制" class="headerlink" title="2.VM垃圾回收机制"></a>2.VM垃圾回收机制</h3><p>针对上述的分类，GC有两种类型：Scavenge GC和Full GC。</p>
+<p>2.1 Scavenge GC</p>
+<p>一般情况下，当新对象生成，并且在Eden申请空间失败时，就会触发Scavenge GC，对Eden区域进行GC，清除非存活对象，并且把尚且存活的对象移动到Survivor区。然后整理Survivor的两个区。这种方式的GC是对年轻代的Eden区进行，不会影响到年老代。因为大部分对象都是从Eden区开始的，同时Eden区不会分配的很大，所以Eden区的GC会频繁进行。因而，一般在这里需要使用速度快、效率高的算法，使Eden去能尽快空闲出来。</p>
+<p>2.2 Full GC</p>
+<p>对整个堆进行整理，包括Young、Tenured和Perm。因为需要对整个块进行回收，所以比Scavenge GC要慢，因此应该尽可能减少Full GC的次数。在对JVM调优的过程中，很大一部分工作就是对于FullGC的调节。有如下原因可能导致Full GC：</p>
+<ul>
+<li>年老代（Tenured）被写满</li>
+<li>持久代（Perm）被写满</li>
+<li>System.gc()被显示调用</li>
+<li>上一次GC之后Heap的各域分配策略动态变化</li>
+</ul>
+<p>下次跟大家，分享一下，垃圾回收机制的几个算法问题吧。</p>
+</div><div class="article-licensing box"><div class="licensing-title"><p>Java Garbage Collection Mechanism</p><p><a href="http://example.com/2022/07/24/2016-01-17-Java-Garbage-Collection-Mechanism/">http://example.com/2022/07/24/2016-01-17-Java-Garbage-Collection-Mechanism/</a></p></div><div class="licensing-meta level is-mobile"><div class="level-left"><div class="level-item is-narrow"><div><h6>Author</h6><p>YalesonChan</p></div></div><div class="level-item is-narrow"><div><h6>Posted on</h6><p>2022-07-24</p></div></div><div class="level-item is-narrow"><div><h6>Updated on</h6><p>2022-07-24</p></div></div><div class="level-item is-narrow"><div><h6>Licensed under</h6><p><a class="icons" rel="noopener" target="_blank" title="Creative Commons" href="https://creativecommons.org/"><i class="icon fab fa-creative-commons"></i></a><a class="icons" rel="noopener" target="_blank" title="Attribution" href="https://creativecommons.org/licenses/by/4.0/"><i class="icon fab fa-creative-commons-by"></i></a><a class="icons" rel="noopener" target="_blank" title="Noncommercial" href="https://creativecommons.org/licenses/by-nc/4.0/"><i class="icon fab fa-creative-commons-nc"></i></a></p></div></div></div></div></div><div class="notification is-danger">You need to set <code>install_url</code> to use ShareThis. Please set it in <code>_config.yml</code>.</div></article></div><div class="card"><div class="card-content"><h3 class="menu-label has-text-centered">Like this article? Support the author with</h3><div class="buttons is-centered"><a class="button donate" href="/" target="_blank" rel="noopener" data-type="afdian"><span class="icon is-small"><i class="fas fa-charging-station"></i></span><span>Afdian.net</span></a><a class="button donate" data-type="alipay"><span class="icon is-small"><i class="fab fa-alipay"></i></span><span>Alipay</span><span class="qrcode"><img src="/" alt="Alipay"></span></a><a class="button donate" href="/" target="_blank" rel="noopener" data-type="buymeacoffee"><span class="icon is-small"><i class="fas fa-coffee"></i></span><span>Buy me a coffee</span></a><a class="button donate" href="/" target="_blank" rel="noopener" data-type="patreon"><span class="icon is-small"><i class="fab fa-patreon"></i></span><span>Patreon</span></a><div class="notification is-danger">You forgot to set the <code>business</code> or <code>currency_code</code> for Paypal. Please set it in <code>_config.yml</code>.</div><a class="button donate" data-type="wechat"><span class="icon is-small"><i class="fab fa-weixin"></i></span><span>Wechat</span><span class="qrcode"><img src="/" alt="Wechat"></span></a></div></div></div><nav class="post-navigation mt-4 level is-mobile"><div class="level-start"><a class="article-nav-prev level level-item link-muted" href="/2022/07/24/2016-01-18-Introduction-to-Leap-Motion/"><i class="level-item fas fa-chevron-left"></i><span class="level-item">Introduction to Leap Motion</span></a></div><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2022/07/24/2016-01-16-Hadoop-Brief/"><span class="level-item">About Hadoop</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><div class="card"><div class="card-content"><h3 class="title is-5">Comments</h3><div class="notification is-danger">You forgot to set the <code>shortname</code> for Disqus. Please set it in <code>_config.yml</code>.</div></div></div></div><div class="column column-left is-4-tablet is-4-desktop is-4-widescreen  order-1"><div class="card widget" data-type="profile"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="avatar" src="/img/avatar.png" alt="Your name"></figure><p class="title is-size-4 is-block" style="line-height:inherit;">Your name</p><p class="is-size-6 is-block">Your title</p><p class="is-size-6 is-flex justify-content-center"><i class="fas fa-map-marker-alt mr-1"></i><span>Your location</span></p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">Posts</p><a href="/archives"><p class="title">29</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">Categories</p><a href="/categories"><p class="title">0</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">Tags</p><a href="/tags"><p class="title">0</p></a></div></div></nav><div class="level"><a class="level-item button is-primary is-rounded" href="https://github.com/ppoffice" target="_blank" rel="noopener">Follow</a></div><div class="level is-mobile is-multiline"><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Github" href="https://github.com/ppoffice"><i class="fab fa-github"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Facebook" href="https://facebook.com"><i class="fab fa-facebook"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Twitter" href="https://twitter.com"><i class="fab fa-twitter"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Dribbble" href="https://dribbble.com"><i class="fab fa-dribbble"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="RSS" href="/"><i class="fas fa-rss"></i></a></div></div></div><!--!--><div class="card widget" data-type="links"><div class="card-content"><div class="menu"><h3 class="menu-label">Links</h3><ul class="menu-list"><li><a class="level is-mobile" href="https://hexo.io" target="_blank" rel="noopener"><span class="level-left"><span class="level-item">Hexo</span></span><span class="level-right"><span class="level-item tag">hexo.io</span></span></a></li><li><a class="level is-mobile" href="https://bulma.io" target="_blank" rel="noopener"><span class="level-left"><span class="level-item">Bulma</span></span><span class="level-right"><span class="level-item tag">bulma.io</span></span></a></li></ul></div></div></div><!--!--><div class="card widget" data-type="recent-posts"><div class="card-content"><h3 class="menu-label">Recents</h3><article class="media"><div class="media-content"><p class="date"><time dateTime="2022-07-24T05:34:45.046Z">2022-07-24</time></p><p class="title"><a href="/2022/07/24/2016-01-20-OpenCV-with-CodeBlocks/">OpenCV with CodeBlocks</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2022-07-24T05:34:43.614Z">2022-07-24</time></p><p class="title"><a href="/2022/07/24/2016-01-19-Rescue-Simulation-League-Team-Description-S.O.S-(Iran)/">RoboCup Rescue 2015 – Rescue Simulation League Team Description S.O.S (Iran)</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2022-07-24T05:34:43.614Z">2022-07-24</time></p><p class="title"><a href="/2022/07/24/2016-01-22-Gaussian-Blur/">Gaussian Blur</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2022-07-24T05:34:43.614Z">2022-07-24</time></p><p class="title"><a href="/2022/07/24/2016-04-04-Android-Activity/">Activity on Android</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2022-07-24T05:34:43.614Z">2022-07-24</time></p><p class="title"><a href="/2022/07/24/2016-04-04-Android-Service/">Service on Android</a></p></div></article></div></div><div class="card widget" data-type="archives"><div class="card-content"><div class="menu"><h3 class="menu-label">Archives</h3><ul class="menu-list"><li><a class="level is-mobile" href="/archives/2022/07/"><span class="level-start"><span class="level-item">July 2022</span></span><span class="level-end"><span class="level-item tag">29</span></span></a></li></ul></div></div></div><!--!--><div class="card widget" data-type="subscribe-email"><div class="card-content"><div class="menu"><h3 class="menu-label">Subscribe for updates</h3><form action="https://feedburner.google.com/fb/a/mailverify" method="post" target="popupwindow" onsubmit="window.open(&#039;https://feedburner.google.com/fb/a/mailverify?uri=&#039;,&#039;popupwindow&#039;,&#039;scrollbars=yes,width=550,height=520&#039;);return true"><input type="hidden" value="" name="uri"><input type="hidden" name="loc" value="en_US"><div class="field has-addons"><div class="control has-icons-left is-expanded"><input class="input" name="email" type="email" placeholder="Email"><span class="icon is-small is-left"><i class="fas fa-envelope"></i></span></div><div class="control"><input class="button" type="submit" value="Subscribe"></div></div></form></div></div></div><div class="card widget"><div class="card-content"><div class="notification is-danger">You need to set <code>client_id</code> and <code>slot_id</code> to show this AD unit. Please set it in <code>_config.yml</code>.</div></div></div><div class="card widget" data-type="subscribe-email"><div class="card-content"><div class="menu"><h3 class="menu-label">follow.it</h3><form action="" method="post" target="_blank"><div class="field has-addons"><div class="control has-icons-left is-expanded"><input class="input" name="email" type="email" placeholder="Email"><span class="icon is-small is-left"><i class="fas fa-envelope"></i></span></div><div class="control"><input class="button" type="submit" value="Subscribe"></div></div></form></div></div></div></div><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/logo.svg" alt="Hexo" height="28"></a><p class="is-size-7"><span>&copy; 2022 YalesonChan</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/"><i class="fab fa-creative-commons-by"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("en");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script src="/js/column.js"></script><script src="/js/animation.js"></script><a id="back-to-top" title="Back to top" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js" defer></script><script>window.addEventListener("load", () => {
+      window.cookieconsent.initialise({
+        type: "info",
+        theme: "edgeless",
+        static: false,
+        position: "bottom-left",
+        content: {
+          message: "This website uses cookies to improve your experience.",
+          dismiss: "Got it!",
+          allow: "Allow cookies",
+          deny: "Decline",
+          link: "Learn more",
+          policy: "Cookie Policy",
+          href: "https://www.cookiesandyou.com/",
+        },
+        palette: {
+          popup: {
+            background: "#edeff5",
+            text: "#838391"
+          },
+          button: {
+            background: "#4b81e8"
+          },
+        },
+      });
+    });</script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="Type something..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"Type something...","untitled":"(Untitled)","posts":"Posts","pages":"Pages","categories":"Categories","tags":"Tags"});
+        });</script></body></html>

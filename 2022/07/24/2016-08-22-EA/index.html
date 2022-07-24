@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>扩展属性Extended Attributes - Hexo</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="Hexo"><meta name="msapplication-TileImage" content="/img/favicon.svg"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Hexo"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="目录 1. EA的概述  2. EA的命名空间  3. EA的Shell指令  4. EA的限制  4.1 对User EA的限制  4.2 EA实现上的限制  5. EA的系统调用  5.1 创建和修改EA  5.2 获取EA值  5.3 删除EA  5.4 获取文件相关的所有EA   1、EA的概述所谓扩展属性，Extended Attributes，以下简称EA，是区分于文件属性、文件的扩展"><meta property="og:type" content="blog"><meta property="og:title" content="扩展属性Extended Attributes"><meta property="og:url" content="http://example.com/2022/07/24/2016-08-22-EA/"><meta property="og:site_name" content="Hexo"><meta property="og:description" content="目录 1. EA的概述  2. EA的命名空间  3. EA的Shell指令  4. EA的限制  4.1 对User EA的限制  4.2 EA实现上的限制  5. EA的系统调用  5.1 创建和修改EA  5.2 获取EA值  5.3 删除EA  5.4 获取文件相关的所有EA   1、EA的概述所谓扩展属性，Extended Attributes，以下简称EA，是区分于文件属性、文件的扩展"><meta property="og:locale" content="en_US"><meta property="og:image" content="http://example.com/img/EA1.png"><meta property="og:image" content="http://example.com/img/EA2.png"><meta property="og:image" content="http://example.com/img/EA3.png"><meta property="og:image" content="http://example.com/img/EA4.png"><meta property="og:image" content="http://example.com/img/EA5.png"><meta property="og:image" content="http://example.com/img/EA6.png"><meta property="og:image" content="http://example.com/img/EA7.png"><meta property="og:image" content="http://example.com/img/EA8.png"><meta property="article:published_time" content="2022-07-24T05:34:43.602Z"><meta property="article:modified_time" content="2022-07-24T05:34:43.602Z"><meta property="article:author" content="YalesonChan"><meta property="twitter:card" content="summary"><meta property="twitter:image:src" content="http://example.com/img/EA1.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://example.com/2022/07/24/2016-08-22-EA/"},"headline":"扩展属性Extended Attributes","image":["http://example.com/img/EA1.png","http://example.com/img/EA2.png","http://example.com/img/EA3.png","http://example.com/img/EA4.png","http://example.com/img/EA5.png","http://example.com/img/EA6.png","http://example.com/img/EA7.png","http://example.com/img/EA8.png"],"datePublished":"2022-07-24T05:34:43.602Z","dateModified":"2022-07-24T05:34:43.602Z","author":{"@type":"Person","name":"YalesonChan"},"publisher":{"@type":"Organization","name":"Hexo","logo":{"@type":"ImageObject","url":"http://example.com/img/logo.svg"}},"description":"目录 1. EA的概述  2. EA的命名空间  3. EA的Shell指令  4. EA的限制  4.1 对User EA的限制  4.2 EA实现上的限制  5. EA的系统调用  5.1 创建和修改EA  5.2 获取EA值  5.3 删除EA  5.4 获取文件相关的所有EA   1、EA的概述所谓扩展属性，Extended Attributes，以下简称EA，是区分于文件属性、文件的扩展"}</script><link rel="canonical" href="http://example.com/2022/07/24/2016-08-22-EA/"><link rel="icon" href="/img/favicon.svg"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/css/justifiedGallery.min.css"><!--!--><!--!--><style>.pace{-webkit-pointer-events:none;pointer-events:none;-webkit-user-select:none;-moz-user-select:none;user-select:none}.pace-inactive{display:none}.pace .pace-progress{background:#3273dc;position:fixed;z-index:2000;top:0;right:100%;width:100%;height:2px}</style><script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js"></script><!--!--><!--!--><!-- hexo injector head_end start --><script>
+  (function () {
+      function switchTab() {
+          if (!location.hash) {
+            return;
+          }
+          Array
+              .from(document.querySelectorAll('.tab-content'))
+              .forEach($tab => {
+                  $tab.classList.add('is-hidden');
+              });
+          Array
+              .from(document.querySelectorAll('.tabs li'))
+              .forEach($tab => {
+                  $tab.classList.remove('is-active');
+              });
+          const $activeTab = document.querySelector(location.hash);
+          if ($activeTab) {
+              $activeTab.classList.remove('is-hidden');
+          }
+          const $tabMenu = document.querySelector(`a[href="${location.hash}"]`);
+          if ($tabMenu) {
+              $tabMenu.parentElement.classList.add('is-active');
+          }
+      }
+      switchTab();
+      window.addEventListener('hashchange', switchTab, false);
+  })();
+  </script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.2.0"></head><body class="is-2-column"><nav class="navbar navbar-main"><div class="container navbar-container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/logo.svg" alt="Hexo" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a><a class="navbar-item" href="/about">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a><a class="navbar-item search" title="Search" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-8-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item">Posted&nbsp;<time dateTime="2022-07-24T05:34:43.602Z" title="7/24/2022, 1:34:43 PM">2022-07-24</time></span><span class="level-item">Updated&nbsp;<time dateTime="2022-07-24T05:34:43.602Z" title="7/24/2022, 1:34:43 PM">2022-07-24</time></span><span class="level-item"> YalesonChan </span><span class="level-item">15 minutes read (About 2309 words)</span></div></div><h1 class="title is-3 is-size-4-mobile">扩展属性Extended Attributes</h1><div class="content"><h2 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h2><ul>
+<li><p><a href="#1">1. EA的概述</a></p>
+</li>
+<li><p><a href="#2">2. EA的命名空间</a></p>
+</li>
+<li><p><a href="#3">3. EA的Shell指令</a></p>
+</li>
+<li><p><a href="#4">4. EA的限制</a></p>
+</li>
+<li><p><a href="#4.1">4.1 对User EA的限制</a></p>
+</li>
+<li><p><a href="#4.2">4.2 EA实现上的限制</a></p>
+</li>
+<li><p><a href="#5">5. EA的系统调用</a></p>
+</li>
+<li><p><a href="#5.1">5.1 创建和修改EA</a></p>
+</li>
+<li><p><a href="#5.2">5.2 获取EA值</a></p>
+</li>
+<li><p><a href="#5.3">5.3 删除EA</a></p>
+</li>
+<li><p><a href="#5.4">5.4 获取文件相关的所有EA</a></p>
+</li>
+</ul>
+<h2 id="1、EA的概述"><a href="#1、EA的概述" class="headerlink" title="1、EA的概述"></a><span id="1">1、EA的概述</span></h2><p>所谓扩展属性，Extended Attributes，以下简称EA，是区分于文件属性、文件的扩展出来的属性。</p>
+<p>EA是目前流行的POSIX系统中文件系统具有的一项特殊功能，可以给文件、文件夹添加额外的key&#x2F;value的键值对，可以以键值对地形式将任意元数据与文件i节点关联起来。键和值都是字符串并且有一定长度地限制，是完全自定义的属性。Linux自版本2.6起，开始支持EA。</p>
+<p>我们可利用EA去实现访问列表和文件能力、记录文件地版本号、与文件地MIME类型&#x2F;字符集有关的信息，或是指向图符的指针。</p>
+<p>EA需要底层文件系统来支撑，包括btrfs、ext2、ext3、ext4、JFS、Reiserfs以及XFS等文件系统都支持EA。各类文件系统对EA的支持都属可选项，受内核配置选项中的“File systems”菜单控制。Reiserfs文件系统自Linux 2.6.7开始支持EA。</p>
+<h2 id="2、EA的命名空间"><a href="#2、EA的命名空间" class="headerlink" title="2、EA的命名空间 "></a><span id="2">2、EA的命名空间 </span></h2><p>EA的命名格式是namespace.name。其中namespace是用来把EA从功能上划分为截然不同地几大类。而name是用来在指定命名空间内唯一标识某一EA。</p>
+<p>可供namespace使用的值有4个：user、trusted、system以及security。这4类EA的用途可参考如下：</p>
+<p><strong>User EA</strong>：</p>
+<ol>
+<li><p>将在文件系统检查地制约下由非特权级进程操控。要想获取User EA值，需要由文件地读权限；要想改变User EA值，则需要写权限。若无所需权限，将会导致EACCES错误。</p>
+</li>
+<li><p>在ext2、ext3、ext4或Reiserfs文件系统上，如要将User EA与一文件关联，需要在装配底层文件系统时候带选上user_xattr选项。<br>$ mount –o user_xattr device directory</p>
+</li>
+</ol>
+<p><strong>Trusted EA</strong>：</p>
+<ol>
+<li><pre><code>也可以由用户进程驱使，跟User EA类似。
+</code></pre>
+</li>
+<li><pre><code>与User EA的区别是，要操纵trusted EA，必须是特权进程。
+</code></pre>
+</li>
+</ol>
+<p><strong>System EA</strong>：供内核使用，将系统对象与一文件关联。目前仅支持访问控制列表。</p>
+<p><strong>Security EA</strong>：</p>
+<ol>
+<li><pre><code>用来存储服务于操作系统安全模块地文件安全标签；
+</code></pre>
+</li>
+<li><pre><code>将可执行文件与能力关联起来;
+</code></pre>
+</li>
+<li><pre><code>设计初衷是为了支持安全强化版地Linux（SELinux）。
+</code></pre>
+</li>
+</ol>
+<p>一个i节点可以拥有多个相关EA，其所属地命名空间可以相同，也可不同。各个命名空间里，EA是自成一体的，即是说这些命名空间是互不排斥的。另外，在user和trusted命名空间内，EA名可以是任意字符串。在system内，只有经过内核明确认可地命名才可使用，比如访问控制列表。</p>
+<h2 id="3、EA的Shell指令"><a href="#3、EA的Shell指令" class="headerlink" title="3、EA的Shell指令 "></a><span id="3">3、EA的Shell指令 </span></h2><p>在Shell中，可执行setfattr(1)和getfattr(1)命令来设置和查看文件的EA。</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">touchtfile</span><br><span class="line">setfattr -n user.x -v <span class="string">&quot;The past is not dead.&quot;</span>  tfile</span><br><span class="line"></span><br><span class="line">getfattr -n user.xtfile</span><br><span class="line">getfattr -d tfile</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>另外需要注意的是，EA值可以为空字符串，这不同于未定义的EA值。</p>
+<ol>
+<li>setfattr</li>
+</ol>
+<p><img src="/img/EA1.png" alt="EA1.png"></p>
+<ol start="2">
+<li>getfattr</li>
+</ol>
+<p><img src="/img/EA2.png" alt="EA2.png"></p>
+<p>默认情况下，getfattr只会列出User EA值。可利用-m选项指定一个正则表达式，来筛选要显示地EA名</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="variable">$ </span>getfattr -m - tfile</span><br><span class="line"><span class="comment"># file: tfile</span></span><br><span class="line">user.x</span><br><span class="line"></span><br><span class="line"><span class="variable">$ </span>getfattr -m x tfile</span><br><span class="line"><span class="comment"># file: tfile</span></span><br><span class="line">user.x</span><br><span class="line"></span><br><span class="line"><span class="variable">$ </span>getfattr -m y tfile</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>attr</li>
+</ol>
+<p><img src="/img/EA3.png" alt="EA3.png"></p>
+<p>这个shell指令涵盖了setfattr和getfattr的功能，是两者的集合。</p>
+<h2 id="4、EA的限制"><a href="#4、EA的限制" class="headerlink" title="4、EA的限制 "></a><span id="4">4、EA的限制 </span></h2><h3 id="1-对User-EA的限制"><a href="#1-对User-EA的限制" class="headerlink" title=" 1) 对User EA的限制 "></a><span id="4.1"> 1) 对User EA的限制 </span></h3><p>User EA只能施之于文件或目录，之所以将其他文件类型排除在外，原因如下：</p>
+<p>1、因为符号链接会对所有用户开启所有权限，而且这是不可更改的。然而，对于User EA，是需要考虑权限地。这是相互矛盾地。如果使用符号链接，系统会吧链接去除掉。</p>
+<p>2、对于设备文件、套接字以及FIFO而言，授予用户权限，意在对其针对底层对象所执行的i&#x2F;o操作加以控制，如欲操控这些权限，转而求取对创建user EA地控制，二者会出现权限冲突。</p>
+<p>3、若某一目录启用了粘性位（sticky位），且为其他用户所拥有，则非特权用户不能将一User EA置于该目录之上。惟其如此，才能防止任一用户将EA附于诸如&#x2F;tmp之类的目录之上，由于其可写权限对所有用户开放，导致任意用户均可操纵此目录的EA，而设置粘性位，意在防止用户删除该目录下为其他用户所拥有的文件。</p>
+<h3 id="2-EA实现上的限制"><a href="#2-EA实现上的限制" class="headerlink" title=" 2)EA实现上的限制 "></a><span id="4.2"> 2)EA实现上的限制 </span></h3><p>1、EA名称地长度不能超过255个字节</p>
+<p>2、EA值的容量为64KB</p>
+<p>此外，某些文件系统对可与文件挂钩的EA数量及其大小还有更为严格的限制。</p>
+<p>3、在ext2、ext3以及ext4文件系统上，与一文件关联地所有EA命名和EA值地总字节数不会超过单个逻辑磁盘块的大小：1024字节、2048字节或4096字节</p>
+<p>4、在JFS上，为某一文件系统所使用的所有EA名和EA值地总字节数上限为128KB</p>
+<h2 id="5、EA的系统调用"><a href="#5、EA的系统调用" class="headerlink" title=" 5、EA的系统调用 "></a><span id="5"> 5、EA的系统调用 </span></h2><h3 id="1-创建和修改EA"><a href="#1-创建和修改EA" class="headerlink" title=" 1) 创建和修改EA "></a><span id="5.1"> 1) 创建和修改EA </span></h3><p>系统可调用以下方法来设置EA值。</p>
+<p><img src="/img/EA4.png" alt="EA4.png"></p>
+<p>setxattr:通过pathname来标识文件，如果文件名是符号链接，则对其解引用；</p>
+<p>lsetxattr:通过pathname来标识文件，如果文件名是符号链接，不会对其解引用；</p>
+<p>fsetxattr:通过打开文件描述符fd来标识文件。</p>
+<p>以上3者之间的差异同样适用于本文下面介绍的其他各组系统调用。</p>
+<p>参数name是一个以空字符串结尾地字符串，定义了EA地名称。</p>
+<p>参数value是一个指向缓冲区地指针，包含了为EA定义地新值。</p>
+<p>参数size是指明缓冲区地大小。</p>
+<p>默认情况，指定名称地EA不存在，系统调用会创建一个新的EA。已经存在地话，就会进行替换。</p>
+<p>参数flags是可对这一行为进行控制，将这参数指定为0，设定为默认情况。或者可将其指定为如下常量之一：</p>
+<p><img src="/img/EA5.png" alt="EA5.png"></p>
+<h3 id="2-获取EA值"><a href="#2-获取EA值" class="headerlink" title=" 2) 获取EA值 "></a><span id="5.2"> 2) 获取EA值 </span></h3><p>可利用以下方法来获取EA值。</p>
+<p><img src="/img/EA6.png" alt="EA6.png"></p>
+<p>参数name是一个以空字符串结尾地字符串，定义了EA地名称。用来标识要取值地EA。</p>
+<p>返回的EA值保存于参数value所指向地缓冲区中，该缓冲区必须由调用者分配，其大小由size来指定。若调用成功，会返回复制到value所指向地缓冲区中地字节数</p>
+<p>若文件不含name的EA，系统调用失败，会返回错误ENODATA。</p>
+<p>若size过小，系统调用也会失败，并返回错误ERANGE。</p>
+<p>可设size为0，将会忽略value，系统调用仍会返回EA值地大小，可用来获取EA值所需value缓冲区大小。</p>
+<h3 id="3-删除EA"><a href="#3-删除EA" class="headerlink" title=" 3) 删除EA "></a><span id="5.3"> 3) 删除EA </span></h3><p>可利用以下方法删除文件的EA。</p>
+<p><img src="/img/EA7.png" alt="EA7.png"></p>
+<p>Name所含以空字符串结尾的字符串，用于标识打算删除的EA。若试图删除不存在的EA，调用将失败，并会返回错误ENODATA。</p>
+<h3 id="4-获取文件相关的所有EA"><a href="#4-获取文件相关的所有EA" class="headerlink" title=" 4) 获取文件相关的所有EA "></a><span id="5.4"> 4) 获取文件相关的所有EA </span></h3><p>以下方法返回的列表会包含与某文件关联的所有EA的名称。</p>
+<p><img src="/img/EA8.png" alt="EA8.png"></p>
+<p>将EA地名称列表以一系列以空字符结尾地字符形式置于list所指向地缓冲区中。缓冲区大小由size指定。</p>
+<p>与getxattr一样，可以将size指定为0，系统调用将忽略list，并返回后续调用实际获取EA名称列表时所需的缓冲区大小。</p>
+<p>想要获取与某文件相关的EA列表，只需对文件拥有访问权限，对文件本身则无需任何权限。</p>
+<p>处于安全堪虑，list中返回的EA名称可能不包含调用进程无权访问的属性名。比如，在非特权进程中调用listxattr()时，大多数文件系统都会忽略trusted EA。</p>
+</div><div class="article-licensing box"><div class="licensing-title"><p>扩展属性Extended Attributes</p><p><a href="http://example.com/2022/07/24/2016-08-22-EA/">http://example.com/2022/07/24/2016-08-22-EA/</a></p></div><div class="licensing-meta level is-mobile"><div class="level-left"><div class="level-item is-narrow"><div><h6>Author</h6><p>YalesonChan</p></div></div><div class="level-item is-narrow"><div><h6>Posted on</h6><p>2022-07-24</p></div></div><div class="level-item is-narrow"><div><h6>Updated on</h6><p>2022-07-24</p></div></div><div class="level-item is-narrow"><div><h6>Licensed under</h6><p><a class="icons" rel="noopener" target="_blank" title="Creative Commons" href="https://creativecommons.org/"><i class="icon fab fa-creative-commons"></i></a><a class="icons" rel="noopener" target="_blank" title="Attribution" href="https://creativecommons.org/licenses/by/4.0/"><i class="icon fab fa-creative-commons-by"></i></a><a class="icons" rel="noopener" target="_blank" title="Noncommercial" href="https://creativecommons.org/licenses/by-nc/4.0/"><i class="icon fab fa-creative-commons-nc"></i></a></p></div></div></div></div></div><div class="notification is-danger">You need to set <code>install_url</code> to use ShareThis. Please set it in <code>_config.yml</code>.</div></article></div><div class="card"><div class="card-content"><h3 class="menu-label has-text-centered">Like this article? Support the author with</h3><div class="buttons is-centered"><a class="button donate" href="/" target="_blank" rel="noopener" data-type="afdian"><span class="icon is-small"><i class="fas fa-charging-station"></i></span><span>Afdian.net</span></a><a class="button donate" data-type="alipay"><span class="icon is-small"><i class="fab fa-alipay"></i></span><span>Alipay</span><span class="qrcode"><img src="/" alt="Alipay"></span></a><a class="button donate" href="/" target="_blank" rel="noopener" data-type="buymeacoffee"><span class="icon is-small"><i class="fas fa-coffee"></i></span><span>Buy me a coffee</span></a><a class="button donate" href="/" target="_blank" rel="noopener" data-type="patreon"><span class="icon is-small"><i class="fab fa-patreon"></i></span><span>Patreon</span></a><div class="notification is-danger">You forgot to set the <code>business</code> or <code>currency_code</code> for Paypal. Please set it in <code>_config.yml</code>.</div><a class="button donate" data-type="wechat"><span class="icon is-small"><i class="fab fa-weixin"></i></span><span>Wechat</span><span class="qrcode"><img src="/" alt="Wechat"></span></a></div></div></div><nav class="post-navigation mt-4 level is-mobile"><div class="level-start"><a class="article-nav-prev level level-item link-muted" href="/2022/07/24/2016-05-23-ConvexHull/"><i class="level-item fas fa-chevron-left"></i><span class="level-item">凸包算法剖析</span></a></div><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/2022/07/24/2016-08-21-disintegration/"><span class="level-item">大学者，蜕变之谓也</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><div class="card"><div class="card-content"><h3 class="title is-5">Comments</h3><div class="notification is-danger">You forgot to set the <code>shortname</code> for Disqus. Please set it in <code>_config.yml</code>.</div></div></div></div><div class="column column-left is-4-tablet is-4-desktop is-4-widescreen  order-1"><div class="card widget" data-type="profile"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="avatar" src="/img/avatar.png" alt="Your name"></figure><p class="title is-size-4 is-block" style="line-height:inherit;">Your name</p><p class="is-size-6 is-block">Your title</p><p class="is-size-6 is-flex justify-content-center"><i class="fas fa-map-marker-alt mr-1"></i><span>Your location</span></p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">Posts</p><a href="/archives"><p class="title">29</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">Categories</p><a href="/categories"><p class="title">0</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">Tags</p><a href="/tags"><p class="title">0</p></a></div></div></nav><div class="level"><a class="level-item button is-primary is-rounded" href="https://github.com/ppoffice" target="_blank" rel="noopener">Follow</a></div><div class="level is-mobile is-multiline"><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Github" href="https://github.com/ppoffice"><i class="fab fa-github"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Facebook" href="https://facebook.com"><i class="fab fa-facebook"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Twitter" href="https://twitter.com"><i class="fab fa-twitter"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Dribbble" href="https://dribbble.com"><i class="fab fa-dribbble"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="RSS" href="/"><i class="fas fa-rss"></i></a></div></div></div><!--!--><div class="card widget" data-type="links"><div class="card-content"><div class="menu"><h3 class="menu-label">Links</h3><ul class="menu-list"><li><a class="level is-mobile" href="https://hexo.io" target="_blank" rel="noopener"><span class="level-left"><span class="level-item">Hexo</span></span><span class="level-right"><span class="level-item tag">hexo.io</span></span></a></li><li><a class="level is-mobile" href="https://bulma.io" target="_blank" rel="noopener"><span class="level-left"><span class="level-item">Bulma</span></span><span class="level-right"><span class="level-item tag">bulma.io</span></span></a></li></ul></div></div></div><!--!--><div class="card widget" data-type="recent-posts"><div class="card-content"><h3 class="menu-label">Recents</h3><article class="media"><div class="media-content"><p class="date"><time dateTime="2022-07-24T05:34:45.046Z">2022-07-24</time></p><p class="title"><a href="/2022/07/24/2016-01-20-OpenCV-with-CodeBlocks/">OpenCV with CodeBlocks</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2022-07-24T05:34:43.614Z">2022-07-24</time></p><p class="title"><a href="/2022/07/24/2016-01-19-Rescue-Simulation-League-Team-Description-S.O.S-(Iran)/">RoboCup Rescue 2015 – Rescue Simulation League Team Description S.O.S (Iran)</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2022-07-24T05:34:43.614Z">2022-07-24</time></p><p class="title"><a href="/2022/07/24/2016-01-22-Gaussian-Blur/">Gaussian Blur</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2022-07-24T05:34:43.614Z">2022-07-24</time></p><p class="title"><a href="/2022/07/24/2016-04-04-Android-Activity/">Activity on Android</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2022-07-24T05:34:43.614Z">2022-07-24</time></p><p class="title"><a href="/2022/07/24/2016-04-04-Android-Service/">Service on Android</a></p></div></article></div></div><div class="card widget" data-type="archives"><div class="card-content"><div class="menu"><h3 class="menu-label">Archives</h3><ul class="menu-list"><li><a class="level is-mobile" href="/archives/2022/07/"><span class="level-start"><span class="level-item">July 2022</span></span><span class="level-end"><span class="level-item tag">29</span></span></a></li></ul></div></div></div><!--!--><div class="card widget" data-type="subscribe-email"><div class="card-content"><div class="menu"><h3 class="menu-label">Subscribe for updates</h3><form action="https://feedburner.google.com/fb/a/mailverify" method="post" target="popupwindow" onsubmit="window.open(&#039;https://feedburner.google.com/fb/a/mailverify?uri=&#039;,&#039;popupwindow&#039;,&#039;scrollbars=yes,width=550,height=520&#039;);return true"><input type="hidden" value="" name="uri"><input type="hidden" name="loc" value="en_US"><div class="field has-addons"><div class="control has-icons-left is-expanded"><input class="input" name="email" type="email" placeholder="Email"><span class="icon is-small is-left"><i class="fas fa-envelope"></i></span></div><div class="control"><input class="button" type="submit" value="Subscribe"></div></div></form></div></div></div><div class="card widget"><div class="card-content"><div class="notification is-danger">You need to set <code>client_id</code> and <code>slot_id</code> to show this AD unit. Please set it in <code>_config.yml</code>.</div></div></div><div class="card widget" data-type="subscribe-email"><div class="card-content"><div class="menu"><h3 class="menu-label">follow.it</h3><form action="" method="post" target="_blank"><div class="field has-addons"><div class="control has-icons-left is-expanded"><input class="input" name="email" type="email" placeholder="Email"><span class="icon is-small is-left"><i class="fas fa-envelope"></i></span></div><div class="control"><input class="button" type="submit" value="Subscribe"></div></div></form></div></div></div></div><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/logo.svg" alt="Hexo" height="28"></a><p class="is-size-7"><span>&copy; 2022 YalesonChan</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/"><i class="fab fa-creative-commons-by"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("en");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script src="/js/column.js"></script><script src="/js/animation.js"></script><a id="back-to-top" title="Back to top" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js" defer></script><script>window.addEventListener("load", () => {
+      window.cookieconsent.initialise({
+        type: "info",
+        theme: "edgeless",
+        static: false,
+        position: "bottom-left",
+        content: {
+          message: "This website uses cookies to improve your experience.",
+          dismiss: "Got it!",
+          allow: "Allow cookies",
+          deny: "Decline",
+          link: "Learn more",
+          policy: "Cookie Policy",
+          href: "https://www.cookiesandyou.com/",
+        },
+        palette: {
+          popup: {
+            background: "#edeff5",
+            text: "#838391"
+          },
+          button: {
+            background: "#4b81e8"
+          },
+        },
+      });
+    });</script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="Type something..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"Type something...","untitled":"(Untitled)","posts":"Posts","pages":"Pages","categories":"Categories","tags":"Tags"});
+        });</script></body></html>
