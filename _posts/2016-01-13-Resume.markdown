@@ -1,0 +1,79 @@
+---
+title: YalesonChan's Resume
+author: YalesonChan
+profile_picture: http://www.famousbirthdays.com/faces/laurel-stan-image.jpg
+short_bio: If anyone at my funeral has a long face, I'll never speak to him again.
+author_site: https://github.com/cyw3
+---
+
+# 陳越威
+
+---
+
+## 联系方式
+
+- 手机：18175139250
+- Email：yueshiyijie@gmail.com
+- 微信号：cyw20130609
+
+---
+
+## 个人信息
+
+ - 陳越威/男/1994
+ - 本科/中南大学信息学院
+ - 技术博客：http://cyw3.github.io/YalesonChan
+ - Github: http://github.com/cyw3
+
+ - 期望职位：数据分析实习生
+
+---
+
+## 项目经历
+
+### 湘雅生物大数据项目 
+使用中南大学湘雅医学院内部数据集，分析处理各有机物质的性质特征。我在此项目负责了java蛋白质分子解析平台的工作，在数据分析这一块成长快。
+
+
+### “找事er”App创业项目 
+我在此项目负责了Android App开发工作，在Android与ThinkPHP后台的数据收发这一块做得出色。这个项目中，我最自豪的技术细节是，我能够连续7天每日每夜的进行开发工作，为的只是想要让我们的产品尽快的落地。
+
+
+### OriStone语言开发项目 
+这是我自己想要做的项目。然后确定开始做这个项目之后，我每天泡在图书馆里面，利用图书馆的资源，在图书馆里面完成了OriStone编程语言的开发。一个属于自己的语言。在这个项目中，我遇到的最大的困难是，如何构建VM。本来是想要把OriSone架构在LLVM框架之上，以此降低开发难度。但是，为了学习其中的原理，我就自己写了个VM。
+
+### RoboCup移动智能机器人大赛
+这个系统是仿真地震过后，城市里面医疗、警察、火警，尽最大可能拯救市民，救火，以得到最大分数的比赛。主要是编写各智能体的运作算法。我负责的是其中医疗智能体的控制算法。对其使用了KNN算法进行分区，A* 算法进行路径搜寻等等。在2015年7月份带领团队在RoboCup世界杯取得世界第六的好成绩，又于10月份取得全国第三名的成绩。
+
+### CCV项目 
+基于OpenCV框架，完成的银行卡号识别项目。这是我单独完成的项目。其中的难处在于数字的提取策略。后来我使用的基于灰度变化的数字提取方法：数字与数字的间隔往往是背景颜色或者是背景像素点个数和的一个波峰，即前景像素点个数和的一个波谷，我们利用这样的特点来分割图片。
+
+---
+
+## 开源项目和作品
+
+### 开源项目
+ - [OriStone语言](http://github.com/cyw3/OriStone) : 自创的一种类python编程语言。
+ - [CCV](http://github.com/cyw3/CCV) : OpenCV实例。
+
+### 技术文章
+
+- [投资组合的收益率走势图](https://i.qutke.com/apps/569f4501310a3c46406493bd)
+- [MACD策略](https://i.qutke.com/apps/56a4fc1c310a3c464064943f) 
+
+## 技能清单
+
+以下均为我熟练使用的技能
+
+- 语言：java/R/Python
+- Web框架：ThinkPHP/Spring/Struct/Hebernate
+- 数据库相关：MySQL/Hbase
+- 版本管理、文档和自动化部署工具：Svn/Git
+- 常用OS：Linux/Windows
+- 算法：机器学习/算法导论
+- 云计算：hadoop/Spark
+
+---
+
+## 致谢
+感谢您花时间阅读我的简历，期待能有机会和您共事。
