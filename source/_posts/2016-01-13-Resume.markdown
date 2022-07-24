@@ -1,6 +1,6 @@
 ---
-title: YalesonChan's Resume
-author: YalesonChan
+title: yalechen's Resume
+author: yalechen
 profile_picture: http://www.famousbirthdays.com/faces/laurel-stan-image.jpg
 short_bio: If anyone at my funeral has a long face, I'll never speak to him again.
 author_site: https://github.com/cyw3
@@ -22,7 +22,7 @@ author_site: https://github.com/cyw3
 
  - 陳越威/男/1994
  - 本科/中南大学信息学院
- - 技术博客：http://cyw3.github.io/YalesonChan
+ - 技术博客：http://cyw3.github.io/yalechen
  - Github: http://github.com/cyw3
 
  - 期望职位：数据分析实习生

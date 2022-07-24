@@ -3,7 +3,9 @@ version: 5.0.0
 # Icarus theme variant, can be "default" or "cyberpunk"
 variant: default
 # Path or URL to the website's logo
-logo: /img/logo.svg
+# logo: /img/logo.svg
+logo:
+    text: Cyw3
 # Page metadata configurations
 head:
     # URL or path to the website's icon
@@ -12,12 +14,12 @@ head:
     # https://developer.mozilla.org/en-US/docs/Web/Manifest
     manifest:
         # Name of the web application (default to the site title)
-        name: 
+        name: cyw3
         # The displayed name of the web application
         # when there is not enough space to display full name
-        short_name: 
+        short_name: cyw3
         # The start URL of the web application
-        start_url: 
+        start_url: http://cyw3.github.io/
         # The default theme color for the application
         theme_color: 
         # A placeholder background color for the application page to display
@@ -54,7 +56,7 @@ head:
         site_name: 
         # Page author (article:author) (optional)
         # You should leave this blank for most of the time
-        author: 
+        author: cyw3
         # Page description (og:description) (optional)
         # You should leave this blank for most of the time
         description: 
@@ -114,7 +116,7 @@ navbar:
     links:
         Download on GitHub:
             icon: fab fa-github
-            url: https://github.com/ppoffice/hexo-theme-icarus
+            url: https://github.com/cyw3/cyw3.github.io
 # Page footer configurations
 footer:
     # Links to be shown on the right of the footer section
@@ -127,7 +129,7 @@ footer:
             url: https://creativecommons.org/licenses/by/4.0/
         Download on GitHub:
             icon: fab fa-github
-            url: https://github.com/ppoffice/hexo-theme-icarus
+            url: https://github.com/cyw3/cyw3.github.io
 # Article related configurations
 article:
     # Code highlight settings
@@ -225,11 +227,11 @@ widgets:
         position: left
         type: profile
         # Author name
-        author: Your name
+        author: cyw3
         # Author title
-        author_title: Your title
+        author_title: ProgramAnalysis/Compiler/VirtualMachine
         # Author's current location
-        location: Your location
+        location: Shenzhen, China
         # URL or path to the avatar image
         avatar: 
         # Whether show the rounded avatar image
@@ -237,12 +239,12 @@ widgets:
         # Email address for the Gravatar
         gravatar: 
         # URL or path for the follow button
-        follow_link: https://github.com/ppoffice
+        follow_link: https://github.com/cyw3
         # Links to be shown on the bottom of the profile widget
         social_links:
             Github:
                 icon: fab fa-github
-                url: https://github.com/ppoffice
+                url: https://github.com/cyw3
             Facebook:
                 icon: fab fa-facebook
                 url: https://facebook.com
@@ -273,8 +275,7 @@ widgets:
         type: links
         # Names and URLs of the sites
         links:
-            Hexo: https://hexo.io
-            Bulma: https://bulma.io
+            Tencent Code Analysis: https://tca.tencent.com/
     # Categories widget configurations
     -
         # Where should the widget be placed, left sidebar or right sidebar
