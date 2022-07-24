@@ -2,6 +2,7 @@
 title: Welcome to yalechen's blog
 author: yalechen
 updated: 2016-01-12
+toc: true
 profile_picture: http://www.famousbirthdays.com/faces/laurel-stan-image.jpg
 short_bio: If anyone at my funeral has a long face, I'll never speak to him again.
 author_site: https://github.com/cyw3
