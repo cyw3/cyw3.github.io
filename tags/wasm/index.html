@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="robots" content="noindex"><meta><title>标签: wasm - cyw3</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="cyw3"><meta name="msapplication-TileImage" content="/img/favicon.svg"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="cyw3"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta property="og:type" content="blog"><meta property="og:title" content="cyw3"><meta property="og:url" content="http://example.com/"><meta property="og:site_name" content="cyw3"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="http://example.com/img/og_image.png"><meta property="article:author" content="cyw3"><meta property="twitter:card" content="summary"><meta property="twitter:image:src" content="http://example.com/img/og_image.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"http://example.com"},"headline":"cyw3","image":["http://example.com/img/og_image.png"],"author":{"@type":"Person","name":"cyw3"},"publisher":{"@type":"Organization","name":"cyw3","logo":{"@type":"ImageObject","url":{"text":"Cyw3"}}},"description":""}</script><link rel="icon" href="/img/favicon.svg"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.2/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/css/justifiedGallery.min.css"><!--!--><!--!--><style>.pace{-webkit-pointer-events:none;pointer-events:none;-webkit-user-select:none;-moz-user-select:none;user-select:none}.pace-inactive{display:none}.pace .pace-progress{background:#3273dc;position:fixed;z-index:2000;top:0;right:100%;width:100%;height:2px}</style><script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js"></script><!--!--><!--!--><!-- hexo injector head_end start --><script>
+  (function () {
+      function switchTab() {
+          if (!location.hash) {
+            return;
+          }
+          Array
+              .from(document.querySelectorAll('.tab-content'))
+              .forEach($tab => {
+                  $tab.classList.add('is-hidden');
+              });
+          Array
+              .from(document.querySelectorAll('.tabs li'))
+              .forEach($tab => {
+                  $tab.classList.remove('is-active');
+              });
+          const $activeTab = document.querySelector(location.hash);
+          if ($activeTab) {
+              $activeTab.classList.remove('is-hidden');
+          }
+          const $tabMenu = document.querySelector(`a[href="${location.hash}"]`);
+          if ($tabMenu) {
+              $tabMenu.parentElement.classList.add('is-active');
+          }
+      }
+      switchTab();
+      window.addEventListener('hashchange', switchTab, false);
+  })();
+  </script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.2.0"></head><body class="is-2-column"><nav class="navbar navbar-main"><div class="container navbar-container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/">Cyw3</a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a><a class="navbar-item" href="/about">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/cyw3/cyw3.github.io"><i class="fab fa-github"></i></a><a class="navbar-item search" title="搜索" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-8-widescreen"><div class="card"><div class="card-content"><nav class="breadcrumb" aria-label="breadcrumbs"><ul><li><a href="/tags">标签</a></li><li class="is-active"><a href="#" aria-current="page">wasm</a></li></ul></nav></div></div><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2022-07-30T03:20:12.000Z" title="7/30/2022, 11:20:12 AM">2022-07-30</time>发表</span><span class="level-item"><time dateTime="2022-07-30T09:01:36.488Z" title="7/30/2022, 5:01:36 PM">2022-07-30</time>更新</span><span class="level-item"> yalechen </span><span class="level-item">35 分钟读完 (大约5294个字)</span></div></div><h1 class="title is-3 is-size-4-mobile"><a class="link-muted" href="/2022/07/30/2022-7-30-Binaryen-Readme/">2022-7-30-Binaryen-Readme</a></h1><div class="content"><h1 id="Binaryen"><a href="#Binaryen" class="headerlink" title="Binaryen"></a><a target="_blank" rel="noopener" href="https://github.com/WebAssembly/binaryen">Binaryen</a></h1><p>Binaryen 是一个用于 WebAssembly 的编译器和工具链基础设施库，用 C++ 编写。 它旨在使 <a target="_blank" rel="noopener" href="https://github.com/WebAssembly/binaryen/wiki/Compiling-to-WebAssembly-with-Binaryen">编译成 WebAssembly</a> <strong>简单、快速和高效</strong>:</p>
+<ul>
+<li><p><strong>简单</strong>: Binaryen 提供了个简单的 <a target="_blank" rel="noopener" href="https://github.com/WebAssembly/binaryen/wiki/Compiling-to-WebAssembly-with-Binaryen#c-api-1">C API</a>，也可以<br><a target="_blank" rel="noopener" href="https://github.com/WebAssembly/binaryen/wiki/binaryen.js-API">使用 JavaScript 调用</a>. 它接受来自 <a target="_blank" rel="noopener" href="https://github.com/WebAssembly/binaryen/wiki/Compiling-to-WebAssembly-with-Binaryen#what-do-i-need-to-have-in-order-to-use-binaryen-to-compile-to-webassembly">类 WebAssembly<br>格式</a> 的输入，也接受一个通用的 <a target="_blank" rel="noopener" href="https://github.com/WebAssembly/binaryen/wiki/Compiling-to-WebAssembly-with-Binaryen#cfg-api">control flow graph</a>.</p>
+</li>
+<li><p><strong>快速</strong>: Binaryen 的内部 IR 使用紧凑的数据结构，专为完全并行的代码生成和优化而设计，使用所有可用的 CPU 内核。 Binaryen 的 IR 也非常容易和快速地编译成 WebAssembly，因为它本质上是 WebAssembly 的一个子集。</p>
+</li>
+<li><p><strong>高效</strong>:<br>Binaryen 的优化器有许多可以改进代码大小和速度的关卡pass（参见后面的概述）。 这些优化旨在使 Binaryen 足够强大，可以单独用作<a target="_blank" rel="noopener" href="https://kripken.github.io/talks/binaryen.html#/9">编译器后端</a>。 一个特定的关注领域是特定于 WebAssembly 的优化（通用编译器可能不会这样做），您可以将其视为 wasm <a target="_blank" rel="noopener" href="https://kripken.github.io/talks/binaryen.html#/2">minification</a>，类似于 JavaScript、CSS 等的缩小版，所有这些都是具体的语言。</p>
+</li>
+</ul>
+<p>Compilers using Binaryen include:</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/AssemblyScript/assemblyscript"><code>AssemblyScript</code></a> 它将 TypeScript 的变体编译为 WebAssembly</li>
+<li><a target="_blank" rel="noopener" href="https://github.com/WebAssembly/binaryen/blob/main/src/wasm2js.h"><code>wasm2js</code></a> 支持将 WebAssembly 编译成 JS</li>
+<li><a target="_blank" rel="noopener" href="https://github.com/tweag/asterius"><code>Asterius</code></a> which compiles Haskell to WebAssembly</li>
+<li><a target="_blank" rel="noopener" href="https://github.com/grain-lang/grain"><code>Grain</code></a> which compiles Grain to WebAssembly</li>
+</ul>
+<p>Binaryen also provides a set of <strong>toolchain utilities</strong> that can</p>
+<ul>
+<li><strong>Parse</strong> and <strong>emit</strong> WebAssembly. In particular this lets you load<br>WebAssembly, optimize it using Binaryen, and re-emit it, thus implementing a<br>wasm-to-wasm optimizer in a single command.</li>
+<li><strong>Interpret</strong> WebAssembly as well as run the WebAssembly spec tests.</li>
+<li>Integrate with <strong><a target="_blank" rel="noopener" href="http://emscripten.org/">Emscripten</a></strong> in order to provide a<br>complete compiler toolchain from C and C++ to WebAssembly.</li>
+<li><strong>Polyfill</strong> WebAssembly by running it in the interpreter compiled to<br>JavaScript, if the browser does not yet have native support (useful for<br>testing).</li>
+</ul>
+<p>Consult the <a href="Contributing.md">contributing instructions</a> if you’re interested in<br>participating.</p>
+<h2 id="Binaryen-IR"><a href="#Binaryen-IR" class="headerlink" title="Binaryen IR"></a>Binaryen IR</h2><p>Binaryen’s internal IR is designed to be</p>
+<ul>
+<li><strong>Flexible and fast</strong> for optimization.</li>
+<li><strong>As close as possible to WebAssembly</strong> so it is simple and fast to convert<br>it to and from WebAssembly.</li>
+</ul>
+<p>There are a few differences between Binaryen IR and the WebAssembly language:</p>
+<ul>
+<li>Tree structure<ul>
+<li>Binaryen IR <a target="_blank" rel="noopener" href="https://github.com/WebAssembly/binaryen/issues/663">is a tree</a>, i.e., it has hierarchical structure,<br>for convenience of optimization. This differs from the WebAssembly binary<br>format which is a stack machine.</li>
+<li>Consequently Binaryen’s text format allows only s-expressions.<br>WebAssembly’s official text format is primarily a linear instruction list<br>(with s-expression extensions). Binaryen can’t read the linear style, but<br>it can read a wasm text file if it contains only s-expressions.</li>
+<li>Binaryen uses Stack IR to optimize “stacky” code (that can’t be<br>represented in structured form).</li>
+<li>When stacky code must be represented in Binaryen IR, such as with<br>multivalue instructions and blocks, it is represented with tuple types that<br>do not exist in the WebAssembly language. In addition to multivalue<br>instructions, locals and globals can also have tuple types in Binaryen IR<br>but not in WebAssembly. Experiments show that better support for<br>multivalue could enable useful but small code size savings of 1-3%, so it<br>has not been worth changing the core IR structure to support it better.</li>
+<li>Block input values (currently only supported in <code>catch</code> blocks in the<br>exception handling feature) are represented as <code>pop</code> subexpressions.</li>
+</ul>
+</li>
+<li>Types and unreachable code<ul>
+<li>WebAssembly 将块&#x2F;if&#x2F;loop 类型限制为 none 和具体值类型（i32、i64、f32、f64）。Binaryen IR 有一个不可访问的类型，它允许 block&#x2F;if&#x2F;loop 接受它，允许<a target="_blank" rel="noopener" href="https://github.com/WebAssembly/binaryen/issues/903">不需要知道全局上下文的本地转换</a>。因此，Binaryen 的默认文本输出不一定是有效的 wasm 文本。（要获得有效的 wasm 文本，您可以执行 <code>--generate-stack-ir --print-stack-ir</code> 打印 Stack IR 的操作，这保证对 wasm 解析器有效。）</li>
+<li>Binaryen 在读取 WebAssembly 二进制文件时会忽略无法访问的代码。这意味着如果您读取包含无法访问代码的 wasm 文件，该代码将被丢弃，就好像它已被优化一样（通常这就是您想要的，优化的程序无论如何都没有无法访问的代码，但是如果您编写一个未优化的文件并且然后阅读它，它可能看起来不同）。这种行为的原因是 WebAssembly 中无法访问的代码具有在 Binaryen IR 中难以处理的极端情况（它可能非常非结构化，并且如前所述，Binaryen IR 比 WebAssembly 更具结构化）。请注意，Binaryen 确实支持 .wat 文本文件中无法访问的代码，因为正如我们所见，Binaryen 仅支持结构化的 s 表达式。</li>
+</ul>
+</li>
+<li>Blocks<ul>
+<li>Binaryen IR 只有一个节点包含可变长度的操作数列表：块blocks。另一方面，WebAssembly 允许循环中的列表、if 臂和函数的顶层。Binaryen 的 IR 对所有非块节点都有一个操作数；这个操作数当然可以是一个块。这个属性的动机是许多通道需要特殊的代码来迭代列表，因此使用带有列表的单个 IR 节点可以简化它们。</li>
+<li>As in wasm, blocks and loops may have names. Branch targets in the IR are<br>resolved by name (as opposed to nesting depth). This has 2 consequences:<ul>
+<li>Blocks without names may not be branch targets.</li>
+<li>Names are required to be unique. (Reading .wat files with duplicate names<br>is supported; the names are modified when the IR is constructed).</li>
+</ul>
+</li>
+<li>As an optimization, a block that is the child of a loop (or if arm, or<br>function toplevel) and which has no branches targeting it will not be<br>emitted when generating wasm. Instead its list of operands will be directly<br>used in the containing node. Such a block is sometimes called an “implicit<br>block”.</li>
+</ul>
+</li>
+<li>Reference Types</li>
+<li>The wasm text and binary formats require that a function whose address is<br>taken by <code>ref.func</code> must be either in the table, or declared via an<br><code>(elem declare func $..)</code>. Binaryen will emit that data when necessary, but<br>it does not represent it in IR. That is, IR can be worked on without needing<br>to think about declaring function references.</li>
+</ul>
+<p>As a result, you might notice that round-trip conversions (wasm &#x3D;&gt; Binaryen IR<br>&#x3D;&gt; wasm) change code a little in some corner cases.</p>
+<ul>
+<li>When optimizing Binaryen uses an additional IR, Stack IR (see<br><code>src/wasm-stack.h</code>). Stack IR allows a bunch of optimizations that are<br>tailored for the stack machine form of WebAssembly’s binary format (but Stack<br>IR is less efficient for general optimizations than the main Binaryen IR). If<br>you have a wasm file that has been particularly well-optimized, a simple<br>round-trip conversion (just read and write, without optimization) may cause<br>more noticeable differences, as Binaryen fits it into Binaryen IR’s more<br>structured format. If you also optimize during the round-trip conversion then<br>Stack IR opts will be run and the final wasm will be better optimized.</li>
+</ul>
+<p>Notes when working with Binaryen IR:</p>
+<ul>
+<li>如上所述，Binaryen IR 具有树结构。因此，每个表达式都应该只有一个父节点 - 您不应该通过让节点在树中多次出现来“重用”节点。这个限制的动机是当我们优化时我们修改节点，所以如果它们在树中出现多次，一个地方的变化可能会错误地出现在另一个地方</li>
+<li>For similar reasons, nodes should not appear in more than one functions.</li>
+</ul>
+<h3 id="Intrinsics"><a href="#Intrinsics" class="headerlink" title="Intrinsics"></a>Intrinsics</h3><p>Binaryen intrinsic functions look like calls to imports, e.g.,</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(import &quot;binaryen-intrinsics&quot; &quot;foo&quot; (func $foo))</span><br></pre></td></tr></table></figure>
+
+<p>Implementing them that way allows them to be read and written by other tools,<br>and it avoids confusing errors on a binary format error that could happen in<br>those tools if we had a custom binary format extension.</p>
+<p>An intrinsic method may be optimized away by the optimizer. If it is not, it<br>must be <strong>lowered</strong> before shipping the wasm, as otherwise it will look like a<br>call to an import that does not exist (and VMs will show an error on not having<br>a proper value for that import). That final lowering is <em>not</em> done<br>automatically. A user of intrinsics must run the pass for that explicitly,<br>because the tools do not know when the user intends to finish optimizing, as the<br>user may have a pipeline of multiple optimization steps, or may be doing local<br>experimentation, or fuzzing&#x2F;reducing, etc. Only the user knows when the final<br>optimization happens before the wasm is “final” and ready to be shipped. Note<br>that, in general, some additional optimizations may be possible after the final<br>lowering, and so a useful pattern is to  optimize once normally with intrinsics,<br>then lower them away, then optimize after that, e.g.:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wasm-opt input.wasm -o output.wasm  -O --intrinsic-lowering -O</span><br></pre></td></tr></table></figure>
+
+<p>Each intrinsic defines its semantics, which includes what the optimizer is<br>allowed to do with it and what the final lowering will turn it to. See<br><a target="_blank" rel="noopener" href="https://github.com/WebAssembly/binaryen/blob/main/src/ir/intrinsics.h">intrinsics.h</a><br>for the detailed definitions. A quick summary appears here:</p>
+<ul>
+<li><code>call.without.effects</code>: Similar to a <code>call_ref</code> in that it receives<br>parameters, and a reference to a function to call, and calls that function<br>with those parameters, except that the optimizer can assume the call has no<br>side effects, and may be able to optimize it out (if it does not have a<br>result that is used, generally).</li>
+</ul>
+<h2 id="Tools"><a href="#Tools" class="headerlink" title="Tools"></a>Tools</h2><p>该仓库包含了 <code>bin/</code> 目录下工具的代码:</p>
+<ul>
+<li><strong>wasm-opt</strong>: 加载 WebAssembly 并在其上运行 Binaryen IR pass。</li>
+<li><strong>wasm-as</strong>: 将文本格式（当前为 S-Expression 格式）的 WebAssembly 组装成二进制格式（通过 Binaryen IR）。</li>
+<li><strong>wasm-dis</strong>: 将二进制格式的 WebAssembly 反汇编成文本格式（通过 Binaryen IR）。</li>
+<li><strong>wasm2js</strong>: WebAssembly-to-JS 编译器。Emscripten 使用它来生成 JavaScript 作为 WebAssembly 的替代方案。</li>
+<li><strong>wasm-reduce</strong>: WebAssembly 文件的测试用例缩减器。给定一个由于某种原因有趣的 wasm 文件（例如，它使特定的 VM 崩溃），wasm-reduce 可以找到一个具有相同属性的较小的 wasm 文件，这通常更容易调试。有关更多详细信息，请参阅 <a href="(https://github.com/WebAssembly/binaryen/wiki/Fuzzing#reducing)">文档</a> 。</li>
+<li><strong>wasm-shell</strong>: 一个可以加载和解释 WebAssembly 代码的 shell。它还可以运行规范测试套件。</li>
+<li><strong>wasm-emscripten-finalize</strong>: 获取由 llvm+lld 生成的 wasm 二进制文件，并对其执行特定的 emscripten pass。</li>
+<li><strong>wasm-ctor-eval</strong>: 一个可以在编译时执行函数（或部分函数）的工具。</li>
+<li><strong>binaryen.js</strong>: 一个独立的 JavaScript 库，公开了用于<a target="_blank" rel="noopener" href="https://github.com/WebAssembly/binaryen/blob/main/test/binaryen.js/hello-world.js">创建和优化 Wasm 模块</a>的 Binaryen 方法。对于构建，请参阅 <a target="_blank" rel="noopener" href="https://www.npmjs.com/package/binaryen">npm 上的 binaryen.js</a>（或直接从 <a target="_blank" rel="noopener" href="https://raw.githubusercontent.com/AssemblyScript/binaryen.js/master/index.js">github</a>、<a target="_blank" rel="noopener" href="https://cdn.rawgit.com/AssemblyScript/binaryen.js/master/index.js">rawgit</a> 或 <a target="_blank" rel="noopener" href="https://unpkg.com/binaryen@latest/index.js">unpkg 下载</a>）。最低要求：Node.js v15.8 或 Chrome v75 或 Firefox v78。</li>
+</ul>
+<p>Usage instructions for each are below.</p>
+<h2 id="Binaryen-优化"><a href="#Binaryen-优化" class="headerlink" title="Binaryen 优化"></a>Binaryen 优化</h2><p>Binaryen 包含了<br><a target="_blank" rel="noopener" href="https://github.com/WebAssembly/binaryen/tree/main/src/passes">一些优化 passes</a>，可以让 WebAssembly 变得体量更小而且更快速。 你可以使用 <code>wasm-opt</code> 来运行 Binaryen 优化器， 你也可以使用其他工具来运行优化器，比如<br><code>wasm2js</code> 和 <code>wasm-metadce</code>.</p>
+<ul>
+<li>默认的优化流水线是在<br><a target="_blank" rel="noopener" href="https://github.com/WebAssembly/binaryen/blob/369b8bdd3d9d49e4d9e0edf62e14881c14d9e352/src/passes/pass.cpp#L396"><code>addDefaultFunctionOptimizationPasses</code></a>.</li>
+<li>你可以设置各种<br><a target="_blank" rel="noopener" href="https://github.com/WebAssembly/binaryen/blob/369b8bdd3d9d49e4d9e0edf62e14881c14d9e352/src/pass.h#L85">pass 设置</a><br>以调整优化和收缩级别、是否忽略不太可能的陷阱、内联启发式、快速数学等。请参阅 <code>wasm-opt --help</code> 如何设置它们和其他详细信息。</li>
+</ul>
+<p>See each optimization pass for details of what it does, but here is a quick<br>overview of some of the relevant ones:</p>
+<ul>
+<li><strong>CoalesceLocals</strong> - Key “register allocation” pass. 可以进行生命周期分析，然后重用局部变量以减少局部变量数量，并尽可能的减少局部变量的复制.</li>
+<li><strong>CodeFolding</strong> - 通过合并避免重复代码（例如，如果两个if分支在其末端有一些共享指令）。</li>
+<li><strong>CodePushing</strong> - “Pushes” code forward past branch operations, potentially<br>allowing the code to not be run if the branch is taken.</li>
+<li><strong>DeadArgumentElimination</strong> - LTO pass 旨在在始终使用相同的常量调用函数的情况下，删除方法参数。</li>
+<li><strong>DeadCodeElimination</strong></li>
+<li><strong>Directize</strong> - 当表索引不变时，将间接调用转换为正常调用。</li>
+<li><strong>DuplicateFunctionElimination</strong> - LTO pass.</li>
+<li><strong>Inlining</strong> - LTO pass.</li>
+<li><strong>LocalCSE</strong> - 简单的局部公共子表达式消除。</li>
+<li><strong>LoopInvariantCodeMotion</strong></li>
+<li><strong>MemoryPacking</strong> - Key “optimize data segments” pass that combines segments,<br>removes unneeded parts, etc.</li>
+<li><strong>MergeBlocks</strong> - Merge a <code>block</code> to an outer one where possible, reducing<br>their number.</li>
+<li><strong>MergeLocals</strong> - When two locals have the same value in part of their<br>overlap, pick in a way to help CoalesceLocals do better later (split off from<br>CoalesceLocals to keep the latter simple).</li>
+<li><strong>MinifyImportsAndExports</strong> - Minifies them to “a”, “b”, etc.</li>
+<li><strong>OptimizeAddedConstants</strong> - Optimize a load&#x2F;store with an added constant into<br>a constant offset.</li>
+<li><strong>OptimizeInstructions</strong> - Key peephole optimization pass with a constantly<br>increasing list of patterns.</li>
+<li><strong>PickLoadSigns</strong> - Adjust whether a load is signed or unsigned in order to<br>avoid sign&#x2F;unsign operations later.</li>
+<li><strong>Precompute</strong> - Calculates constant expressions at compile time, using the<br>built-in interpreter (which is guaranteed to be able to handle any constant<br>expression).</li>
+<li><strong>ReReloop</strong> - Transforms wasm structured control flow to a CFG and then goes<br>back to structured form using the Relooper algorithm, which may find more<br>optimal shapes.</li>
+<li><strong>RedundantSetElimination</strong> - Removes a <code>local.set</code> of a value that is already<br>present in a local. (Overlaps with CoalesceLocals; this achieves the specific<br>operation just mentioned without all the other work CoalesceLocals does, and<br>therefore is useful in other places in the optimization pipeline.)</li>
+<li><strong>RemoveUnsedBrs</strong> - Key “minor control flow optimizations” pass, including<br>jump threading and various transforms that can get rid of a <code>br</code> or <code>br_table</code><br>(like turning a <code>block</code> with a <code>br</code> in the middle into an <code>if</code> when possible).</li>
+<li><strong>RemoveUnusedModuleElements</strong> - “Global DCE”, an LTO pass that removes<br>imports, functions, globals, etc., when they are not used.</li>
+<li><strong>ReorderFunctions</strong> - Put more-called functions first, potentially allowing<br>the LEB emitted to call them to be smaller (in a very large program).</li>
+<li><strong>ReorderLocals</strong> - Put more-used locals first, potentially allowing the LEB<br>emitted to use them to be smaller (in a very large function). After the<br>sorting, it also removes locals not used at all.</li>
+<li><strong>SimplifyGlobals</strong> - Optimizes globals in various ways, for example,<br>coalescing them, removing mutability from a global never modified, applying a<br>constant value from an immutable global, etc.</li>
+<li><strong>SimplifyLocals</strong> - Key “<code>local.get/set/tee</code>” optimization pass, doing things<br>like replacing a set and a get with moving the set’s value to the get (and<br>creating a tee) where possible. Also creates <code>block/if/loop</code> return values<br>instead of using a local to pass the value.</li>
+<li><strong>Vacuum</strong> - Key “remove silly unneeded code” pass, doing things like removing<br>an <code>if</code> arm that has no contents, a drop of a constant value with no side<br>effects, a <code>block</code> with a single child, etc.</li>
+</ul>
+<p>“LTO” in the above means an optimization is Link Time Optimization-like in that<br>it works across multiple functions, but in a sense Binaryen is always “LTO” as<br>it usually is run on the final linked wasm.</p>
+<p>Advanced optimization techniques in the Binaryen optimizer include<br><a target="_blank" rel="noopener" href="https://github.com/WebAssembly/binaryen/blob/main/src/passes/SSAify.cpp">SSAification</a>,<br><a target="_blank" rel="noopener" href="https://github.com/WebAssembly/binaryen/blob/main/src/ir/flat.h">Flat IR</a>, and<br><a target="_blank" rel="noopener" href="https://github.com/WebAssembly/binaryen/blob/main/src/ir/stack-utils.h">Stack&#x2F;Poppy IR</a>.</p>
+<p>Binaryen also contains various passes that do other things than optimizations,<br>like<br><a target="_blank" rel="noopener" href="https://github.com/WebAssembly/binaryen/blob/main/src/passes/LegalizeJSInterface.cpp">legalization for JavaScript</a>,<br><a target="_blank" rel="noopener" href="https://github.com/WebAssembly/binaryen/blob/main/src/passes/Asyncify.cpp">Asyncify</a>,<br>etc.</p>
+<h2 id="Building"><a href="#Building" class="headerlink" title="Building"></a>Building</h2><p>Binaryen uses git submodules (at time of writing just for gtest), so before you build you will have to initialize the submodules:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git submodule init</span><br><span class="line">git submodule update</span><br></pre></td></tr></table></figure>
+
+<p>After that you can build with CMake:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cmake . &amp;&amp; make</span><br></pre></td></tr></table></figure>
+
+<p>A C++17 compiler is required. Note that you can also use <code>ninja</code> as your generator: <code>cmake -G Ninja . &amp;&amp; ninja</code>.</p>
+<p>To avoid the gtest dependency, you can pass <code>-DBUILD_TESTS=OFF</code> to cmake.</p>
+<p>Binaryen.js can be built using Emscripten, which can be installed via <a target="_blank" rel="noopener" href="http://kripken.github.io/emscripten-site/docs/getting_started/downloads.html">the SDK</a>).</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">emcmake cmake . &amp;&amp; emmake make binaryen_js</span><br></pre></td></tr></table></figure>
+
+<h3 id="Visual-C"><a href="#Visual-C" class="headerlink" title="Visual C++"></a>Visual C++</h3><ol>
+<li><p>Using the Microsoft Visual Studio Installer, install the “Visual C++ tools for CMake” component.</p>
+</li>
+<li><p>Generate the projects:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mkdir build</span><br><span class="line">cd build</span><br><span class="line">&quot;%VISUAL_STUDIO_ROOT%\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe&quot; ..</span><br></pre></td></tr></table></figure>
+
+<p>Substitute VISUAL_STUDIO_ROOT with the path to your Visual Studio<br>installation. In case you are using the Visual Studio Build Tools, the path<br>will be “C:\Program Files (x86)\Microsoft Visual Studio\2017\BuildTools”.</p>
+</li>
+<li><p>From the Developer Command Prompt, build the desired projects:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">msbuild binaryen.vcxproj</span><br></pre></td></tr></table></figure>
+
+<p>CMake generates a project named “ALL_BUILD.vcxproj” for conveniently building all the projects.</p>
+</li>
+</ol>
+<h2 id="Running"><a href="#Running" class="headerlink" title="Running"></a>Running</h2><h3 id="wasm-opt"><a href="#wasm-opt" class="headerlink" title="wasm-opt"></a>wasm-opt</h3><p>Run</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/wasm-opt [.wasm or .wat file] [options] [passes, see --help] [--help]</span><br></pre></td></tr></table></figure>
+
+<p>wasm优化器以 WebAssembly 文件作为输入，然后执行转换pass，（在转换过程之前或之后）输出执行结果。比如，</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/wasm-opt test/lit/passes/name-types.wast -all -S -o -</span><br></pre></td></tr></table></figure>
+
+<p>这将输出测试套件中的一个测试用例。要对其进行转换，请尝试执行以下语句：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/wasm-opt test/lit/passes/name-types.wast --name-types -all -S -o -</span><br></pre></td></tr></table></figure>
+
+<p><code>name-types</code> pass 会确保每个类型都有一个名称并重命名异常长的类型名称。通过比较两个命令的输出，您可以看到转换导致的变化。</p>
+<p>将您自己的转换过程添加到 shell 很容易，只需将 <code>.cpp</code> 文件添加到 <code>src/passes</code> 中，然后重新构建 shell。可以参考 <a target="_blank" rel="noopener" href="https://github.com/WebAssembly/binaryen/blob/main/src/passes/NameTypes.cpp"><code>name-types</code> pass</a> 的代码.</p>
+<p>Some more notes:</p>
+<ul>
+<li>See <code>bin/wasm-opt --help</code> for the full list of options and passes.</li>
+<li>Passing <code>--debug</code> will emit some debugging info.</li>
+</ul>
+<h3 id="wasm2js"><a href="#wasm2js" class="headerlink" title="wasm2js"></a>wasm2js</h3><p>Run</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/wasm2js [input.wasm file]</span><br></pre></td></tr></table></figure>
+
+<p>This will print out JavaScript to the console.</p>
+<p>For example, try</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bin/wasm2js test/hello_world.wat</span><br></pre></td></tr></table></figure>
+
+<p>That output contains</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">function add(x, y) &#123;</span><br><span class="line"> x = x | 0;</span><br><span class="line"> y = y | 0;</span><br><span class="line"> return x + y | 0 | 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>as a translation of</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">(func $add (; 0 ;) (type $0) (param $x i32) (param $y i32) (result i32)</span><br><span class="line"> (i32.add</span><br><span class="line">  (local.get $x)</span><br><span class="line">  (local.get $y)</span><br><span class="line"> )</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>wasm2js’s output is in ES6 module format - basically, it converts a wasm<br>module into an ES6 module (to run on older browsers and Node.js versions<br>you can use Babel etc. to convert it to ES5). Let’s look at a full example<br>of calling that hello world wat; first, create the main JS file:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// main.mjs</span></span><br><span class="line"><span class="keyword">import</span> &#123; add &#125; <span class="keyword">from</span> <span class="string">&quot;./hello_world.mjs&quot;</span>;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;the sum of 1 and 2 is:&#x27;</span>, <span class="title function_">add</span>(<span class="number">1</span>, <span class="number">2</span>));</span><br></pre></td></tr></table></figure>
+
+<p>The run this (note that you need a new enough Node.js with ES6 module<br>support):</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">bin/wasm2js <span class="built_in">test</span>/hello_world.wat -o hello_world.mjs</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">node --experimental-modules main.mjs</span></span><br><span class="line">the sum of 1 and 2 is: 3</span><br></pre></td></tr></table></figure>
+
+<p>Things keep to in mind with wasm2js’s output:</p>
+<ul>
+<li>You should run wasm2js with optimizations for release builds, using <code>-O</code><br>or another optimization level. That will optimize along the entire pipeline<br>(wasm and JS). It won’t do everything a JS minifer would, though, like<br>minify whitespace, so you should still run a normal JS minifer afterwards.</li>
+<li>It is not possible to match WebAssembly semantics 100% precisely with fast<br>JavaScript code. For example, every load and store may trap, and to make<br>JavaScript do the same we’d need to add checks everywhere, which would be<br>large and slow. Instead, wasm2js assumes loads and stores do not trap, that<br>int&#x2F;float conversions do not trap, and so forth. There may also be slight<br>differences in corner cases of conversions, like non-trapping float to int.</li>
+</ul>
+<h3 id="wasm-ctor-eval"><a href="#wasm-ctor-eval" class="headerlink" title="wasm-ctor-eval"></a>wasm-ctor-eval</h3><p><code>wasm-ctor-eval</code> executes functions, or parts of them, at compile time.<br>After doing so it serializes the runtime state into the wasm, which is like<br>taking a “snapshot”. When the wasm is later loaded and run in a VM, it will<br>continue execution from that point, without re-doing the work that was already<br>executed.</p>
+<p>For example, consider this small program:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">(module</span><br><span class="line"> ;; A global variable that begins at 0.</span><br><span class="line"> (global $global (mut i32) (i32.const 0))</span><br><span class="line"></span><br><span class="line"> (import &quot;import&quot; &quot;import&quot; (func $import))</span><br><span class="line"></span><br><span class="line"> (func &quot;main&quot;</span><br><span class="line">  ;; Set the global to 1.</span><br><span class="line">  (global.set $global</span><br><span class="line">   (i32.const 1))</span><br><span class="line"></span><br><span class="line">  ;; Call the imported function. This *cannot* be executed at</span><br><span class="line">  ;; compile time.</span><br><span class="line">  (call $import)</span><br><span class="line"></span><br><span class="line">  ;; We will never get to this point, since we stop at the</span><br><span class="line">  ;; import.</span><br><span class="line">  (global.set $global</span><br><span class="line">   (i32.const 2))</span><br><span class="line"> )</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>We can evaluate part of it at compile time like this:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wasm-ctor-eval input.wat --ctors=main -S -o -</span><br></pre></td></tr></table></figure>
+
+<p>This tells it that there is a single function that we want to execute (“ctor”<br>is short for “global constructor”, a name that comes from code that is executed<br>before a program’s entry point) and then to print it as text to <code>stdout</code>. The<br>result is this:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">trying to eval main</span><br><span class="line">  ...partial evalling successful, but stopping since could not eval: call import: import.import</span><br><span class="line">  ...stopping</span><br><span class="line">(module</span><br><span class="line"> (type $none_=&gt;_none (func))</span><br><span class="line"> (import &quot;import&quot; &quot;import&quot; (func $import))</span><br><span class="line"> (global $global (mut i32) (i32.const 1))</span><br><span class="line"> (export &quot;main&quot; (func $0_0))</span><br><span class="line"> (func $0_0</span><br><span class="line">  (call $import)</span><br><span class="line">  (global.set $global</span><br><span class="line">   (i32.const 2)</span><br><span class="line">  )</span><br><span class="line"> )</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>The logging shows us managing to eval part of <code>main()</code>, but not all of it, as<br>expected: We can eval the first <code>global.get</code>, but then we stop at the call to<br>the imported function (because we don’t know what that function will be when the<br>wasm is actually run in a VM later). Note how in the output wasm the global’s<br>value has been updated from 0 to 1, and that the first <code>global.get</code> has been<br>removed: the wasm is now in a state that, when we run it in a VM, will seamlessly<br>continue to run from the point at which <code>wasm-ctor-eval</code> stopped.</p>
+<p>In this tiny example we just saved a small amount of work. How much work can be<br>saved depends on your program. (It can help to do pure computation up front, and<br>leave calls to imports to as late as possible.)</p>
+<p>Note that <code>wasm-ctor-eval</code>‘s name is related to global constructor functions,<br>as mentioned earlier, but there is no limitation on what you can execute here.<br>Any export from the wasm can be executed, if its contents are suitable. For<br>example, in Emscripten <code>wasm-ctor-eval</code> is even run on <code>main()</code> when possible.</p>
+<h2 id="Testing"><a href="#Testing" class="headerlink" title="Testing"></a>Testing</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./check.py</span><br></pre></td></tr></table></figure>
+
+<p>(or <code>python check.py</code>) will run <code>wasm-shell</code>, <code>wasm-opt</code>, etc. on the testcases in <code>test/</code>, and verify their outputs.</p>
+<p>The <code>check.py</code> script supports some options:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./check.py [--interpreter=/path/to/interpreter] [TEST1] [TEST2]..</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>If an interpreter is provided, we run the output through it, checking for<br>parse errors.</li>
+<li>If tests are provided, we run exactly those. If none are provided, we run<br>them all. To see what tests are available, run <code>./check.py --list-suites</code>.</li>
+<li>Some tests require <code>emcc</code> or <code>nodejs</code> in the path. They will not run if the<br>tool cannot be found, and you’ll see a warning.</li>
+<li>We have tests from upstream in <code>tests/spec</code>, in git submodules. Running<br><code>./check.py</code> should update those.</li>
+</ul>
+<p>Note that we are trying to gradually port the legacy wasm-opt tests to use <code>lit</code> and <code>filecheck</code> as we modify them.<br>For <code>passes</code> tests that output wast, this can be done automatically with <code>scripts/port_passes_tests_to_lit.py</code> and for non-<code>passes</code> tests that output wast, see<br><a target="_blank" rel="noopener" href="https://github.com/WebAssembly/binaryen/pull/4779">https://github.com/WebAssembly/binaryen/pull/4779</a> for an example of how to do a simple manual port.</p>
+<h3 id="Setting-up-dependencies"><a href="#Setting-up-dependencies" class="headerlink" title="Setting up dependencies"></a>Setting up dependencies</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./third_party/setup.py [mozjs|v8|wabt|all]</span><br></pre></td></tr></table></figure>
+
+<p>(or <code>python third_party/setup.py</code>) installs required dependencies like the SpiderMonkey JS shell, the V8 JS shell<br>and WABT in <code>third_party/</code>. Other scripts automatically pick these up when installed.</p>
+<p>Run <code>pip3 install -r requirements-dev.txt</code> to get the requirements for the <code>lit</code><br>tests. Note that you need to have the location <code>pip</code> installs to in your <code>$PATH</code><br>(on linux, <code>~/.local/bin</code>).</p>
+<h3 id="Fuzzing"><a href="#Fuzzing" class="headerlink" title="Fuzzing"></a>Fuzzing</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./scripts/fuzz_opt.py [--binaryen-bin=build/bin]</span><br></pre></td></tr></table></figure>
+
+<p>(or <code>python scripts/fuzz_opt.py</code>) will run various fuzzing modes on random inputs with random passes until it finds<br>a possible bug. See <a target="_blank" rel="noopener" href="https://github.com/WebAssembly/binaryen/wiki/Fuzzing">the wiki page</a> for all the details.</p>
+<h2 id="Design-Principles"><a href="#Design-Principles" class="headerlink" title="Design Principles"></a>Design Principles</h2><ul>
+<li><strong>Interned strings for names</strong>: It’s very convenient to have names on nodes,<br>instead of just numeric indices etc. To avoid most of the performance<br>difference between strings and numeric indices, all strings are interned,<br>which means there is a single copy of each string in memory, string<br>comparisons are just a pointer comparison, etc.</li>
+<li><strong>Allocate in arenas</strong>: Based on experience with other<br>optimizing&#x2F;transformating toolchains, it’s not worth the overhead to<br>carefully track memory of individual nodes. Instead, we allocate all elements<br>of a module in an arena, and the entire arena can be freed when the module is<br>no longer needed.</li>
+</ul>
+<h2 id="FAQ"><a href="#FAQ" class="headerlink" title="FAQ"></a>FAQ</h2><ul>
+<li>Why the weird name for the project?</li>
+</ul>
+<p>“Binaryen” is a combination of <strong>binary</strong> - since WebAssembly is a binary format<br>for the web - and <strong>Emscripten</strong> - with which it can integrate in order to<br>compile C and C++ all the way to WebAssembly, via asm.js. Binaryen began as<br>Emscripten’s WebAssembly processing library (<code>wasm-emscripten</code>).</p>
+<p>“Binaryen” is pronounced <a target="_blank" rel="noopener" href="http://www.makinggameofthrones.com/production-diary/2011/2/11/official-pronunciation-guide-for-game-of-thrones.html">in the same manner</a> as “<a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/List_of_A_Song_of_Ice_and_Fire_characters#House_Targaryen">Targaryen</a>“: <em>bi-NAIR-ee-in</em>. Or something like that? Anyhow, however Targaryen is correctly pronounced, they should rhyme. Aside from pronunciation, the Targaryen house words, “Fire and Blood”, have also inspired Binaryen’s: “Code and Bugs.”</p>
+<ul>
+<li>Does it compile under Windows and&#x2F;or Visual Studio?</li>
+</ul>
+<p>Yes, it does. Here’s a step-by-step <a target="_blank" rel="noopener" href="https://github.com/brakmic/bazaar/blob/master/webassembly/COMPILING_WIN32.md">tutorial</a>  on how to compile it<br>under <strong>Windows 10 x64</strong> with with <strong>CMake</strong> and <strong>Visual Studio 2015</strong>.<br>However, Visual Studio 2017 may now be required. Help would be appreciated on<br>Windows and OS X as most of the core devs are on Linux.</p>
+</div></article></div></div><div class="column column-left is-4-tablet is-4-desktop is-4-widescreen  order-1"><div class="card widget" data-type="profile"><div class="card-content"><nav class="level"><div class="level-item has-text-centered flex-shrink-1"><div><figure class="image is-128x128 mx-auto mb-2"><img class="avatar" src="/img/avatar.png" alt="cyw3"></figure><p class="title is-size-4 is-block" style="line-height:inherit;">cyw3</p><p class="is-size-6 is-block">ProgramAnalysis/Compiler/VirtualMachine</p><p class="is-size-6 is-flex justify-content-center"><i class="fas fa-map-marker-alt mr-1"></i><span>Shenzhen, China</span></p></div></div></nav><nav class="level is-mobile"><div class="level-item has-text-centered is-marginless"><div><p class="heading">文章</p><a href="/archives"><p class="title">30</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">分类</p><a href="/categories"><p class="title">0</p></a></div></div><div class="level-item has-text-centered is-marginless"><div><p class="heading">标签</p><a href="/tags"><p class="title">1</p></a></div></div></nav><div class="level"><a class="level-item button is-primary is-rounded" href="https://github.com/cyw3" target="_blank" rel="noopener">关注我</a></div><div class="level is-mobile is-multiline"><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Github" href="https://github.com/cyw3"><i class="fab fa-github"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Facebook" href="https://facebook.com"><i class="fab fa-facebook"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Twitter" href="https://twitter.com"><i class="fab fa-twitter"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="Dribbble" href="https://dribbble.com"><i class="fab fa-dribbble"></i></a><a class="level-item button is-transparent is-marginless" target="_blank" rel="noopener" title="RSS" href="/"><i class="fas fa-rss"></i></a></div></div></div><!--!--><div class="card widget" data-type="links"><div class="card-content"><div class="menu"><h3 class="menu-label">链接</h3><ul class="menu-list"><li><a class="level is-mobile" href="https://tca.tencent.com/" target="_blank" rel="noopener"><span class="level-left"><span class="level-item">Tencent Code Analysis</span></span><span class="level-right"><span class="level-item tag">tca.tencent.com</span></span></a></li></ul></div></div></div><!--!--><div class="card widget" data-type="recent-posts"><div class="card-content"><h3 class="menu-label">最新文章</h3><article class="media"><div class="media-content"><p class="date"><time dateTime="2022-07-30T03:20:12.000Z">2022-07-30</time></p><p class="title"><a href="/2022/07/30/2022-7-30-Binaryen-Readme/">2022-7-30-Binaryen-Readme</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2022-07-24T06:56:22.285Z">2022-07-24</time></p><p class="title"><a href="/2022/07/24/2016-01-14-MACD/">MACD策略</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2022-07-24T06:55:45.905Z">2022-07-24</time></p><p class="title"><a href="/2022/07/24/2016-01-20-OpenCV-with-CodeBlocks/">OpenCV with CodeBlocks</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2022-07-24T06:55:26.913Z">2022-07-24</time></p><p class="title"><a href="/2022/07/24/2016-01-12-Welcome-to-yalesonchan-blog/">Welcome to yalechen&#039;s blog</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2022-07-24T05:39:54.677Z">2022-07-24</time></p><p class="title"><a href="/2022/07/24/2016-01-15-Genetic-Algorithms-in-R/">遗传算法的R语言实现</a></p></div></article></div></div><div class="card widget" data-type="archives"><div class="card-content"><div class="menu"><h3 class="menu-label">归档</h3><ul class="menu-list"><li><a class="level is-mobile" href="/archives/2022/07/"><span class="level-start"><span class="level-item">七月 2022</span></span><span class="level-end"><span class="level-item tag">30</span></span></a></li></ul></div></div></div><div class="card widget" data-type="tags"><div class="card-content"><div class="menu"><h3 class="menu-label">标签</h3><div class="field is-grouped is-grouped-multiline"><div class="control"><a class="tags has-addons" href="/tags/wasm/"><span class="tag">wasm</span><span class="tag">1</span></a></div></div></div></div></div><div class="card widget" data-type="subscribe-email"><div class="card-content"><div class="menu"><h3 class="menu-label">订阅更新</h3><form action="https://feedburner.google.com/fb/a/mailverify" method="post" target="popupwindow" onsubmit="window.open(&#039;https://feedburner.google.com/fb/a/mailverify?uri=&#039;,&#039;popupwindow&#039;,&#039;scrollbars=yes,width=550,height=520&#039;);return true"><input type="hidden" value="" name="uri"><input type="hidden" name="loc" value="en_US"><div class="field has-addons"><div class="control has-icons-left is-expanded"><input class="input" name="email" type="email" placeholder="Email"><span class="icon is-small is-left"><i class="fas fa-envelope"></i></span></div><div class="control"><input class="button" type="submit" value="订阅"></div></div></form></div></div></div><div class="card widget"><div class="card-content"><div class="notification is-danger">You need to set <code>client_id</code> and <code>slot_id</code> to show this AD unit. Please set it in <code>_config.yml</code>.</div></div></div><div class="card widget" data-type="subscribe-email"><div class="card-content"><div class="menu"><h3 class="menu-label">follow.it</h3><form action="" method="post" target="_blank"><div class="field has-addons"><div class="control has-icons-left is-expanded"><input class="input" name="email" type="email" placeholder="Email"><span class="icon is-small is-left"><i class="fas fa-envelope"></i></span></div><div class="control"><input class="button" type="submit" value="订阅"></div></div></form></div></div></div></div><!--!--></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/">Cyw3</a><p class="is-size-7"><span>&copy; 2022 cyw3</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/"><i class="fab fa-creative-commons-by"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/cyw3/cyw3.github.io"><i class="fab fa-github"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("zh-CN");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script src="/js/column.js"></script><script src="/js/animation.js"></script><a id="back-to-top" title="回到顶端" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js" defer></script><script>window.addEventListener("load", () => {
+      window.cookieconsent.initialise({
+        type: "info",
+        theme: "edgeless",
+        static: false,
+        position: "bottom-left",
+        content: {
+          message: "此网站使用Cookie来改善您的体验。",
+          dismiss: "知道了！",
+          allow: "允许使用Cookie",
+          deny: "拒绝",
+          link: "了解更多",
+          policy: "Cookie政策",
+          href: "https://www.cookiesandyou.com/",
+        },
+        palette: {
+          popup: {
+            background: "#edeff5",
+            text: "#838391"
+          },
+          button: {
+            background: "#4b81e8"
+          },
+        },
+      });
+    });</script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="想要查找什么..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"想要查找什么...","untitled":"(无标题)","posts":"文章","pages":"页面","categories":"分类","tags":"标签"});
+        });</script></body></html>
